@@ -3,12 +3,15 @@ VERSION := $(shell sed -e '/^\#+RFC_VERSION:/!d;s/\#+RFC_VERSION: *\([0-9]*\)/\1
 VERSION_NOZERO := $(shell echo "$(VERSION)" | sed -e 's/^0*//')
 NEXT_VERSION := $(shell printf "%02d" "$$(($(VERSION_NOZERO) + 1))")
 PREV_VERSION := $(shell printf "%02d" "$$(($(VERSION_NOZERO) - 1))")
-DTYPE := $(word 2,$(subst -, ,$(BASE)))
-PBRANCH := publish-$(DTYPE)-$(VERSION)
+SBASE := $(patsubst draft-%,%,$(BASE))
+#DTYPE := $(word 2,$(subst -, ,$(BASE)))
+PBRANCH := publish-$(SBASE)-$(VERSION)
 PBASE := publish/$(BASE)-$(VERSION)
 VBASE := draft/$(BASE)-$(VERSION)
 LBASE := draft/$(BASE)-latest
 SHELL := /bin/bash
+MAIN_BRANCH ?= main #older repos set to master
+PUSH_TO_REMOTE ?=
 
 # If you have docker you can avoid having to install anything by leaving this.
 ifeq ($(CIRCLECI),)
@@ -25,27 +28,35 @@ git-clean-check:
 	@echo Checking for git clean status
 	@STATUS="$$(git status -s)"; [[ -z "$$STATUS" ]] || echo "$$STATUS"
 
+push_to_remote:
+ifeq ($(strip $(PUSH_TO_REMOTE)),)
+		@echo "PUSH_TO_REMOTE is not set. Skipping git push."
+else
+		git push $(PUSH_TO_REMOTE) $(PBRANCH)
+		git push $(PUSH_TO_REMOTE) -f --tags
+endif
+
 .PHONY: publish
 publish: git-clean-check $(VBASE).xml $(VBASE).txt $(VBASE).html
 	if [ -f $(PBASE).xml ]; then echo "$(PBASE).xml already present, increment version?"; exit 1; fi
+	@mkdir -p publish
 	cp $(VBASE).xml $(VBASE).txt $(VBASE).html publish
 	git checkout -b $(PBRANCH)
-	git tag -m "yank.mk publish-$(DTYPE)-$(VERSION)" bp-$(PBRANCH)
-	git push -f --tags
+	git tag -m "yank.mk: publish-$(SBASE)-$(VERSION)" bp-$(PBRANCH)
 	git add $(PBASE).xml $(PBASE).txt $(PBASE).html
-	git commit -m "yank.mk publish-$(DTYPE)-$(VERSION)"
-	git push origin $(PBRANCH)
-	git checkout master
+	git commit -m "yank.mk: publish-$(SBASE)-$(VERSION)"
+	$(MAKE) push_to_remote
+	git checkout $(MAIN_BRANCH)
 	git merge --ff-only $(PBRANCH)
 	sed -i -e 's/\#+RFC_VERSION: *\([0-9]*\)/\#+RFC_VERSION: $(NEXT_VERSION)/' $(ORG)
-	git commit -am "yank.mk new version post-publish"
+	git commit -am "yank.mk: new version -$(NEXT_VERSION) post-publish $(SBASE)-$(VERSION)"
 
 #republish:
 #	sed -i -e 's/\#+RFC_VERSION: *\([0-9]*\)/\#+RFC_VERSION: $(PREV_VERSION)/' $(ORG)
 #	cp $(VBASE).xml $(VBASE).txt $(VBASE).html publish
 #	git add $(PBASE).xml $(PBASE).txt $(PBASE).html
-#	git commit -m "publish-$(DTYPE)-$(VERSION)-update"
-#	git tag -a -f -m "yank.mk publish-$(DTYPE)-$(VERSION) update" publish-$(DTYPE)-$(VERSION)
+#	git commit -m "publish-$(SBASE)-$(VERSION)-update"
+#	git tag -a -f -m "yank.mk publish-$(SBASE)-$(VERSION) update" publish-$(SBASE)-$(VERSION)
 #	sed -i -e 's/\#+RFC_VERSION: *\([0-9]*\)/\#+RFC_VERSION: $(VERSION)/' $(ORG)
 
 draft:
