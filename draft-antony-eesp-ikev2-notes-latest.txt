@@ -1,0 +1,280 @@
+
+
+
+
+IPSECME Working Group                                        S. Klassert
+Internet-Draft                                                 A. Antony
+Intended status: Informational                                   secunet
+Expires: 12 June 2025                                    9 December 2024
+
+
+                 Notes on IKEv2 Key Derivation Function
+                    draft-antony-eesp-ikev2-notes-00
+
+Status of This Memo
+
+   This Internet-Draft is submitted in full conformance with the
+   provisions of BCP 78 and BCP 79.
+
+   Internet-Drafts are working documents of the Internet Engineering
+   Task Force (IETF).  Note that other groups may also distribute
+   working documents as Internet-Drafts.  The list of current Internet-
+   Drafts is at https://datatracker.ietf.org/drafts/current/.
+
+   Internet-Drafts are draft documents valid for a maximum of six months
+   and may be updated, replaced, or obsoleted by other documents at any
+   time.  It is inappropriate to use Internet-Drafts as reference
+   material or to cite them other than as "work in progress."
+
+   This Internet-Draft will expire on 12 June 2025.
+
+Copyright Notice
+
+   Copyright (c) 2024 IETF Trust and the persons identified as the
+   document authors.  All rights reserved.
+
+   This document is subject to BCP 78 and the IETF Trust's Legal
+   Provisions Relating to IETF Documents (https://trustee.ietf.org/
+   license-info) in effect on the date of publication of this document.
+   Please review these documents carefully, as they describe your rights
+   and restrictions with respect to this document.  Code Components
+   extracted from this document must include Revised BSD License text as
+   described in Section 4.e of the Trust Legal Provisions and are
+   provided without warranty as described in the Revised BSD License.
+
+Table of Contents
+
+   1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
+   2.  KDF methods . . . . . . . . . . . . . . . . . . . . . . . . .   2
+   3.  UDP Encap . . . . . . . . . . . . . . . . . . . . . . . . . .   3
+     3.1.  UDP Source Port issue . . . . . . . . . . . . . . . . . .   3
+     3.2.  UDP Encap issue . . . . . . . . . . . . . . . . . . . . .   3
+   4.  WESP UDP Encap  . . . . . . . . . . . . . . . . . . . . . . .   4
+
+
+
+Klassert & Antony         Expires 12 June 2025                  [Page 1]
+
+Internet-Draft               KEv2 KDF Notes                December 2024
+
+
+   5.  Normative References  . . . . . . . . . . . . . . . . . . . .   4
+   6.  Informative References  . . . . . . . . . . . . . . . . . . .   5
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .   5
+
+1.  Introduction
+
+   These are notes on EESP IKEv2 and other EESP related information.  To
+   keep it in one place for quick access.
+
+2.  KDF methods
+
+   IKEv2 key derivation, [RFC7296], is likely 'KDF in Feedback Mode'
+   specified in [NIST800-108].  This in iterative method as I see it in
+   Section 2.13 [RFC7296]
+
+   In the following, | indicates concatenation.  prf+ is defined as:
+   prf+ (K,S) = T1 | T2 | T3 | T4 | ...
+
+   where: T1 = prf (K, S | 0x01)
+
+   T2 = prf (K, T1 | S | 0x02)
+
+   T3 = prf (K, T2 | S | 0x03)
+
+   T4 = prf (K, T3 | S | 0x04)
+
+   ...
+
+   Section 2.14 of [RFC7296]
+
+   SKEYSEED = prf(Ni | Nr, g^ir)
+
+   {SK_d | SK_ai | SK_ar | SK_ei | SK_er | SK_pi | SK_pr} = prf+
+   (SKEYSEED, Ni | Nr | SPIi | SPIr)
+
+   (indicating that the quantities SK_d, SK_ai, SK_ar, SK_ei, SK_er,
+   SK_pi, and SK_pr are taken in order from the generated bits of the
+   prf+).  g^ir is the shared secret from the ephemeral Diffie-Hellman
+   exchange.  g^ir is represented as a string of octets in big endian
+   order padded with zeros if necessary to make it the length of the
+   modulus.  Ni and Nr are the nonces, stripped of any headers.
+
+   KEYMAT = prf+(SK_d, Ni | Nr)
+
+   Where Ni and Nr are the nonces from the IKE_SA_INIT exchange if this
+   request is the first Child SA created or the fresh Ni and Nr from the
+   CREATE_CHILD_SA exchange if this is a subsequent creation.
+
+
+
+
+Klassert & Antony         Expires 12 June 2025                  [Page 2]
+
+Internet-Draft               KEv2 KDF Notes                December 2024
+
+
+   For CREATE_CHILD_SA exchanges including an optional Diffie-Hellman
+   exchange, the keying material is defined as:
+
+   KEYMAT = prf+(SK_d, g^ir (new) | Ni | Nr)
+
+   where g^ir (new) is the shared secret from the ephemeral Diffie-
+   Hellman exchange of this CREATE_CHILD_SA exchange (represented as an
+   octet string in big endian order padded with zeros in the high-order
+   bits if necessary to make it the length of the modulus).
+
+   What EESP IKEv2 proposing as 'Heirarchial key derivation' NIST800-108
+   defines 'Key Hierarchy'
+
+   In Section 5.4 of Key Management for Multicast [RFC2627] a Logical
+   Key Hierarchy (LKH) . I din't follow that completly.  It is refered
+   in G-IKEv2.
+
+3.  UDP Encap
+
+   Why UDP?
+
+   *  For Roadwarrior: IPv4 home gateway.
+
+   *  Why Datacenters, without NAT, using UDP?  [Tero] This is a failure
+      for a new protocol.
+
+   *  In the Cloud per flow limitation
+
+3.1.  UDP Source Port issue
+
+   2.1.  UDP-Encapsulated ESP Header Format [RFC3948] : "the Source Port
+   and Destination Port MUST be the same as that used by IKE traffic "
+
+   And [RFC3947] for IKE in UDP encapsulation: "The initiator MUST set
+   both UDP source and destination ports to 4500."  However, NAT
+   gateways the middleboxes, NAT gateways, are allowed to change source
+   port number.  The receiver must accept any source port.  And the
+   receiver MUST respond to the source port.  With this I.D.  We propose
+   sender may also use non 4500 source port especially when using Sub
+   SA, for per CPU SA.
+
+3.2.  UDP Encap issue
+
+   If the existing destination port 4500 is reused the packet the
+   receiver must able to distingish ESP vs EESP.  If the EESP start with
+   SPI this issue would not be there.  Otherwise like WESP encap we may
+   have to add additionl 32 bits and reserve an ESP SPI bellow 255.
+
+
+
+
+Klassert & Antony         Expires 12 June 2025                  [Page 3]
+
+Internet-Draft               KEv2 KDF Notes                December 2024
+
+
+4.  WESP UDP Encap
+
+   [RFC5840] WESP has the same issue, because they re-use destination
+   port 4500.  WESP-in-UP add additoonal 32 bit, SPI 0x2 to disinguish
+   from EESP.  It is 32 bits at the top.  SPI 0x2 is from the reserved
+   range.  I think they say not use the first nibble, 4 bits, numbers 4
+   and 6 could be used by IPv4 or IPv6.
+
+   0                   1                   2                   3
+   0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |        Src Port (4500)        | Dest Port (4500)              |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |             Length            |          Checksum             |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |          Protocol Identifier (value = 0x00000002)             |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |  Next Header  |   HdrLen      |  TrailerLen   |    Flags      |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                      Existing ESP Encapsulation               |
+   ~                                                               ~
+   |                                                               |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+              Figure 1: Figure 4: UDP-Encapsulated WESP Header
+
+   However, this 4 bytes would lead to waste of 4 bytes every EESP
+   packet.
+
+5.  Normative References
+
+   [NIST800-108]
+              NIST, "Recommendation for Key Derivation Using
+              Pseudorandom Functions",
+              <https://www.nist.gov/publications/recommendation-key-
+              derivation-using-pseudorandom-functions-1>.
+
+   [RFC2627]  Wallner, D., Harder, E., and R. Agee, "Key Management for
+              Multicast: Issues and Architectures", RFC 2627,
+              DOI 10.17487/RFC2627, June 1999,
+              <https://www.rfc-editor.org/info/rfc2627>.
+
+   [RFC3947]  Kivinen, T., Swander, B., Huttunen, A., and V. Volpe,
+              "Negotiation of NAT-Traversal in the IKE", RFC 3947,
+              DOI 10.17487/RFC3947, January 2005,
+              <https://www.rfc-editor.org/info/rfc3947>.
+
+
+
+
+
+Klassert & Antony         Expires 12 June 2025                  [Page 4]
+
+Internet-Draft               KEv2 KDF Notes                December 2024
+
+
+   [RFC3948]  Huttunen, A., Swander, B., Volpe, V., DiBurro, L., and M.
+              Stenberg, "UDP Encapsulation of IPsec ESP Packets",
+              RFC 3948, DOI 10.17487/RFC3948, January 2005,
+              <https://www.rfc-editor.org/info/rfc3948>.
+
+   [RFC5840]  Grewal, K., Montenegro, G., and M. Bhatia, "Wrapped
+              Encapsulating Security Payload (ESP) for Traffic
+              Visibility", RFC 5840, DOI 10.17487/RFC5840, April 2010,
+              <https://www.rfc-editor.org/info/rfc5840>.
+
+   [RFC7296]  Kaufman, C., Hoffman, P., Nir, Y., Eronen, P., and T.
+              Kivinen, "Internet Key Exchange Protocol Version 2
+              (IKEv2)", STD 79, RFC 7296, DOI 10.17487/RFC7296, October
+              2014, <https://www.rfc-editor.org/info/rfc7296>.
+
+6.  Informative References
+
+   [I-D.ietf-ipsecme-g-ikev2]
+              Smyslov, V. and B. Weis, "Group Key Management using
+              IKEv2", Work in Progress, Internet-Draft, draft-ietf-
+              ipsecme-g-ikev2-17, 19 November 2024,
+              <https://datatracker.ietf.org/doc/html/draft-ietf-ipsecme-
+              g-ikev2-17>.
+
+Authors' Addresses
+
+   Steffen Klassert
+   secunet Security Networks AG
+   Email: steffen.klassert@secunet.com
+
+
+   Antony Antony
+   secunet Security Networks AG
+   Email: antony.antony@secunet.com
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Klassert & Antony         Expires 12 June 2025                  [Page 5]
