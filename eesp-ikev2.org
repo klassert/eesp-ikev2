@@ -61,7 +61,7 @@ document are to be interpreted as described in [[RFC2119]].
 
 
 ** Terminology
-It is assumed that readers are familiar with the  IKEv2 negotation
+It is assumed that readers are familiar with the IKEv2 negotation
 [[RFC7296]], IPsec architecture [[RFC4301]] and ESP [[RFC4303]].
 This document uses a notation and conventions from IKEv2 [RFC7296]
 to negotiate EESP.
@@ -98,23 +98,23 @@ The ESP_TFC_PADDING_NOT_SUPPORTED, [[RFC7296]], notification is not
 supported in EESP, instead use IP-TFS, USE_AGGFRAG, [[RFC9347]].
 If this notification is received it should be discarded.
 
-** New SA  using IKE_AUTH or CREATE_CHILD_SA exchange
+** Negotiating an EESP SA using IKE_AUTH or CREATE_CHILD_SA
+To negotiate an EESP Child SA, use the IKEv2 IKE_AUTH or CREATE_CHILD_SA
+exchange. This negotiation the new  Security Protocol Identifier value ~EESP~,
+as specified in this document, and  uses the EESP Transform attributes
+defined in [[EESP SA Transforms]].
 
-An EESP Child SA can be negitationed using IKEv2 IKE_AUTH exchange
-using Security Protolcol EESP specified in this document using EESP
-Transform attric[[EESP SA Transforms]]
+** Rekeying an EESP SA with the CREATE_CHILD_SA Exchange
+Rekeying an EESP SA follows the same procedure as rekeying an ESP SA,
+as specified in Sections 1.3.3 and 2.8 of [[RFC7296]]. During the
+rekeying process, the [[EESP SA Transforms]] MUST remain identical to
+those negotiated when the SA was initially established.
 
+** Deleting EESP SA with INFORMATIONAL Exchange
 
-** Rekeying SA with CREATE_CHILD_SA Exchange
-
-Rekeying an EESP is identical to rekeying an ESP SA as specified in
-[[RFC7296]] section 1.3.3 and section 2.8  During rekey
-[[EESP SA Transforms]] identical.
-
-** Deleting SA with INFORMATIONAL Exchange
-
-EESP SA always exist in pairs to delete an SA use IKEv2
-INFORMATIONAL exchange as specified in [[RFC7296]] section 1.4.1.
+EESP SA always exist in pairs. Deleting EESP SA follows the same
+prorceduue as deleting Child SA using IKEv2 INFORMATIONAL exchange as
+specified in Section 1.4.1 [[RFC7296]]
 
 * EESP SA Transforms
 EESP introduces several transform properties that are negotiated
@@ -123,20 +123,25 @@ identical for the duration of the SA. When the SA is rekeyed,
 the new SA MUST inherit all EESP transform properties negotiated for
 the original EESP SA.
 
-** Anti-Replay Protection
-EESP provides optional Anti-Replay Protection (ARP) using an
+** Anti-Replay Service
+EESP provides optional Anti-Replay Protection using an
 Extended Sequence Number (ESN) carried in the packet.
+To enable Anti-Replay service the initiator SHOULD
+propse 1 (64 bit ESN) in Substructure of the Proposal Substructure
+inside the Security Association (SA) payload in the IKEv2 Exchange.
+When the responder select 64 bit ESN
+
 This feature can be negotiated using IKEv2 Transform Type 5,
-Anti-Replay Protection [[ARP]]. When ARP is enabled using ESN, the full
-64-bit ESN is included in each EESP packet. When present and
+Sequence Number Properties [[SNP]]. When ARP is enabled using ESN,
+the full 64-bit ESN is included in each EESP packet. When present and
 using EESP integerity protection the full 64bit ESN will be part of
 integerity check.
 
-When the Transform Type (ARP) is not present in initiaor's Child SA
+When the Transform Type SNP is not present in initiaor's Child SA
 proposl during negotiation of an EESP Child SA, the Sequence Number
 field MUST NOT be transmitted in the EESP packet.
 
-When ARP is not negotiated, i.e., when ESN is not carried in the
+When SNP is not negotiated, i.e., when ESN is not carried in the
 EESP packet, an EESP receiver should not act on address or port
 changes. It should not initiate a dynamic address update without the
 use of IKEv2 Mobility [[RFC4555]]. Since ARP is disabled, an attacker
@@ -155,7 +160,7 @@ may be carried explicitly in every EESP packet.
 When using the Implicit Initialization Vector (IIV) encryption
 algorithm [[RFC8750]], the IV MUST be omitted. To negotiate this,
 IIV transforms specified in [[IKEv2-Enc]] MUST be used. Additionally,
-[[Anti-Replay Protection]] MUST be negotiated to carry a 64-bit ESN
+[[Anti-Replay Service]] MUST be negotiated to carry a 64-bit ESN
 in the EESP packet.
 
 ** EESP Version
@@ -174,14 +179,14 @@ The Flow Identifier SHOULD be negotiated by when creating EESP SA.
 Advantages of Sub SAs compared Child SAs with differnt keys
 
 - Possiblity for unidirectional SA. Compared to [[RFC9611]] when per
-  resourse SA is brought up it is bidirectional. However, both SA MAY
-  not be in use. When using CREATE_CHILD_SA Unidirectal SAis not possible
+ resourse SA is brought up it is bidirectional. However, both SA MAY
+ not be in use. When using CREATE_CHILD_SA Unidirectal SAis not possible
 
 - No extra setup time, a.k.a. zeroround trip time. Even though using
  IKE window size specified in [[RFC7296]] section 2.3 would aliviate
  setup this would be quicker.
 - Creating Sub SA is more efficient while creating as well as rekeying
- and  deletinng, lifeicycle managment of Sub SA is simple.
+ and deletinng, lifeicycle managment of Sub SA is simple.
 
 *** Key derivation for Sub SA
 
@@ -210,14 +215,14 @@ of this CREATE_CHILD_SA exchange (represented as an
 octet string in big endian order padded with zeros in the high-order
 bits if necessary to make it the length of the modulus).
 
-For example for Sub SA ID n,  use nth set of keys from the KEYMAT
+For example for Sub SA ID n, use nth set of keys from the KEYMAT
 The order is specified in Section 2.17 of [[RFC7296]].
 
 With exisitng prf+ function the keymat length rather limited.
 [[RFC7296]] limit the iteration to 256.
-However, with  modern prf+, more specifically XOF, functions,
+However, with modern prf+, more specifically XOF, functions,
 such as KMAC spefified in [[NIST800-185 ]], or HopMAC/TurboSHAKE
-specified [[I-D.irtf-cfrg-kangarootwelve]]  KEYMAT can be infinetly long.
+specified [[I-D.irtf-cfrg-kangarootwelve]] KEYMAT can be infinetly long.
 
 Typical length of of 256 bit encryption is 36 bytes (32+4), in one direction.
 Using an AEAD for 64K Sub SAs maximum KEYMAT length would be
@@ -252,7 +257,7 @@ KEYMAT = prf+(SK_d, g^ir (new) | Ni | Nr | Flow ID)
 
 Even though each Sub SA could be independently rekeyed, for the ease of use
 when any one of the Sub SA need rekeying when reaching packet limited
-all Sub SAs MUST be reakeyed  immediatly following the first rekey.
+all Sub SAs MUST be reakeyed immediatly following the first rekey.
 First replace the outgoing SAs. And incmoing SAs could be replace
 whenever the peer received new Sub SA.
 
@@ -297,8 +302,8 @@ This document defines new Exchange Type in the
 *** Extending ESP with EESP
 Several tables in [[IKEv2-IANA]] that specifiy ESP as protocol
 should be extended with EESP. Should we list each table one by one or
-specify as replace ESP, with ESP, EESP.e.g in the  Transform Type Values,
-replace 'IKE and ESP' with  'IKE, ESP, and EESP'
+specify as replace ESP, with ESP, EESP.e.g in the Transform Type Values,
+replace 'IKE and ESP' with 'IKE, ESP, and EESP'
 
 Changes the "Used In" column for the existing allocations as follows;
 
@@ -313,8 +318,8 @@ This document defines new Notify Message types in the "IKEv2 Notify Message Erro
 ** New Registries
 
 A new set of registries is created for EESP-IKEv2 on IKEv2 parameters
-page [[IKEv2-IANA]].  The terms Reserved, Expert Review and Private Use
-   are to be applied as defined in [[RFC8126]]
+page [[IKEv2-IANA]]. The terms Reserved, Expert Review and Private
+Use are to be applied as defined in [[RFC8126]]
 
 *** EESP Session ID registry
 
@@ -326,13 +331,12 @@ IANA is requested to create a new registry named
 - Description: EESP Base Header Session ID
 - Reference: This document
 
-| Session ID | Name         | Reference         |
+| Session ID | Name         | Reference       |
 |------------+------------- +-----------------+
 | 0          | Unspecified  | [this document] |
 | 1          | ENCRYPION_ID | [this document] |
-| 2          | SUB_SA_K    | [this document] |
+| 2          | SUB_SA_K     | [this document] |
 | 3          | SUB_SA_SN    | [this document] |
-
 
 *** EESP Flow ID registry
 
@@ -392,8 +396,9 @@ may not rely on single Security Policy Database (SPD) as specified in
 the IPsec Architecture document [[RFC4301]], section 4.4.1. However,
 the receiver MUST validate the negotiated Security Policy through
 other means to ensure compliance with the intended security
-requirements. For by adding Security Policy to the socket or route entry.
-Also comply with ICMP  processing sepcified  in section 6 of RFC4301.
+requirements. For by adding Security Policy to the socket or route
+entry. Also comply with ICMP  processing sepcified  in section 6 of
+RFC4301.
 
 Additional security relevant aspects of using the IPsec protocol are
 discussed in the Security Architecture document [[RFC4301]]
@@ -441,18 +446,16 @@ TBD
 :REF_ORG: IANA
 :END:
 
-
-** ARP
+** SNP
 :PROPERTIES:
 :REF_TARGET: https://www.iana.org/assignments/ikev2-parameters/ikev2-parameters.xhtml#ikev2-parameters-9
 :REF_TITLE: IKEv2 Parameters: Encryption Algorithm Transform IDs
 :REF_ORG: IANA
 :END:
 
-
 ** IKEv2-Enc
 :PROPERTIES:
-:REF_TARGET: https://www.iana.org/assignments/ikev2-parameters/ikev2-parameters.xhtml#ikev2-parameters-9
+:REF_TARGET: https://www.iana.org/assignments/ikev2-parameters/ikev2-parameters.xhtml#ikev2-parameters-5
 :REF_TITLE: IKEv2 Parameters: Extended Sequence Numbers Transform IDs
 :REF_ORG: IANA
 :END:
@@ -466,7 +469,7 @@ TBD
 
 ** NIST800-185
 :PROPERTIES:
-:REF_TARGET: https://www.iana.org/assignments/ikev2-parameters/ikev2-parameters.xhtml#ikev2-parameters-18
+:REF_TARGET: https://csrc.nist.gov/pubs/sp/800/185/final
 :REF_TITLE: SHA-3 Derived Functions: cSHAKE, KMAC, TupleHash and ParallelHash
 :REF_ORG: NIST
 :END:
@@ -474,4 +477,3 @@ TBD
 * Additional Stuff
 
 TBD
-
