@@ -86,16 +86,29 @@ In Section 5.4 of Key Management for Multicast [[RFC2627]] a Logical Key Hierarc
 Why UDP?
 - For Roadwarrior: IPv4 home gateway.
 - Why Datacenters, without NAT, using UDP? [Tero] This is a failure for a new protocol.
+- In the Cloud per flow limitation
 
+** UDP Source Port issue
 2.1.  UDP-Encapsulated ESP Header Format [[RFC3948]] : "the Source Port and Destination Port MUST be the same as that used by IKE traffic "
 
 And [[RFC3947]] for IKE in UDP encapsulation: "The initiator MUST set both UDP source and destination ports to 4500." However, NAT gateways
-in the middle are allowed to change source port number. The receiver must accept any source port.
-And respond to the source port.
+the middleboxes, NAT gateways, are allowed to change source port number. The receiver must accept any source port.
+And the receiver MUST respond to the source port. With this I.D. We propose sender may also use non 4500 source port
+especially when using Sub SA, for per CPU SA.
+
+** UDP Encap issue
+If the existing destination port 4500 is reused the packet the receiver must able to distingish
+ESP vs EESP. If the EESP start with SPI this issue would not be there. Otherwise like WESP encap
+we may have to add additionl 32 bits and reserve an ESP SPI bellow 255.
+
 
 * WESP UDP Encap
 
-[[RFC5840]]  It use SPI 0x2 . It is 32 bits at the top. SPI 0x2 is reserved.
+
+[[RFC5840]] WESP has the same issue, because they re-use destination port 4500.
+WESP-in-UP add additoonal 32 bit, SPI 0x2 to disinguish from EESP.
+It is 32 bits at the top. SPI 0x2 is from the reserved range. I think they say
+not use the first nibble, 4 bits, numbers 4 and 6 could be used by IPv4 or IPv6.
 
 #+caption: Figure 4: UDP-Encapsulated WESP Header
 #+name: wesp-udp-encap
@@ -118,7 +131,8 @@ And respond to the source port.
 
 #+end_src
 
-EESP could use that ext 4 bytes, reserve an ESP SPI bellow 255. However, this would lead to waste of 4 bytes every EESP packet.
+However, this 4 bytes would lead to waste of 4 bytes every EESP packet.
+
 
 * Normative References
 
