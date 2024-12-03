@@ -1,0 +1,18 @@
+#+TITLE: README for EESP IKEv2 Draft
+#+AUTHOR: Your Name
+#+DATE: December 3, 2024
+
+This is the working area for the individual Internet-Draft, "EESP IKEv2".
+
+* Introduction
+This README provides information about the Enhanced Encapsulating Security Payload (EESP) draft document.
+
+
+* Cached Output File
+The latest version of the draft can be accessed in HTML format at the following location:
+- [[file:draft/draft-klassert-ipsecme-eesp-ikev2-latest.html][Editor's Copy]]
+
+
+* References
+For more detailed information, refer to the following resources:
+- [[https://datatracker.ietf.org/doc/draft-klassert-ipsecme-eesp/][IETF Datatracker: draft-klassert-ipsecme-eesp]]

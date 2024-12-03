@@ -1,0 +1,140 @@
+# -*- fill-column: 69; -*-
+# vim: set textwidth=69
+# Do: title, toc:table-of-contents ::fixed-width-sections |tables
+# Do: ^:sup/sub with curly -:special-strings *:emphasis
+# Don't: prop:no-prop-drawers \n:preserve-linebreaks ':use-smart-quotes
+#+OPTIONS: prop:nil title:t toc:t \n:nil ::t |:t ^:{} -:t *:t ':nil
+
+#+RFC_CATEGORY: info
+#+RFC_NAME: draft-antony-eesp-ikev2-notes
+#+RFC_VERSION: 00
+#+RFC_IPR: trust200902
+#+RFC_STREAM: IETF
+#+RFC_XML_VERSION: 3
+#+RFC_CONSENSUS: true
+
+#+TITLE: Notes on IKEv2 Key Derivation Function
+#+RFC_SHORT_TITLE: KEv2 KDF Notes
+#+AUTHOR: Steffen Klassert
+#+EMAIL: steffen.klassert@secunet.com
+#+AFFILIATION: secunet Security Networks AG
+#+RFC_SHORT_ORG: secunet
+#+RFC_ADD_AUTHOR: ("Antony Antony" "antony.antony@secunet.com" ("secunet" "secunet Security Networks AG"))
+#+RFC_AREA: SEC
+#+RFC_WORKGROUP: IPSECME Working Group
+
+* Introduction
+
+These are notes on EESP IKEv2 and other EESP related information. To keep it in one place for quick access.
+
+* KDF methods
+
+IKEv2 key derivation, [[RFC7296]], is likely ~KDF in Feedback Mode~ specified
+in [[NIST800-108]]. This in iterative method as I see it in Section 2.13 [[RFC7296]]
+
+In the following, | indicates concatenation.  prf+ is defined as:
+prf+ (K,S) = T1 | T2 | T3 | T4 | ...
+
+where:
+   T1 = prf (K, S | 0x01)
+
+   T2 = prf (K, T1 | S | 0x02)
+
+   T3 = prf (K, T2 | S | 0x03)
+
+   T4 = prf (K, T3 | S | 0x04)
+
+   ...
+
+Section 2.14 of [[RFC7296]]
+
+SKEYSEED = prf(Ni | Nr, g^ir)
+
+{SK_d | SK_ai | SK_ar | SK_ei | SK_er | SK_pi | SK_pr}
+                   = prf+ (SKEYSEED, Ni | Nr | SPIi | SPIr)
+
+(indicating that the quantities SK_d, SK_ai, SK_ar, SK_ei, SK_er,
+SK_pi, and SK_pr are taken in order from the generated bits of the
+prf+).  g^ir is the shared secret from the ephemeral Diffie-Hellman
+exchange.  g^ir is represented as a string of octets in big endian
+order padded with zeros if necessary to make it the length of the
+modulus.  Ni and Nr are the nonces, stripped of any headers.
+
+KEYMAT = prf+(SK_d, Ni | Nr)
+
+Where Ni and Nr are the nonces from the IKE_SA_INIT exchange if this
+request is the first Child SA created or the fresh Ni and Nr from the
+CREATE_CHILD_SA exchange if this is a subsequent creation.
+
+For CREATE_CHILD_SA exchanges including an optional Diffie-Hellman
+exchange, the keying material is defined as:
+
+KEYMAT = prf+(SK_d, g^ir (new) | Ni | Nr)
+
+where g^ir (new) is the shared secret from the ephemeral Diffie-
+Hellman exchange of this CREATE_CHILD_SA exchange (represented as an
+octet string in big endian order padded with zeros in the high-order
+bits if necessary to make it the length of the modulus).
+
+What EESP IKEv2 proposing as ~Heirarchial key derivation~
+NIST800-108 defines ~Key Hierarchy~
+
+In Section 5.4 of Key Management for Multicast [[RFC2627]] a Logical Key Hierarchy (LKH) . I din't follow that completly. It is refered in G-IKEv2.
+
+* UDP Encap
+
+Why UDP?
+- For Roadwarrior: IPv4 home gateway.
+- Why Datacenters, without NAT, using UDP? [Tero] This is a failure for a new protocol.
+
+2.1.  UDP-Encapsulated ESP Header Format [[RFC3948]] : "the Source Port and Destination Port MUST be the same as that used by IKE traffic "
+
+And [[RFC3947]] for IKE in UDP encapsulation: "The initiator MUST set both UDP source and destination ports to 4500." However, NAT gateways
+in the middle are allowed to change source port number. The receiver must accept any source port.
+And respond to the source port.
+
+* WESP UDP Encap
+
+[[RFC5840]]  It use SPI 0x2 . It is 32 bits at the top. SPI 0x2 is reserved.
+
+#+caption: Figure 4: UDP-Encapsulated WESP Header
+#+name: wesp-udp-encap
+#+begin_src
+  0                   1                   2                   3
+  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+  |        Src Port (4500)        | Dest Port (4500)              |
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+  |             Length            |          Checksum             |
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+  |          Protocol Identifier (value = 0x00000002)             |
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+  |  Next Header  |   HdrLen      |  TrailerLen   |    Flags      |
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+  |                      Existing ESP Encapsulation               |
+  ~                                                               ~
+  |                                                               |
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+#+end_src
+
+EESP could use that ext 4 bytes, reserve an ESP SPI bellow 255. However, this would lead to waste of 4 bytes every EESP packet.
+
+* Normative References
+
+** RFC2627
+** RFC3947
+** RFC3948
+** RFC5840
+** RFC7296
+
+** NIST800-108
+:PROPERTIES:
+:REF_TARGET: https://www.nist.gov/publications/recommendation-key-derivation-using-pseudorandom-functions-1
+:REF_TITLE: Recommendation for Key Derivation Using Pseudorandom Functions
+:REF_ORG: NIST
+:END:
+
+* Informative References
+
+** I-D.ietf-ipsecme-g-ikev2
