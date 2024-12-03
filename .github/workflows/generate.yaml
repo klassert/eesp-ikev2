@@ -1,0 +1,66 @@
+name: Generate Dynamic Pages
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - .gitignore
+      - mk/README.org
+  pull_request:
+    branches: [main]
+    paths-ignore:
+      - .gitignore
+      - mk/README.org
+
+jobs:
+  build:
+    name: "Update Editor's Copy"
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up build environment
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y build-essential git emacs python3-pip
+        sudo pip install xml2rfc
+
+    - name: Ensure Draft Directory Exists
+      run: mkdir -p draft
+
+    - name: Generate dynamic pages
+      run: make
+
+    - name: Debug Draft Directory After Make
+      run: |
+        echo "Contents of the draft directory:"
+        ls -l draft
+
+    - name: Cache generated pages
+      uses: actions/cache@v3
+      with:
+        path: ./draft
+        key: ${{ runner.os }}-dynamic-pages-${{ hashFiles('draft/draft-*latest*') }}
+
+    - name: "Archive Built Drafts"
+      uses: actions/upload-artifact@v3
+      with:
+        path: |
+          draft/draft-*latest*.html
+          draft/draft-*latest*.txt
+
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: .
+        publish_branch: gh-pages
+        keep_files: true
+        cname: ''
+        allow_empty_commit: false
+        exclude_assets: |
+          !draft/draft-*latest*.html
+          !draft/draft-*latest*.txt
+
+
