@@ -72,7 +72,7 @@ Table of Contents
            CREATE_CHILD_SA . . . . . . . . . . . . . . . . . . . . .   4
      2.2.  Rekeying an EESP SA with the CREATE_CHILD_SA Exchange . .   4
      2.3.  Deleting EESP SA with INFORMATIONAL Exchange  . . . . . .   4
-   3.  EESP SA Transforms  . . . . . . . . . . . . . . . . . . . . .   4
+   3.  EESP SA Transforms  . . . . . . . . . . . . . . . . . . . . .   5
      3.1.  Anti-Replay Service . . . . . . . . . . . . . . . . . . .   5
      3.2.  Explicit Initialization Vector  . . . . . . . . . . . . .   6
      3.3.  Implicit Initialization Vectors . . . . . . . . . . . . .   6
@@ -81,7 +81,7 @@ Table of Contents
      3.6.  Sub SAs . . . . . . . . . . . . . . . . . . . . . . . . .   6
        3.6.1.  Key derivation for Sub SA Independent keys. . . . . .   7
        3.6.2.  Rekey Key Derivation. . . . . . . . . . . . . . . . .   8
-     3.7.  Session ID  . . . . . . . . . . . . . . . . . . . . . . .   8
+     3.7.  Session ID  . . . . . . . . . . . . . . . . . . . . . . .   9
    4.  UDP Encapsulation for EESP  . . . . . . . . . . . . . . . . .   9
    5.  EESP Crypt Offset Option  . . . . . . . . . . . . . . . . . .   9
    6.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   9
@@ -116,19 +116,33 @@ Internet-Draft           EESP IKEv2 negotiation            December 2024
 
 1.  Introduction
 
-   This document specifies extensions to the Internet Key Exchange
-   Protocol Version 2 (IKEv2) [RFC7296] to negotiate an Enhanced
-   Encapsulating Security Payload (EESP) Child Security Association (SA)
-   as defined in [I-D.klassert-ipsecme-eesp].  An EESP SA is similar to
-   an ESP SA, as specified in [RFC4303], while introducing enhancements
-   to address evolving requirements in IPsec deployments.
+   The Enhanced Encapsulating Security Payload (EESP), specified in
+   [I-D.klassert-ipsecme-eesp], introduces enhancements to the
+   Encapsulating Security Payload (ESP) defined in [RFC4303].  These
+   improvements address evolving requirements in modern IPsec
+   deployments.  EESP offers increased flexibility for hardware offloads
+   at the packet level.  It supports carrying inner packet flow
+   identifiers used by ECMP, RSS hardware, and IPsec peers prior to
+   decryption.  EESP also enables the establishment of Sub Child SAs
+   with independent sequence number spaces.  Additionally, it supports
+   the use of 64-bit sequence numbers in each packet or the omission of
+   sequence numbers when the Anti-Replay service is disabled.
 
-   This document describes how to establish, rekey, delete, and
-   negotiate the options of EESP SAs using the IKEv2 protocol.
+   This document specifies the negotiation of EESP Security Associations
+   (SAs) within the Internet Key Exchange Protocol Version 2 (IKEv2)
+   framework [RFC7296].  It details the creation, rekeying, and deletion
+   of EESP SAs and the negotiation of associated transform properties.
 
-   The semantics of IKEv2 messages for EESP SAs are identical to those
-   for ESP SAs.  All options and negotiation semantics applicable to ESP
-   also apply to EESP unless explicitly excluded.
+   The extensions defined here enable EESP SAs to coexist with ESP SAs
+   when using stateful decryption, sharing a common SPI namespace while
+   introducing new capabilities that enhance IPsec’s effectiveness in
+   modern use cases.  By starting with the SPI in the Base Header, EESP
+   maintains compatibility with existing ESP UDP encapsulation formats,
+   further simplifying integration.
+
+   Stateless implementations of EESP may only support either EESP or
+   ESP.  The detailed use of stateless EESP, which is similar to [PSP],
+   is outside the scope of this document.
 
 1.1.  Requirements Language
 
@@ -147,6 +161,15 @@ Internet-Draft           EESP IKEv2 negotiation            December 2024
    Child SA, CREATE_CHILD_SA exchange, IKE_AUTH exchange,
    USE_TRANSPORT_MODE
 
+
+
+
+
+Klassert, et al.           Expires 9 June 2025                  [Page 3]
+
+Internet-Draft           EESP IKEv2 negotiation            December 2024
+
+
    This document uses the following terms defined in [PSP]: PSP (a
    recursive acronym for PSP Security Protocol), Network Identifier
    (VNI), Crypt Offset.
@@ -159,16 +182,6 @@ Internet-Draft           EESP IKEv2 negotiation            December 2024
 
    This document uses the following terms defined in
    [I-D.mrossberg-ipsecme-multiple-sequence-counters]: Sub-Child SA.
-
-
-
-
-
-
-Klassert, et al.           Expires 9 June 2025                  [Page 3]
-
-Internet-Draft           EESP IKEv2 negotiation            December 2024
-
 
 2.  EESP SA IKEv2 negotiation
 
@@ -206,6 +219,13 @@ Internet-Draft           EESP IKEv2 negotiation            December 2024
    procedure as deleting Child SA using IKEv2 INFORMATIONAL exchange as
    specified in Section 1.4.1 [RFC7296]
 
+
+
+Klassert, et al.           Expires 9 June 2025                  [Page 4]
+
+Internet-Draft           EESP IKEv2 negotiation            December 2024
+
+
 3.  EESP SA Transforms
 
    EESP introduces several transform properties that are negotiated
@@ -213,18 +233,6 @@ Internet-Draft           EESP IKEv2 negotiation            December 2024
    identical for the duration of the SA.  When the SA is rekeyed, the
    new SA MUST inherit all EESP transform properties negotiated for the
    original EESP SA.
-
-
-
-
-
-
-
-
-Klassert, et al.           Expires 9 June 2025                  [Page 4]
-
-Internet-Draft           EESP IKEv2 negotiation            December 2024
-
 
       +======+==========================+=========+=================+
       | Type | Description              | Used In | Reference       |
@@ -266,14 +274,6 @@ Internet-Draft           EESP IKEv2 negotiation            December 2024
    Security Association (SA) payload in the IKEv2 Exchange.  When the
    responder select 64 bit ESN a receiver MAY enable Antir-Reply.
 
-   When the Transform Type [IKEv2-SNP] is not present in initiator's
-   Child SA proposal during negotiation of an EESP Child SA, the
-   Sequence Number field MUST NOT be transmitted in the EESP packet.
-
-   When SNP is not negotiated, i.e., when ESN is not carried in the EESP
-   packet, an EESP receiver should not act on address or port changes.
-   It should not initiate a dynamic address update without the use of
-   IKEv2 Mobility [RFC4555].  Since ARP is disabled, an attacker could
 
 
 
@@ -282,6 +282,14 @@ Klassert, et al.           Expires 9 June 2025                  [Page 5]
 Internet-Draft           EESP IKEv2 negotiation            December 2024
 
 
+   When the Transform Type [IKEv2-SNP] is not present in initiator's
+   Child SA proposal during negotiation of an EESP Child SA, the
+   Sequence Number field MUST NOT be transmitted in the EESP packet.
+
+   When SNP is not negotiated, i.e., when ESN is not carried in the EESP
+   packet, an EESP receiver should not act on address or port changes.
+   It should not initiate a dynamic address update without the use of
+   IKEv2 Mobility [RFC4555].  Since ARP is disabled, an attacker could
    replay packets with a different source address.  Otherwise, an
    attacker could disrupt the connection by capturing and replaying a
    single packet with different source address or port number.
@@ -321,14 +329,6 @@ Internet-Draft           EESP IKEv2 negotiation            December 2024
       MAY not be in use.  When using CREATE_CHILD_SA Unidirectional SAis
       not possible.
 
-   *  No extra setup time, a.k.a. zero round trip time to setup
-      additional Sub SAs.  Even though using IKE window size specified
-      in [RFC7296] Section 2.3 would aliviate setup this would be
-      quicker.
-
-   *  Creating Sub SA is more efficient while creating as well as
-      rekeying and deleting, life cycle management of Sub SA is simple.
-
 
 
 
@@ -337,6 +337,14 @@ Klassert, et al.           Expires 9 June 2025                  [Page 6]
 
 Internet-Draft           EESP IKEv2 negotiation            December 2024
 
+
+   *  No extra setup time, a.k.a. zero round trip time to setup
+      additional Sub SAs.  Even though using IKE window size specified
+      in [RFC7296] Section 2.3 would aliviate setup this would be
+      quicker.
+
+   *  Creating Sub SA is more efficient while creating as well as
+      rekeying and deleting, life cycle management of Sub SA is simple.
 
    There are two types of Sub SAs, 'Session ID as Replay Subspace ID'
    specified in [I-D.klassert-ipsecme-eesp], and Sub SA Independent
@@ -379,20 +387,18 @@ Internet-Draft           EESP IKEv2 negotiation            December 2024
    For example for Sub SA ID n, use nth set of keys from the KEYMAT The
    order is specified in Section 2.17 of [RFC7296].
 
-   With existing prf+ function the keymat length rather limited.
-   [RFC7296] limit the iteration to 256.  However, with modern prf+,
-   more specifically XOF, functions, such as KMAC specified in
-   [NIST800-185], or HopMAC/TurboSHAKE specified
-   [I-D.irtf-cfrg-kangarootwelve] KEYMAT can be infinitely long.
-
-
-
 
 
 Klassert, et al.           Expires 9 June 2025                  [Page 7]
 
 Internet-Draft           EESP IKEv2 negotiation            December 2024
 
+
+   With existing prf+ function the keymat length rather limited.
+   [RFC7296] limit the iteration to 256.  However, with modern prf+,
+   more specifically XOF, functions, such as KMAC specified in
+   [NIST800-185], or HopMAC/TurboSHAKE specified
+   [I-D.irtf-cfrg-kangarootwelve] KEYMAT can be infinitely long.
 
    Typical length of of 256 bit encryption is 36 bytes (32+4), in one
    direction.  Using an AEAD for 64K Sub SAs maximum KEYMAT length would
@@ -433,13 +439,7 @@ Internet-Draft           EESP IKEv2 negotiation            December 2024
    rekey.  First replace the outgoing SAs.  And incoming SAs could be
    replace whenever the peer received new Sub SA.
 
-3.7.  Session ID
 
-   The Session ID is a multi-purpose attribute with mutually exclusive
-   values.  The initiator MUST propose a single value in the Child SA
-   proposal, Transform EESPSSID (Value).  The responder MUST either
-   accept the proposed value or reject it with an INVALID_SESSION_ID
-   error message, indicating a supported value.
 
 
 
@@ -449,6 +449,14 @@ Klassert, et al.           Expires 9 June 2025                  [Page 8]
 
 Internet-Draft           EESP IKEv2 negotiation            December 2024
 
+
+3.7.  Session ID
+
+   The Session ID is a multi-purpose attribute with mutually exclusive
+   values.  The initiator MUST propose a single value in the Child SA
+   proposal, Transform EESPSSID (Value).  The responder MUST either
+   accept the proposed value or reject it with an INVALID_SESSION_ID
+   error message, indicating a supported value.
 
 4.  UDP Encapsulation for EESP
 
@@ -490,14 +498,6 @@ Internet-Draft           EESP IKEv2 negotiation            December 2024
 
    This document defines new transforms in "IKEv2 Transform Type Values"
    registry, [IKEv2-Transforms]
-
-
-
-
-
-
-
-
 
 
 

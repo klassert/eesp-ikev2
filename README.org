@@ -1,13 +1,12 @@
-#+TITLE: README for EESP IKEv2 Draft
-#+AUTHOR: Your Name
+#+TITLE: README for EESP IKEv2 Internet Draft
+#+AUTHOR: Antony Antony
 #+DATE: December 3, 2024
 
 This is the working area for the individual Internet-Draft, "EESP IKEv2".
 
 * Introduction
 This README provides information about the Enhanced Encapsulating
-Security Payload (EESP)  IKEv2 draft document.
-
+Security Payload (EESP) IKEv2 draft document.
 
 * Laest Copy
 The latest version of the draft in HTML format is at:
@@ -16,7 +15,7 @@ The latest version of the draft in HTML format is at:
 # sed -i "s|klassert.github.io/eesp-ikev2|$USERNAME.github.io/$REPO_NAME|g"
 
 * IETF Datatracker Copy
-This document is yet to be published.
+This document is yet to be submitted to IETF.
 
 * References
 For more detailed information, refer to the following resources:

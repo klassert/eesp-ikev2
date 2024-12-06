@@ -1444,17 +1444,31 @@ type EESP.<a href="#section-abstract-2" class="pilcrow">¶</a></p>
       <h2 id="name-introduction">
 <a href="#section-1" class="section-number selfRef">1. </a><a href="#name-introduction" class="section-name selfRef">Introduction</a>
       </h2>
-<p id="section-1-1">This document specifies extensions to the Internet Key Exchange
-Protocol Version 2 (IKEv2) <span>[<a href="#RFC7296" class="cite xref">RFC7296</a>]</span> to negotiate an Enhanced
-Encapsulating Security Payload (EESP) Child Security Association (SA)
-as defined in <span>[<a href="#I-D.klassert-ipsecme-eesp" class="cite xref">I-D.klassert-ipsecme-eesp</a>]</span>. An EESP SA is similar to
-an ESP SA, as specified in [RFC4303], while introducing enhancements
-to address evolving requirements in IPsec deployments.<a href="#section-1-1" class="pilcrow">¶</a></p>
-<p id="section-1-2">This document describes how to establish, rekey, delete, and
-negotiate the options of EESP SAs using the IKEv2 protocol.<a href="#section-1-2" class="pilcrow">¶</a></p>
-<p id="section-1-3">The semantics of IKEv2 messages for EESP SAs are identical to those
-for ESP SAs. All options and negotiation semantics applicable to
-ESP also apply to EESP unless explicitly excluded.<a href="#section-1-3" class="pilcrow">¶</a></p>
+<p id="section-1-1">The Enhanced Encapsulating Security Payload (EESP), specified in
+<span>[<a href="#I-D.klassert-ipsecme-eesp" class="cite xref">I-D.klassert-ipsecme-eesp</a>]</span>, introduces enhancements to the
+Encapsulating Security Payload (ESP) defined in [RFC4303]. These
+improvements address evolving requirements in modern IPsec
+deployments.  EESP offers increased flexibility for hardware
+offloads at the packet level. It supports carrying inner packet flow
+identifiers used by ECMP, RSS hardware, and IPsec peers prior to
+decryption. EESP also enables the establishment of Sub Child SAs with
+independent sequence number spaces. Additionally, it supports the use
+of 64-bit sequence numbers in each packet or the omission of sequence
+numbers when the Anti-Replay service is disabled.<a href="#section-1-1" class="pilcrow">¶</a></p>
+<p id="section-1-2">This document specifies the negotiation of EESP Security
+Associations (SAs) within the Internet Key Exchange Protocol Version
+2 (IKEv2) framework [RFC7296]. It details the creation, rekeying,
+and deletion of EESP SAs and the negotiation of associated transform
+properties.<a href="#section-1-2" class="pilcrow">¶</a></p>
+<p id="section-1-3">The extensions defined here enable EESP SAs to coexist with ESP SAs
+when using stateful decryption, sharing a common SPI namespace
+while introducing new capabilities that enhance IPsec’s
+effectiveness in modern use cases. By starting with the SPI in the
+Base Header, EESP maintains compatibility with existing ESP UDP
+encapsulation formats, further simplifying integration.<a href="#section-1-3" class="pilcrow">¶</a></p>
+<p id="section-1-4">Stateless implementations of EESP may only support either EESP or
+ESP. The detailed use of stateless EESP, which is similar to
+<span>[<a href="#PSP" class="cite xref">PSP</a>]</span>, is outside the scope of this document.<a href="#section-1-4" class="pilcrow">¶</a></p>
 <section id="section-1.1">
         <h3 id="name-requirements-language">
 <a href="#section-1.1" class="section-number selfRef">1.1. </a><a href="#name-requirements-language" class="section-name selfRef">Requirements Language</a>
