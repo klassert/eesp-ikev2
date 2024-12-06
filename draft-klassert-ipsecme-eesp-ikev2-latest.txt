@@ -5,9 +5,9 @@
 IPSECME Working Group                                        S. Klassert
 Internet-Draft                                                 A. Antony
 Intended status: Standards Track                                 secunet
-Expires: 7 June 2025                                          T. Brunner
+Expires: 9 June 2025                                          T. Brunner
                                                            codelabs GmbH
-                                                         4 December 2024
+                                                         6 December 2024
 
 
               IKEv2 negotiation for Enhanced Encapsulating
@@ -38,7 +38,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 7 June 2025.
+   This Internet-Draft will expire on 9 June 2025.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Klassert, et al.           Expires 7 June 2025                  [Page 1]
+Klassert, et al.           Expires 9 June 2025                  [Page 1]
 
 Internet-Draft           EESP IKEv2 negotiation            December 2024
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Klassert, et al.           Expires 7 June 2025                  [Page 2]
+Klassert, et al.           Expires 9 June 2025                  [Page 2]
 
 Internet-Draft           EESP IKEv2 negotiation            December 2024
 
@@ -165,7 +165,7 @@ Internet-Draft           EESP IKEv2 negotiation            December 2024
 
 
 
-Klassert, et al.           Expires 7 June 2025                  [Page 3]
+Klassert, et al.           Expires 9 June 2025                  [Page 3]
 
 Internet-Draft           EESP IKEv2 negotiation            December 2024
 
@@ -221,7 +221,7 @@ Internet-Draft           EESP IKEv2 negotiation            December 2024
 
 
 
-Klassert, et al.           Expires 7 June 2025                  [Page 4]
+Klassert, et al.           Expires 9 June 2025                  [Page 4]
 
 Internet-Draft           EESP IKEv2 negotiation            December 2024
 
@@ -266,9 +266,9 @@ Internet-Draft           EESP IKEv2 negotiation            December 2024
    Security Association (SA) payload in the IKEv2 Exchange.  When the
    responder select 64 bit ESN a receiver MAY enable Antir-Reply.
 
-   When the Transform Type [SNP] is not present in initiator's Child SA
-   proposal during negotiation of an EESP Child SA, the Sequence Number
-   field MUST NOT be transmitted in the EESP packet.
+   When the Transform Type [IKEv2-SNP] is not present in initiator's
+   Child SA proposal during negotiation of an EESP Child SA, the
+   Sequence Number field MUST NOT be transmitted in the EESP packet.
 
    When SNP is not negotiated, i.e., when ESN is not carried in the EESP
    packet, an EESP receiver should not act on address or port changes.
@@ -277,7 +277,7 @@ Internet-Draft           EESP IKEv2 negotiation            December 2024
 
 
 
-Klassert, et al.           Expires 7 June 2025                  [Page 5]
+Klassert, et al.           Expires 9 June 2025                  [Page 5]
 
 Internet-Draft           EESP IKEv2 negotiation            December 2024
 
@@ -333,7 +333,7 @@ Internet-Draft           EESP IKEv2 negotiation            December 2024
 
 
 
-Klassert, et al.           Expires 7 June 2025                  [Page 6]
+Klassert, et al.           Expires 9 June 2025                  [Page 6]
 
 Internet-Draft           EESP IKEv2 negotiation            December 2024
 
@@ -389,7 +389,7 @@ Internet-Draft           EESP IKEv2 negotiation            December 2024
 
 
 
-Klassert, et al.           Expires 7 June 2025                  [Page 7]
+Klassert, et al.           Expires 9 June 2025                  [Page 7]
 
 Internet-Draft           EESP IKEv2 negotiation            December 2024
 
@@ -445,7 +445,7 @@ Internet-Draft           EESP IKEv2 negotiation            December 2024
 
 
 
-Klassert, et al.           Expires 7 June 2025                  [Page 8]
+Klassert, et al.           Expires 9 June 2025                  [Page 8]
 
 Internet-Draft           EESP IKEv2 negotiation            December 2024
 
@@ -465,7 +465,7 @@ Internet-Draft           EESP IKEv2 negotiation            December 2024
    This option is typically used for within one Datacenter use case such
    as [PSP].  To negotiate, the initiator sends USE_CRYPTOFFSET together
    with USE_TRANSPORT_MODE and the responder respond with the same.
-   USE_CRYPTOFFSET is not supported in Tunnel mode or BEET mode.
+   USE_EESP_CRYPTOFFSET is not supported in Tunnel mode or BEET mode.
 
    'NOTE' Add EESP draft section reference.
 
@@ -501,7 +501,7 @@ Internet-Draft           EESP IKEv2 negotiation            December 2024
 
 
 
-Klassert, et al.           Expires 7 June 2025                  [Page 9]
+Klassert, et al.           Expires 9 June 2025                  [Page 9]
 
 Internet-Draft           EESP IKEv2 negotiation            December 2024
 
@@ -525,7 +525,7 @@ Internet-Draft           EESP IKEv2 negotiation            December 2024
          +=======+============================+=================+
          | Value | Notify Message Status Type | Reference       |
          +=======+============================+=================+
-         | TBD8  | USE_CRYPTOFFSET            | [this document] |
+         | TBD8  | USE_EESP_CRYPTOFFSET       | [this document] |
          +-------+----------------------------+-----------------+
 
                                  Table 4
@@ -557,7 +557,7 @@ Internet-Draft           EESP IKEv2 negotiation            December 2024
 
 
 
-Klassert, et al.           Expires 7 June 2025                 [Page 10]
+Klassert, et al.           Expires 9 June 2025                 [Page 10]
 
 Internet-Draft           EESP IKEv2 negotiation            December 2024
 
@@ -613,7 +613,7 @@ Internet-Draft           EESP IKEv2 negotiation            December 2024
 
 
 
-Klassert, et al.           Expires 7 June 2025                 [Page 11]
+Klassert, et al.           Expires 9 June 2025                 [Page 11]
 
 Internet-Draft           EESP IKEv2 negotiation            December 2024
 
@@ -669,7 +669,7 @@ Internet-Draft           EESP IKEv2 negotiation            December 2024
 
 
 
-Klassert, et al.           Expires 7 June 2025                 [Page 12]
+Klassert, et al.           Expires 9 June 2025                 [Page 12]
 
 Internet-Draft           EESP IKEv2 negotiation            December 2024
 
@@ -725,7 +725,7 @@ Internet-Draft           EESP IKEv2 negotiation            December 2024
 
 
 
-Klassert, et al.           Expires 7 June 2025                 [Page 13]
+Klassert, et al.           Expires 9 June 2025                 [Page 13]
 
 Internet-Draft           EESP IKEv2 negotiation            December 2024
 
@@ -767,24 +767,29 @@ Internet-Draft           EESP IKEv2 negotiation            December 2024
               <https://www.iana.org/assignments/ikev2-parameters/
               ikev2-parameters.xhtml>.
 
+   [IKEv2-SNP]
+              IANA, "IKEv2 Parameters: Encryption Algorithm Transform
+              IDs", <https://www.iana.org/assignments/ikev2-parameters/
+              ikev2-parameters.xhtml#ikev2-parameters-9>.
+
    [IKEv2-SP] IANA, "IKEv2 Parameters: Security Protocol Identifiers",
               <https://www.iana.org/assignments/ikev2-parameters/
               ikev2-parameters.xhtml#ikev2-parameters-18>.
+
+
+
+
+
+
+Klassert, et al.           Expires 9 June 2025                 [Page 14]
+
+Internet-Draft           EESP IKEv2 negotiation            December 2024
+
 
    [IKEv2-Transforms]
               IANA, "IKEv2 Parameters: Transform Type Values",
               <https://www.iana.org/assignments/ikev2-parameters/
               ikev2-parameters.xhtml#ikev2-parameters-3>.
-
-
-
-
-
-
-Klassert, et al.           Expires 7 June 2025                 [Page 14]
-
-Internet-Draft           EESP IKEv2 negotiation            December 2024
-
 
    [NIST800-185]
               NIST, "SHA-3 Derived Functions: cSHAKE, KMAC, TupleHash
@@ -825,22 +830,23 @@ Internet-Draft           EESP IKEv2 negotiation            December 2024
               DOI 10.17487/RFC9347, January 2023,
               <https://www.rfc-editor.org/info/rfc9347>.
 
+
+
+
+
+
+
+
+Klassert, et al.           Expires 9 June 2025                 [Page 15]
+
+Internet-Draft           EESP IKEv2 negotiation            December 2024
+
+
    [RFC9611]  Antony, A., Brunner, T., Klassert, S., and P. Wouters,
               "Internet Key Exchange Protocol Version 2 (IKEv2) Support
               for Per-Resource Child Security Associations (SAs)",
               RFC 9611, DOI 10.17487/RFC9611, July 2024,
               <https://www.rfc-editor.org/info/rfc9611>.
-
-   [SNP]      IANA, "IKEv2 Parameters: Encryption Algorithm Transform
-              IDs", <https://www.iana.org/assignments/ikev2-parameters/
-              ikev2-parameters.xhtml#ikev2-parameters-9>.
-
-
-
-Klassert, et al.           Expires 7 June 2025                 [Page 15]
-
-Internet-Draft           EESP IKEv2 negotiation            December 2024
-
 
 Appendix A.  Additional Stuff
 
@@ -887,10 +893,4 @@ Authors' Addresses
 
 
 
-
-
-
-
-
-
-Klassert, et al.           Expires 7 June 2025                 [Page 16]
+Klassert, et al.           Expires 9 June 2025                 [Page 16]
