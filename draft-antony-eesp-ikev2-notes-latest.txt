@@ -5,7 +5,7 @@
 IPSECME Working Group                                        S. Klassert
 Internet-Draft                                                 A. Antony
 Intended status: Informational                                   secunet
-Expires: 12 June 2025                                    9 December 2024
+Expires: 15 June 2025                                   12 December 2024
 
 
                  Notes on IKEv2 Key Derivation Function
@@ -26,7 +26,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 12 June 2025.
+   This Internet-Draft will expire on 15 June 2025.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Table of Contents
 
 
 
-Klassert & Antony         Expires 12 June 2025                  [Page 1]
+Klassert & Antony         Expires 15 June 2025                  [Page 1]
 
 Internet-Draft               KEv2 KDF Notes                December 2024
 
@@ -109,7 +109,7 @@ Internet-Draft               KEv2 KDF Notes                December 2024
 
 
 
-Klassert & Antony         Expires 12 June 2025                  [Page 2]
+Klassert & Antony         Expires 15 June 2025                  [Page 2]
 
 Internet-Draft               KEv2 KDF Notes                December 2024
 
@@ -165,7 +165,7 @@ Internet-Draft               KEv2 KDF Notes                December 2024
 
 
 
-Klassert & Antony         Expires 12 June 2025                  [Page 3]
+Klassert & Antony         Expires 15 June 2025                  [Page 3]
 
 Internet-Draft               KEv2 KDF Notes                December 2024
 
@@ -221,7 +221,7 @@ Internet-Draft               KEv2 KDF Notes                December 2024
 
 
 
-Klassert & Antony         Expires 12 June 2025                  [Page 4]
+Klassert & Antony         Expires 15 June 2025                  [Page 4]
 
 Internet-Draft               KEv2 KDF Notes                December 2024
 
@@ -246,9 +246,9 @@ Internet-Draft               KEv2 KDF Notes                December 2024
    [I-D.ietf-ipsecme-g-ikev2]
               Smyslov, V. and B. Weis, "Group Key Management using
               IKEv2", Work in Progress, Internet-Draft, draft-ietf-
-              ipsecme-g-ikev2-17, 19 November 2024,
+              ipsecme-g-ikev2-18, 11 December 2024,
               <https://datatracker.ietf.org/doc/html/draft-ietf-ipsecme-
-              g-ikev2-17>.
+              g-ikev2-18>.
 
 Authors' Addresses
 
@@ -277,4 +277,4 @@ Authors' Addresses
 
 
 
-Klassert & Antony         Expires 12 June 2025                  [Page 5]
+Klassert & Antony         Expires 15 June 2025                  [Page 5]
