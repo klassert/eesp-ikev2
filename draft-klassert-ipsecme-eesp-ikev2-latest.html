@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta content="Common,Latin" name="scripts">
 <meta content="initial-scale=1.0" name="viewport">
-<title>IKEv2 negotiation for Enhanced Encapsulating</title>
+<title>IKEv2 negotiation for Enhanced Encapsulating Security Payload</title>
 <meta content="Steffen Klassert" name="author">
 <meta content="Antony Antony" name="author">
 <meta content="Tobias Brunner" name="author">
@@ -1222,7 +1222,7 @@ li > p:last-of-type:only-child {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Klassert, et al.</td>
-<td class="center">Expires 15 June 2025</td>
+<td class="center">Expires 19 June 2025</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1233,12 +1233,12 @@ li > p:last-of-type:only-child {
 <dd class="workgroup">IPSECME Working Group</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2024-12-12" class="published">12 December 2024</time>
+<time datetime="2024-12-16" class="published">16 December 2024</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2025-06-15">15 June 2025</time></dd>
+<dd class="expires"><time datetime="2025-06-19">19 June 2025</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1256,7 +1256,7 @@ li > p:last-of-type:only-child {
 </dd>
 </dl>
 </div>
-<h1 id="title">IKEv2 negotiation for Enhanced Encapsulating</h1>
+<h1 id="title">IKEv2 negotiation for Enhanced Encapsulating Security Payload</h1>
 <section id="section-abstract">
       <h2 id="abstract"><a href="#abstract" class="selfRef">Abstract</a></h2>
 <p id="section-abstract-1">This document species how to negotiate Enhanced Encapsulating
@@ -1285,7 +1285,7 @@ type EESP.<a href="#section-abstract-2" class="pilcrow">¶</a></p>
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 15 June 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 19 June 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1352,7 +1352,7 @@ type EESP.<a href="#section-abstract-2" class="pilcrow">¶</a></p>
                 <p id="section-toc.1-1.3.2.3.1"><a href="#section-3.3" class="auto internal xref">3.3</a>.  <a href="#name-implicit-initialization-vec" class="internal xref">Implicit Initialization Vectors</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.4">
-                <p id="section-toc.1-1.3.2.4.1"><a href="#section-3.4" class="auto internal xref">3.4</a>.  <a href="#name-eesp-version" class="internal xref">EESP Version:</a></p>
+                <p id="section-toc.1-1.3.2.4.1"><a href="#section-3.4" class="auto internal xref">3.4</a>.  <a href="#name-eesp-version" class="internal xref">EESP Version</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.5">
                 <p id="section-toc.1-1.3.2.5.1"><a href="#section-3.5" class="auto internal xref">3.5</a>.  <a href="#name-eesp-flow-identifier" class="internal xref">EESP Flow Identifier</a></p>
@@ -1450,7 +1450,7 @@ Encapsulating Security Payload (ESP) defined in [RFC4303]. These
 improvements address evolving requirements in modern IPsec
 deployments. EESP offers increased flexibility for hardware
 offloads at the packet level. It supports carrying inner packet flow
-identifiers used by ECMP, RSS hardware, and IPsec peers prior to
+identifiers foe the use with ECMP, RSS hardware, and IPsec peers prior to
 decryption. EESP also enables the establishment of Sub Child SAs with
 independent sequence number spaces. Additionally, it supports the use
 of 64-bit sequence numbers in each packet or the omission of sequence
@@ -1508,7 +1508,7 @@ Encapsulating Security Payload (ESP).<a href="#section-1.2-5" class="pilcrow">¶
       </h2>
 <p id="section-2-1">EESP IKEv2 is an extension to IKEv2 <span>[<a href="#RFC7296" class="cite xref">RFC7296</a>]</span> to negotiate
 on EESP SA specified in <span>[<a href="#I-D.klassert-ipsecme-eesp" class="cite xref">I-D.klassert-ipsecme-eesp</a>]</span>.
-An EESP SA can be negotiated using IKEv2 either IKE_AUTH or
+An EESP SA can be negotiated using IKEv2 either with the IKE_AUTH or
 CREATE_CHILD_SA new SA, exchange.<a href="#section-2-1" class="pilcrow">¶</a></p>
 <p id="section-2-2">IKEv2 Notify Message Status Type USE_WESP_MODE, <span>[<a href="#RFC5840" class="cite xref">RFC5840</a>]</span>, is not
 supported when negotiating EESP SA. As the WESP functionality
@@ -1522,10 +1522,11 @@ If this notification is received it MUST be discarded.<a href="#section-2-3" cla
 <a href="#section-2.1" class="section-number selfRef">2.1. </a><a href="#name-negotiating-an-eesp-sa-usin" class="section-name selfRef">Negotiating an EESP SA using IKE_AUTH or CREATE_CHILD_SA</a>
         </h3>
 <p id="section-2.1-1">To negotiate an EESP Child SA, use the IKEv2 IKE_AUTH or
-CREATE_CHILD_SA New SA exchange. The SA Payload, Poropsal
-MUST have Security Protocol Identifier, Proto Id = EESP.<a href="#section-2.1-1" class="pilcrow">¶</a></p>
-<p id="section-2.1-2">which is specified in/ '<code>EESP</code>', as specified in this document, and uses the
-EESP Transform attributes defined in <a href="#sec-eesp-sa-transforms" class="auto internal xref">Section 3</a>.<a href="#section-2.1-2" class="pilcrow">¶</a></p>
+CREATE_CHILD_SA new SA exchange. The SA Payload, Proposal
+MUST have Security Protocol Identifier, Proto Id = EESP
+which is specified in <span>[<a href="#I-D.klassert-ipsecme-eesp" class="cite xref">I-D.klassert-ipsecme-eesp</a>]</span>,
+as specified in this document, and uses the
+EESP Transform attributes defined in <a href="#sec-eesp-sa-transforms" class="auto internal xref">Section 3</a>.<a href="#section-2.1-1" class="pilcrow">¶</a></p>
 </section>
 <section id="section-2.2">
         <h3 id="name-rekeying-an-eesp-sa-with-th">
@@ -1621,20 +1622,21 @@ SA Payload
         <h3 id="name-anti-replay-service">
 <a href="#section-3.1" class="section-number selfRef">3.1. </a><a href="#name-anti-replay-service" class="section-name selfRef">Anti-Replay Service</a>
         </h3>
-<p id="section-3.1-1">EESP provides optional Anti-Replay protection using an
-Extended Sequence Number (ESN) carried in the packet.
+<p id="section-3.1-1">EESP provides an optional Anti-Replay service using a
+64 bit Sequence Number, carried in the packet.
 To enable Anti-Replay service the initiator SHOULD
 propose SNP Transforms SNP = (1, Name 64 bit ESN) in Substructure
 of the Proposal Substructure inside the Security Association (SA)
 payload in the IKEv2 Exchange. When the responder select 64 bit
-ESN a receiver MAY enable Antir-Reply.<a href="#section-3.1-1" class="pilcrow">¶</a></p>
+ESN a receiver MUST enable Anti-Reply.<a href="#section-3.1-1" class="pilcrow">¶</a></p>
 <p id="section-3.1-2">When the Transform Type <span>[<a href="#IKEv2-SNP" class="cite xref">IKEv2-SNP</a>]</span> is not present in initiator's Child SA
 proposal during negotiation of an EESP Child SA, the Sequence Number
 field MUST NOT be transmitted in the EESP packet.<a href="#section-3.1-2" class="pilcrow">¶</a></p>
-<p id="section-3.1-3">When SNP is not negotiated, i.e., when ESN is not carried in the
+<p id="section-3.1-3">When SNP is not negotiated, i.e., when the 64 bit sequence number is
+not carried in the
 EESP packet, an EESP receiver should not act on address or port
 changes. It should not initiate a dynamic address update without the
-use of IKEv2 Mobility <span>[<a href="#RFC4555" class="cite xref">RFC4555</a>]</span>. Since ARP is disabled, an attacker
+use of IKEv2 Mobility <span>[<a href="#RFC4555" class="cite xref">RFC4555</a>]</span>. Since the Anti-Replay service is disabled, an attacker
 could replay packets with a different source address. Otherwise,
 an attacker could disrupt the connection by capturing and replaying
 a single packet with different source address or port number.<a href="#section-3.1-3" class="pilcrow">¶</a></p>
@@ -1660,9 +1662,9 @@ in the EESP packet.<a href="#section-3.3-1" class="pilcrow">¶</a></p>
 </section>
 <section id="section-3.4">
         <h3 id="name-eesp-version">
-<a href="#section-3.4" class="section-number selfRef">3.4. </a><a href="#name-eesp-version" class="section-name selfRef">EESP Version:</a>
+<a href="#section-3.4" class="section-number selfRef">3.4. </a><a href="#name-eesp-version" class="section-name selfRef">EESP Version</a>
         </h3>
-<p id="section-3.4-1">Each SA need an EESB Base Header version which is specified
+<p id="section-3.4-1">Each SA need an EESP Base Header version which is specified
 <span>[<a href="#I-D.klassert-ipsecme-eesp" class="cite xref">I-D.klassert-ipsecme-eesp</a>]</span>.<a href="#section-3.4-1" class="pilcrow">¶</a></p>
 </section>
 <section id="section-3.5">
@@ -1672,7 +1674,7 @@ in the EESP packet.<a href="#section-3.3-1" class="pilcrow">¶</a></p>
 <p id="section-3.5-1">EESP Flow Identifier (EESPFID) Options are used to carry
 characteristic information of the inner flow and SHOULD NOT change on
 per packet basis inside any inner flow to avoid packet reordering.
-The Flow Identifier SHOULD be negotiated by when creating EESP SA.<a href="#section-3.5-1" class="pilcrow">¶</a></p>
+The Flow Identifier SHOULD be negotiated when creating EESP SA.<a href="#section-3.5-1" class="pilcrow">¶</a></p>
 </section>
 <section id="section-3.6">
         <h3 id="name-sub-sas">
@@ -1683,7 +1685,7 @@ The Flow Identifier SHOULD be negotiated by when creating EESP SA.<a href="#sect
 <li class="normal" id="section-3.6-2.1">
             <p id="section-3.6-2.1.1">Possiblity for unidirectional SA. Compared to <span>[<a href="#RFC9611" class="cite xref">RFC9611</a>]</span> when per
 resource SA is brought up it is bidirectional. However, both SA MAY
-not be in use. When using CREATE_CHILD_SA Unidirectional SAis not
+not be in use. When using CREATE_CHILD_SA Unidirectional SAs not
 possible.<a href="#section-3.6-2.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-3.6-2.2">
@@ -1691,16 +1693,18 @@ possible.<a href="#section-3.6-2.1.1" class="pilcrow">¶</a></p>
 Sub SAs. Even though using IKE window size specified in <span>[<a href="#RFC7296" class="cite xref">RFC7296</a>]</span>
 Section 2.3 would aliviate setup this would be quicker.<a href="#section-3.6-2.2.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-3.6-2.3">
-            <p id="section-3.6-2.3.1">Creating Sub SA is more efficient while creating as well as rekeying
-and deleting, life cycle management of Sub SA is simple.<a href="#section-3.6-2.3.1" class="pilcrow">¶</a></p>
+        </ul>
+<ul class="normal">
+<li class="normal" id="section-3.6-3.1">
+            <p id="section-3.6-3.1.1">Creating Sub SA is more efficient while creating as well as rekeying
+and deleting, life cycle management of Sub SA is simple.<a href="#section-3.6-3.1.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<p id="section-3.6-3">There are two types of Sub SAs, '<code>Session ID as Replay Subspace ID</code>'
+<p id="section-3.6-4">There are two types of Sub SAs, '<code>Session ID as Replay Subspace ID</code>'
 specified in <span>[<a href="#I-D.klassert-ipsecme-eesp" class="cite xref">I-D.klassert-ipsecme-eesp</a>]</span>, and  Sub SA Independent
-keys.<a href="#section-3.6-3" class="pilcrow">¶</a></p>
-<p id="section-3.6-4">To negotiate Session ID as Replay Subspace ID use transform Session
-ID, SUB_SA_SN.<a href="#section-3.6-4" class="pilcrow">¶</a></p>
+keys.<a href="#section-3.6-4" class="pilcrow">¶</a></p>
+<p id="section-3.6-5">To negotiate Session ID as Replay Subspace ID use transform Session
+ID, SUB_SA_SN.<a href="#section-3.6-5" class="pilcrow">¶</a></p>
 <section id="section-3.6.1">
           <h4 id="name-key-derivation-for-sub-sa-i">
 <a href="#section-3.6.1" class="section-number selfRef">3.6.1. </a><a href="#name-key-derivation-for-sub-sa-i" class="section-name selfRef">Key derivation for Sub SA Independent keys.</a>
@@ -1708,7 +1712,7 @@ ID, SUB_SA_SN.<a href="#section-3.6-4" class="pilcrow">¶</a></p>
 <p id="section-3.6.1-1"><span>[<a href="#RFC7296" class="cite xref">RFC7296</a>]</span> section 2.17 specifies Child SA key generation.
 When the EESP SA is negotiated with a Sub SA Keys (SUB_SA_K), each
 Sub SA need to derive its own unique key. This allows each Sub SA
-it's of Sequence Number space or IV space when using AEAD counter
+its own Sequence Number space, or IV space when using AEAD counter
 mode algorithm.<a href="#section-3.6.1-1" class="pilcrow">¶</a></p>
 <p id="section-3.6.1-2">This section specifies two methods for Sub SA key derivation.<a href="#section-3.6.1-2" class="pilcrow">¶</a></p>
 <p id="section-3.6.1-3">Initially we are proposing two Key Derivation Functions for Sub SAs.
@@ -1728,9 +1732,9 @@ Sub SA<a href="#section-3.6.1.1-1" class="pilcrow">¶</a></p>
 of this CREATE_CHILD_SA exchange (represented as an
 octet string in big endian order padded with zeros in the high-order
 bits if necessary to make it the length of the modulus).<a href="#section-3.6.1.1-5" class="pilcrow">¶</a></p>
-<p id="section-3.6.1.1-6">For example for Sub SA ID n, use nth set of keys from the KEYMAT
+<p id="section-3.6.1.1-6">For example for Sub SA ID n, use nth set of keys from the KEYMAT.
 The order is specified in Section 2.17 of <span>[<a href="#RFC7296" class="cite xref">RFC7296</a>]</span>.<a href="#section-3.6.1.1-6" class="pilcrow">¶</a></p>
-<p id="section-3.6.1.1-7">With existing prf+ function the keymat length rather limited.
+<p id="section-3.6.1.1-7">With existing prf+ function the keymat length is rather limited.
 <span>[<a href="#RFC7296" class="cite xref">RFC7296</a>]</span> limit the iteration to 256.
 However, with modern prf+, more specifically XOF, functions,
 such as KMAC specified in <span>[<a href="#NIST800-185" class="cite xref">NIST800-185</a>]</span>, or HopMAC/TurboSHAKE
@@ -1744,7 +1748,10 @@ about 9 Mega Bytes.<a href="#section-3.6.1.1-10" class="pilcrow">¶</a></p>
 <p id="section-3.6.1.1-11">An XOF differs from a traditional hash function in that it is
 designed generate very long, and variable length output.
 Unlike the IKEv2 prf+ an XOF can generate longer outputs directly
-without iterative call.<a href="#section-3.6.1.1-11" class="pilcrow">¶</a></p>
+without iterative call. Additionally to that, the KEYMAT
+for the Sub SAs can be generated on the fly if available
+memory is limited. This is usually the case if such an algorithm is
+implemented in hardware.<a href="#section-3.6.1.1-11" class="pilcrow">¶</a></p>
 </section>
 <section id="section-3.6.1.2">
             <h5 id="name-hierarchical-key-derivation">
