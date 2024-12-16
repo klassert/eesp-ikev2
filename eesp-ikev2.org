@@ -101,6 +101,16 @@ Encapsulating Security Payload (ESP).
 This document uses the following terms defined in
 [[I-D.mrossberg-ipsecme-multiple-sequence-counters]]: Sub-Child SA.
 
+* EESP SA IKEv2 Negotiation
+To negotiate of EESP Security Associations (SAs), as specified
+in [[I-D.klassert-ipsecme-eesp]].  Propose ~Protocol ID~ EESP input
+SA Payload, Proposal payload.
+These extensions provide the ability to establish EESP SAs using
+the IKE_AUTH or the CREATE_CHILD_SA exchanges. The initiator includes
+EESP-specific transforms and attributes in the proposal, allowing
+the responder to evaluate and establish the SA if supported.
+
+
 * EESP SA IKEv2 negotiation
 EESP IKEv2 is an extension to IKEv2 [[RFC7296]] to negotiate
 on EESP SA specified in [[I-D.klassert-ipsecme-eesp]].
@@ -248,22 +258,27 @@ ID, SUB_SA_SN.
 [[RFC7296]] section 2.17 specifies Child SA key generation.
 When the EESP SA is negotiated with a Sub SA Keys (SUB_SA_K), each
 Sub SA need to derive its own unique key. This allows each Sub SA
-its own Sequence Number space, or IV space when using AEAD counter
-mode algorithm.
+its own Sequence Number space, and independent IV space when using
+AEAD counter mode algorithm.
 
-This section specifies two methods for Sub SA key derivation.
-
-Initially we are proposing two Key Derivation Functions for Sub SAs.
+Initially we are proposing two Key Derivation Functions(KDF) for Sub SAs.
 Based on community feedback, further research and advise from
 cryptographers one method will be chosen.
 
+The requirements:
+- Independent keys for each Sub SA
+- Ability to derive Sub SA keys on the fly
+- Minimal meomory requirements
+- Keyderviation support multiple SAs, such as EESP, AH
+
 **** Iterative key derivation
 To iteratively derive keys create a large keymt. e.g. for the nth
-Sub SA
 
 KEYMAT = prf+(SK_d, Ni | Nr)
+When there is no additional Key Exchange.
 
 KEYMAT = prf+(SK_d, g^ir (new) | Ni | Nr)
+When there is additional Key Exchange Paload, a.k.a. PFS.
 
 Where SK_d is derived from IKE negotiation, as specified in Section
 2.14 of [[RFC7296]]
@@ -301,9 +316,10 @@ implemented in hardware.
 
 **** Hierarchical key derivation
 
-KEYMAT = prf+(SK_child, FLOWID)
-# Note STK: We encodes the Subspace ID on the Session ID,
-# so I think that's the needed input here.
+Hierarchical key derivation use Sub SA ID, either carried  in EESP
+Seesion ID or EESP Flow ID, as an input the key dervivation.
+
+KEYMAT = prf+(SK_child, Sub SA ID)
 
 Where SK_child is the key derived for the Child SA as specified in
 [[RFC7296]] section 2.17
@@ -312,18 +328,36 @@ An alternative key derivation :
 
 KEYMAT = prf+(SK_d, Ni | Nr | Flow ID)
 
+Does using using Ni|Nr|g^ir  matters is there perfernece?
+
 *** Rekey Key Derivation.
 During the EESP SA rekey, a new key is derived using the new Ni, Nr,
 and possibly g^ir, depending on whether a Key Exchange (KE) method
 was used during the CREATE_CHILD_SA exchange.
 
-KEYMAT = prf+(SK_d, g^ir (new) | Ni | Nr | Flow ID)
+KEYMAT = prf+(SK_child, Sub SA ID)
 
-Even though each Sub SA could be independently rekeyed, for the ease
-of use when any one of the Sub SA need rekeying when reaching packet
-limited all Sub SAs MUST be reakeyed immediately following the first
-rekey. First replace the outgoing SAs. And incoming SAs could be
-replace whenever the peer received new Sub SA.
+or
+
+KEYMAT = prf+(SK_d, g^ir (new) | Ni | Nr | Sub SA ID)
+
+Even though each Sub SA can be independently rekeyed, for
+simplicity and security, all Sub SAs MUST be rekeyed together
+when either a cryptographic limit or a time-based limit is
+reached.
+
+The cryptographic limit ensures that keys are replaced after
+processing a maximum number of packets or bytes, as specified in
+Section 2.8 of [RFC7296]. This prevents the reuse of keys beyond
+their safe operational bounds.
+
+The time-based limit, also described in Section 2.8 of
+[RFC7296], ensures periodic key replacement to minimize the risks
+associated with long-term key exposure, even if the cryptographic
+limit has not been reached.
+
+Rekeying is triggered by whichever limit—cryptographic or time-
+based—is reached first.
 
 ** Session ID
 
@@ -360,7 +394,7 @@ same. USE_EESP_CRYPTOFFSET is not supported in Tunnel mode or BEET mode.
 ** Changes in the Existing IKEv2 Registries
 
 *** IKEv2 Security Protocol Identifiers registry
-This document defines new Exchange Type in the
+This document defines new Protocol ID in the
 "IKEv2 Security Protocol Identifiers" registry, [[IKEv2-SP]]:
 
 | Protocol ID | Protocol | Reference       |
