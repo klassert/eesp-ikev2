@@ -86,29 +86,46 @@ In Section 5.4 of Key Management for Multicast [[RFC2627]] a Logical Key Hierarc
 Why UDP?
 - For Roadwarrior: IPv4 home gateway.
 - Why Datacenters, without NAT, using UDP? [Tero] This is a failure for a new protocol.
-- In the Cloud per flow limitation
+- In the Cloud per flow limitation, without NAT
+- Wide spread RSS Support for UDP when using RFC9611
 
-** UDP Source Port issue
-2.1.  UDP-Encapsulated ESP Header Format [[RFC3948]] : "the Source Port and Destination Port MUST be the same as that used by IKE traffic "
+** Use cases for UDP Encapsulation  without NAT
+*** UDP Encapsulation in Cloud Provider
 
-And [[RFC3947]] for IKE in UDP encapsulation: "The initiator MUST set both UDP source and destination ports to 4500." However, NAT gateways
-the middleboxes, NAT gateways, are allowed to change source port number. The receiver must accept any source port.
-And the receiver MUST respond to the source port. With this I.D. We propose sender may also use non 4500 source port
-especially when using Sub SA, for per CPU SA.
+A common question is why use UDP when there is no NAT, especially in
+cloud environments or why vary UDP source ports for inner flows.
 
-** UDP Encap issue
-If the existing destination port 4500 is reused the packet the receiver must able to distingish
-ESP vs EESP. If the EESP start with SPI this issue would not be there. Otherwise like WESP encap
-we may have to add additionl 32 bits and reserve an ESP SPI bellow 255.
+Cloud providers often enforce bandwidth limits per flow between nodes
+or to external endpoints. A flow is defined by a 5-tuple: protocol,
+local IP, remote IP, local port, and remote port. ESP (and likely
+EESP) lacks port numbers, unlike UDP or TCP, so it is identified only
+by its local and remote IPs. This causes ESP traffic to be treated as
+one flow, leading to strict bandwidth limits.
+
+These limits can severely impact IPsec throughput between peers,
+especially when using [[RFC9611]].
+
+A practical solution is to encapsulate ESP in UDP. By varying the UDP
+source port based on inner flow characteristics, traffic can be spread
+across multiple flows. This bypasses bandwidth restrictions and
+improves throughput. Test results supporting this were presented in
+[[AWS-IPsec-NetDev]].
+
+For further details, see:
+
+[[Azure-Network]]
+
+[[AWS-Network]]
+
+[[GCP-Network]]
 
 
 * WESP UDP Encap
-
-
-[[RFC5840]] WESP has the same issue, because they re-use destination port 4500.
-WESP-in-UP add additoonal 32 bit, SPI 0x2 to disinguish from EESP.
-It is 32 bits at the top. SPI 0x2 is from the reserved range. I think they say
-not use the first nibble, 4 bits, numbers 4 and 6 could be used by IPv4 or IPv6.
+[[RFC5840]] WESP has the same issue, because they re-use destination
+port 4500. WESP-in-UP add additoonal 32 bits, SPI 0x2, to disinguish
+from EESP. It is 32 bits at the top. SPI 0x2 is from the reserved
+range SPIs (0-255). I think, the RFC 5840 also advise not to use the
+first nibble, 4 bits, numbers 4 and 6 could be used by IPv4 or IPv6.
 
 #+caption: Figure 4: UDP-Encapsulated WESP Header
 #+name: wesp-udp-encap
@@ -131,13 +148,13 @@ not use the first nibble, 4 bits, numbers 4 and 6 could be used by IPv4 or IPv6.
 
 #+end_src
 
+EESP could use another spi say 3 as an EESP marker.
 However, this 4 bytes would lead to waste of 4 bytes every EESP packet.
 
 
 * Normative References
 
 ** RFC2627
-** RFC3947
 ** RFC3948
 ** RFC5840
 ** RFC7296
@@ -151,4 +168,41 @@ However, this 4 bytes would lead to waste of 4 bytes every EESP packet.
 
 * Informative References
 
+** RFC9611
+
 ** I-D.ietf-ipsecme-g-ikev2
+
+** Azure-Network
+:PROPERTIES:
+:REF_TITLE: Azure Virtual machine network bandwidth
+:REF_TARGET: https://learn.microsoft.com/en-us/azure/virtual-network/virtual-machine-network-throughput
+:REF_ORG: Microsoft Azure
+:END:
+
+** GCP-Network
+:PROPERTIES:
+:REF_TITLE: Google Compute Engine Network bandwidth
+:REF_TARGET: https://cloud.google.com/compute/docs/network-bandwidth
+:REF_ORG: Google
+:END:
+
+** AWS-Network
+:PROPERTIES:
+:REF_TITLE: Google Compute Engine Network bandwidth
+:REF_TARGET: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-network-bandwidth.html
+:REF_ORG: Amazon AWS
+:END:
+
+** AWS-IPsec-NetDev
+:PROPERTIES:
+:REF_TITLE: NetDev Talk : Multi-core IPsec tunnels
+:REF_TARGET: https://learn.microsoft.com/en-us/azure/virtual-network/virtual-machine-network-throughput
+:REF_ORG: Amazon AWS
+:END:
+
+** PRGS20
+:PROPERTIES:
+:REF_TITLE: Vector Packet Encapsulation: The Case for a Scalable IPsec Encryption Protocol
+:REF_TARGET: https://doi.org/10.1145/3407023.3407060
+:REF_ORG: Technische Universität Ilmenau
+:END:
