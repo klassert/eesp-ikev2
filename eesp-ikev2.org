@@ -239,19 +239,28 @@ Advantages of Sub SAs compared Child SAs with different keys
 
 - No extra setup time, a.k.a. zero round trip time to setup additional
  Sub SAs. Even though using IKE window size specified in [[RFC7296]]
- Section 2.3 would aliviate setup this would be quicker.
-# Note STK: What do you mean by aliviate?
+ to reduce multiple SAs, Sub SA setup would be quicker.
 - Creating Sub SA is more efficient while creating as well as rekeying
  and deleting, life cycle management of Sub SA is simple.
 
-There are two types of Sub SAs, ~Session ID as Replay Subspace ID~
-specified in [[I-D.klassert-ipsecme-eesp]], and  Sub SA Independent
-keys.
+- When using Hierarchical key derivation, the Sub SA key could be dervived
+ on-the-fly, per packet for better performance, "Data-plane performance degradation due to the
+ use of a larger number of keys", [[I-D.ponchon-ipsecme-anti-replay-subspaces]].
+
+There are two types of Sub SAs, Session ID as: Replay Subspace ID,
+specified in [[I-D.klassert-ipsecme-eesp]], and Sub SA with
+independent keys.
+
 # I don't think there are two types, we always need to encode
 # the Replay Subspace ID on the Session ID.
+# One kind is only splitting the SN, one set of keys
+# Second one use per Sub SA keys.
 
-To negotiate Session ID as Replay Subspace ID use transform Session
-ID, SUB_SA_SN.
+To negotiate a Sub SA with with Replay Subspace,
+use SUB_SA_SN in Session ID Transform.
+
+To negotiate Sub SA with independent keys use transform,
+SUB_SA_K in Session ID Transform.
 
 *** Key derivation for Sub SA Independent keys.
 
@@ -309,15 +318,12 @@ about 9 Mega Bytes.
 An XOF differs from a traditional hash function in that it is
 designed generate very long, and variable length output.
 Unlike the IKEv2 prf+ an XOF can generate longer outputs directly
-without iterative call. Additionally to that, the KEYMAT
-for the Sub SAs can be generated on the fly if available
-memory is limited. This is usually the case if such an algorithm is
-implemented in hardware.
+without iterative call.
 
 **** Hierarchical key derivation
 
-Hierarchical key derivation use Sub SA ID, either carried  in EESP
-Seesion ID or EESP Flow ID, as an input the key dervivation.
+Hierarchical key derivation use Sub SA ID, either carried in EESP
+Seesion ID or in EESP Flow ID(TLV), as an input the key dervivation.
 
 KEYMAT = prf+(SK_child, Sub SA ID)
 
@@ -330,7 +336,16 @@ KEYMAT = prf+(SK_d, Ni | Nr | Flow ID)
 
 Does using using Ni|Nr|g^ir  matters is there perfernece?
 
+The KEYMAT for the Sub SAs can be generated on the fly, for every packet,
+when available memory is limited. This is usually the case when key derivation
+is implemented in hardware.
+
 *** Rekey Key Derivation.
+During the EESP SA rekey, new keys are derived using the new Ni
+and Nr values. If a Key Exchange (KE) method was used in the rekying,
+CREATE_CHILD_SA exchange, the new key MAY also include g^ir as part of
+the derivation process.
+
 During the EESP SA rekey, a new key is derived using the new Ni, Nr,
 and possibly g^ir, depending on whether a Key Exchange (KE) method
 was used during the CREATE_CHILD_SA exchange.
@@ -366,7 +381,6 @@ exclusive values. The initiator MUST propose a single value in the
 Child SA proposal, Transform EESPSSID (Value). The responder MUST
 either accept the proposed value or reject it with an
 INVALID_SESSION_ID error message, indicating a supported value.
-
 
 * UDP Encapsulation for EESP
 # Note STK: With the Verion in front, we likely need
@@ -553,6 +567,7 @@ TBD
 
 ** I-D.irtf-cfrg-kangarootwelve
 ** I-D.mrossberg-ipsecme-multiple-sequence-counters
+** I-D.ponchon-ipsecme-anti-replay-subspaces
 
 ** PSP
 :PROPERTIES:
