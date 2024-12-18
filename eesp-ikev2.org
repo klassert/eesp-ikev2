@@ -50,7 +50,7 @@ identifiers foe the use with ECMP, RSS hardware, and IPsec peers prior to
 decryption. EESP also enables the establishment of Sub Child SAs with
 independent sequence number spaces. Additionally, it supports the use
 of 64-bit sequence numbers in each packet or the omission of sequence
-numbers when the Anti-Replay service is disabled. EESP packets carry
+numbers when the Replay Protection service is disabled. EESP packets carry
 a version number, enabling easier support for future extensions.
 
 This document specifies the negotiation of EESP Security
@@ -101,21 +101,15 @@ Encapsulating Security Payload (ESP).
 This document uses the following terms defined in
 [[I-D.mrossberg-ipsecme-multiple-sequence-counters]]: Sub-Child SA.
 
+
 * EESP SA IKEv2 Negotiation
 To negotiate of EESP Security Associations (SAs), as specified
-in [[I-D.klassert-ipsecme-eesp]].  Propose ~Protocol ID~ EESP input
+in [[I-D.klassert-ipsecme-eesp]]. Propose ~Protocol ID~ EESP input
 SA Payload, Proposal payload.
 These extensions provide the ability to establish EESP SAs using
 the IKE_AUTH or the CREATE_CHILD_SA exchanges. The initiator includes
 EESP-specific transforms and attributes in the proposal, allowing
 the responder to evaluate and establish the SA if supported.
-
-
-* EESP SA IKEv2 negotiation
-EESP IKEv2 is an extension to IKEv2 [[RFC7296]] to negotiate
-on EESP SA specified in [[I-D.klassert-ipsecme-eesp]].
-An EESP SA can be negotiated using IKEv2 either with the IKE_AUTH or
-CREATE_CHILD_SA new SA, exchange.
 
 IKEv2 Notify Message Status Type USE_WESP_MODE, [[RFC5840]], is not
 supported when negotiating EESP SA. As the WESP functionality
@@ -179,29 +173,29 @@ the original EESP SA.
       |     +-- Transform EESPFID ( Name =  )
 #+end_src
 
-** Anti-Replay Service
-EESP provides an optional Anti-Replay service using a
+** Replay Protection Service
+EESP provides an optional Replay service using a
 64 bit Sequence Number, carried in the packet.
-To enable Anti-Replay service the initiator SHOULD
+To enable Replay service the initiator SHOULD
 propose SNP Transforms SNP = (1, Name 64 bit ESN) in Substructure
 of the Proposal Substructure inside the Security Association (SA)
 payload in the IKEv2 Exchange. When the responder select 64 bit
-ESN a receiver MUST enable Anti-Reply.
-# NOTE STK: I'd say MUST above as we want to negotiate Anti-Replay service
+ESN a receiver MUST enable Reply Protection.
+# NOTE STK: I'd say MUST above as we want to negotiate Anti-Replayservice
 # and not just the presense of the seq nr field.
 
-When the Transform Type [[IKEv2-SNP]] is not present in initiator's Child SA
-proposal during negotiation of an EESP Child SA, the Sequence Number
-field MUST NOT be transmitted in the EESP packet.
+When the Transform Type [[IKEv2-SNP]] is not present in initiator's
+Child SA proposal during negotiation of an EESP Child SA, the
+Sequence Number field MUST NOT be transmitted in the EESP packet.
 
 When SNP is not negotiated, i.e., when the 64 bit sequence number is
-not carried in the
-EESP packet, an EESP receiver should not act on address or port
-changes. It should not initiate a dynamic address update without the
-use of IKEv2 Mobility [[RFC4555]]. Since the Anti-Replay service is disabled, an attacker
-could replay packets with a different source address. Otherwise,
-an attacker could disrupt the connection by capturing and replaying
-a single packet with different source address or port number.
+not carried in the EESP packet, an EESP receiver should not act on
+address or port changes. It should not initiate a dynamic address
+update without the use of IKEv2 Mobility [[RFC4555]]. Since the Replay
+Protection service is disabled, an attacker could replay packets with
+a different source address. Otherwise, an attacker could disrupt the
+connection by capturing and replaying a single packet with different
+source address or port number.
 
 ** Explicit Initialization Vector
 
@@ -228,55 +222,61 @@ characteristic information of the inner flow and SHOULD NOT change on
 per packet basis inside any inner flow to avoid packet reordering.
 The Flow Identifier SHOULD be negotiated when creating EESP SA.
 
-** Sub SAs
 
-Advantages of Sub SAs compared Child SAs with different keys
+* Sub SAs
 
-- Possiblity for unidirectional SA. Compared to [[RFC9611]] when per
- resource SA is brought up it is bidirectional. However, both SA MAY
- not be in use. When using CREATE_CHILD_SA Unidirectional SAs not
- possible.
+A Sub SA is a unidirectional Security Association derived from an
+existing EESP Child SA pair. It inherits all properties except
+keys, sequence number space, and IV space. These three are unique for
+each Sub SA. This allows finer granularity for managing
+one-directional traffic flows. Sub SAs avoid the overhead associated
+with bidirectional Child SAs for identical traffic
+selections[[RFC7296]], [[RFC9611]]. They enable more efficient
+resource utilization and improved performance, particularly in
+scenarios requiring high flexibility. Each Sub SA is uniquely
+identified by a Sub SA ID, which is used to derive a unique key. The
+Sub SA ID is carried in each EESP packet, either in the Session ID
+field or the Flow ID field, as negotiated during the establishment of
+the EESP Child SA.
 
-- No extra setup time, a.k.a. zero round trip time to setup additional
- Sub SAs. Even though using IKE window size specified in [[RFC7296]]
- to reduce multiple SAs, Sub SA setup would be quicker.
-- Creating Sub SA is more efficient while creating as well as rekeying
- and deleting, life cycle management of Sub SA is simple.
+Advantages of Sub SAs compared to Child SAs with different keys:
 
-- When using Hierarchical key derivation, the Sub SA key could be dervived
- on-the-fly, per packet for better performance, "Data-plane performance degradation due to the
- use of a larger number of keys", [[I-D.ponchon-ipsecme-anti-replay-subspaces]].
+- Possibility for unidirectional SAs. Compared to [[RFC9611]], when a
+  per-resource SA is established, it is bidirectional. However, both
+  directions of the SA MAY not always be in use. Using CREATE_CHILD_SA
+  does not allow unidirectional SAs.
 
-There are two types of Sub SAs, Session ID as: Replay Subspace ID,
-specified in [[I-D.klassert-ipsecme-eesp]], and Sub SA with
-independent keys.
+- No extra setup time, i.e., zero round-trip time to set up
+  additional Sub SAs. This would be more efficient than using large
+  IKE window size specified in [[RFC7296]] to manage multiple SAs.
 
-# I don't think there are two types, we always need to encode
-# the Replay Subspace ID on the Session ID.
-# One kind is only splitting the SN, one set of keys
-# Second one use per Sub SA keys.
+- Sub SAs are more efficient to create, rekey, and delete. Their
+lifecycle management is simpler compared to traditional Child SAs.
 
-To negotiate a Sub SA with with Replay Subspace,
-use SUB_SA_SN in Session ID Transform.
+- When using hierarchical key derivation, especially when using
+  hardware key derivation, Sub SA keys can be derived on-the-fly
+  per packet. This reduces "Data-plane performance degradation due to
+  the use of a larger number of keys" as noted in
+  [[I-D.ponchon-ipsecme-anti-replay-subspaces]].
 
-To negotiate Sub SA with independent keys use transform,
-SUB_SA_K in Session ID Transform.
+To negotiate Sub SA SUB_SA_ID in Session ID Transform. Or in a Flow
+IDs Transform. TBD: expand Sub SA with Flow ID  negotiation
 
-*** Key derivation for Sub SA Independent keys.
+*** Key derivation for Sub SA
 
-[[RFC7296]] section 2.17 specifies Child SA key generation.
-When the EESP SA is negotiated with a Sub SA Keys (SUB_SA_K), each
-Sub SA need to derive its own unique key. This allows each Sub SA
-its own Sequence Number space, and independent IV space when using
-AEAD counter mode algorithm.
+# [[RFC7296]] section 2.17 specifies Child SA key generation.
 
-Initially we are proposing two Key Derivation Functions(KDF) for Sub SAs.
-Based on community feedback, further research and advise from
+When the EESP SA is negotiated with a Sub SA Keys (SUB_SA_ID), each
+Sub SA need to derive its own unique keys. This allows each Sub SA
+its own independent Sequence Number space, and independent IV space.
+
+Initially we are proposing three Key Derivation Functions(KDF) for
+Sub SAs. Based on community feedback, further research and advise from
 cryptographers one method will be chosen.
 
 The requirements:
 - Independent keys for each Sub SA
-- Ability to derive Sub SA keys on the fly
+- Ability to derive Sub SA keys on the fly with least amount of memory usage
 - Minimal meomory requirements
 - Keyderviation support multiple SAs, such as EESP, AH
 
@@ -304,41 +304,52 @@ With existing prf+ function the keymat length is rather limited.
 [[RFC7296]] limit the iteration to 256.
 However, with modern prf+, more specifically XOF, functions,
 such as KMAC specified in [[NIST800-185 ]], or HopMAC/TurboSHAKE
-specified [[I-D.irtf-cfrg-kangarootwelve]] KEYMAT can be infinitely long.
+specified [[I-D.irtf-cfrg-kangarootwelve]] the KEYMAT can be
+infinitely,(2^40 bytes), long.
 
-Typical length of of 256 bit encryption is 36 bytes (32+4), in one
-direction. Using an AEAD for 64K Sub SAs maximum KEYMAT length would
+An XOF differs from a traditional PRF, hash, function in that it is
+designed to generate very long, and variable length output.
+Unlike the IKEv2 prf+ an XOF can generate longer outputs directly
+without iterative call.
+
+Typical length of of 256 bit encryption is 36 bytes,
+(32 + 4 salt for IV), in one direction. Using an AEAD for 64K Sub SAs
+maximum KEYMAT length would
 be:
 
 4718592 bytes = 2^16 * 2 * 36 bytes. i.e. 4.5 Mega Bytes
 
-When using non AEAD algorithms KEMAT size would double of the abve,
-about 9 Mega Bytes.
+When using non AEAD algorithms KEMAT size would roughly double of the
+above, about 9 Mega Bytes.
 
-An XOF differs from a traditional hash function in that it is
-designed generate very long, and variable length output.
-Unlike the IKEv2 prf+ an XOF can generate longer outputs directly
-without iterative call.
+The memory requirment fot generate could be reduced by changing prf+
+function interface to return portion of the KEYMAT when using
+iterative feedback mode.
 
 **** Hierarchical key derivation
 
-Hierarchical key derivation use Sub SA ID, either carried in EESP
+Hierarchical key derivation use Sub SA ID, which is carried in EESP
 Seesion ID or in EESP Flow ID(TLV), as an input the key dervivation.
+
+Two KDF are propsed below and eventully choose one of them.
 
 KEYMAT = prf+(SK_child, Sub SA ID)
 
 Where SK_child is the key derived for the Child SA as specified in
 [[RFC7296]] section 2.17
 
+One advantage of Hierarchical KDF is KEYMAT for the Sub SAs can be
+generated on the fly, for every packet, when available memory is
+limited, for example [[PSP]]. This is usually the case when key
+derivation is implemented in hardware. When implimenting in hardware
+choose a hardware friendly prf+.
+
 An alternative key derivation :
 
 KEYMAT = prf+(SK_d, Ni | Nr | Flow ID)
 
-Does using using Ni|Nr|g^ir  matters is there perfernece?
-
-The KEYMAT for the Sub SAs can be generated on the fly, for every packet,
-when available memory is limited. This is usually the case when key derivation
-is implemented in hardware.
+NOTE: does using using Ni|Nr|g^ir KDF input matters? Is there a
+perfernece? Any advise from the cryptographers?
 
 *** Rekey Key Derivation.
 During the EESP SA rekey, new keys are derived using the new Ni
@@ -346,13 +357,9 @@ and Nr values. If a Key Exchange (KE) method was used in the rekying,
 CREATE_CHILD_SA exchange, the new key MAY also include g^ir as part of
 the derivation process.
 
-During the EESP SA rekey, a new key is derived using the new Ni, Nr,
-and possibly g^ir, depending on whether a Key Exchange (KE) method
-was used during the CREATE_CHILD_SA exchange.
-
 KEYMAT = prf+(SK_child, Sub SA ID)
 
-or
+or depending on which one of the above KDF is chossen.
 
 KEYMAT = prf+(SK_d, g^ir (new) | Ni | Nr | Sub SA ID)
 
@@ -361,18 +368,14 @@ simplicity and security, all Sub SAs MUST be rekeyed together
 when either a cryptographic limit or a time-based limit is
 reached.
 
-The cryptographic limit ensures that keys are replaced after
-processing a maximum number of packets or bytes, as specified in
-Section 2.8 of [RFC7296]. This prevents the reuse of keys beyond
-their safe operational bounds.
-
 The time-based limit, also described in Section 2.8 of
 [RFC7296], ensures periodic key replacement to minimize the risks
 associated with long-term key exposure, even if the cryptographic
 limit has not been reached.
 
-Rekeying is triggered by whichever limit—cryptographic or time-
-based—is reached first.
+When rekeying is triggered for any of the Sub SA by whichever
+limit—cryptographic or time- based—is reached first, subseqenty all
+Sub SAs must rekeyed.
 
 ** Session ID
 
@@ -470,8 +473,7 @@ IANA is requested to create a new registry named
 |------------+------------- +-----------------+
 | 0          | Unspecified  | [this document] |
 | 1          | ENCRYPION_ID | [this document] |
-| 2          | SUB_SA_K     | [this document] |
-| 3          | SUB_SA_SN    | [this document] |
+| 2          | SUB_SA_ID     | [this document] |
 
 *** EESP Flow ID registry
 
