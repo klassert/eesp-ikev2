@@ -5,7 +5,7 @@
 IPSECME Working Group                                        S. Klassert
 Internet-Draft                                                 A. Antony
 Intended status: Informational                                   secunet
-Expires: 19 June 2025                                   16 December 2024
+Expires: 21 June 2025                                   18 December 2024
 
 
                  Notes on IKEv2 Key Derivation Function
@@ -26,7 +26,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 19 June 2025.
+   This Internet-Draft will expire on 21 June 2025.
 
 Copyright Notice
 
@@ -47,20 +47,20 @@ Table of Contents
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
    2.  KDF methods . . . . . . . . . . . . . . . . . . . . . . . . .   2
    3.  UDP Encap . . . . . . . . . . . . . . . . . . . . . . . . . .   3
-     3.1.  UDP Source Port issue . . . . . . . . . . . . . . . . . .   3
-     3.2.  UDP Encap issue . . . . . . . . . . . . . . . . . . . . .   3
+     3.1.  Use cases for UDP Encapsulation without NAT . . . . . . .   3
+       3.1.1.  UDP Encapsulation in Cloud Provider . . . . . . . . .   3
    4.  WESP UDP Encap  . . . . . . . . . . . . . . . . . . . . . . .   4
 
 
 
-Klassert & Antony         Expires 19 June 2025                  [Page 1]
+Klassert & Antony         Expires 21 June 2025                  [Page 1]
 
 Internet-Draft               KEv2 KDF Notes                December 2024
 
 
    5.  Normative References  . . . . . . . . . . . . . . . . . . . .   4
    6.  Informative References  . . . . . . . . . . . . . . . . . . .   5
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .   5
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .   6
 
 1.  Introduction
 
@@ -109,7 +109,7 @@ Internet-Draft               KEv2 KDF Notes                December 2024
 
 
 
-Klassert & Antony         Expires 19 June 2025                  [Page 2]
+Klassert & Antony         Expires 21 June 2025                  [Page 2]
 
 Internet-Draft               KEv2 KDF Notes                December 2024
 
@@ -140,43 +140,57 @@ Internet-Draft               KEv2 KDF Notes                December 2024
    *  Why Datacenters, without NAT, using UDP?  [Tero] This is a failure
       for a new protocol.
 
-   *  In the Cloud per flow limitation
+   *  In the Cloud per flow limitation, without NAT
 
-3.1.  UDP Source Port issue
+   *  Wide spread RSS Support for UDP when using RFC9611
 
-   2.1.  UDP-Encapsulated ESP Header Format [RFC3948] : "the Source Port
-   and Destination Port MUST be the same as that used by IKE traffic "
+3.1.  Use cases for UDP Encapsulation without NAT
 
-   And [RFC3947] for IKE in UDP encapsulation: "The initiator MUST set
-   both UDP source and destination ports to 4500."  However, NAT
-   gateways the middleboxes, NAT gateways, are allowed to change source
-   port number.  The receiver must accept any source port.  And the
-   receiver MUST respond to the source port.  With this I.D.  We propose
-   sender may also use non 4500 source port especially when using Sub
-   SA, for per CPU SA.
+3.1.1.  UDP Encapsulation in Cloud Provider
 
-3.2.  UDP Encap issue
+   A common question is why use UDP when there is no NAT, especially in
+   cloud environments or why vary UDP source ports for inner flows.
 
-   If the existing destination port 4500 is reused the packet the
-   receiver must able to distingish ESP vs EESP.  If the EESP start with
-   SPI this issue would not be there.  Otherwise like WESP encap we may
-   have to add additionl 32 bits and reserve an ESP SPI bellow 255.
+   Cloud providers often enforce bandwidth limits per flow between nodes
+   or to external endpoints.  A flow is defined by a 5-tuple: protocol,
+   local IP, remote IP, local port, and remote port.  ESP (and likely
+   EESP) lacks port numbers, unlike UDP or TCP, so it is identified only
+   by its local and remote IPs.  This causes ESP traffic to be treated
+   as one flow, leading to strict bandwidth limits.
 
+   These limits can severely impact IPsec throughput between peers,
+   especially when using [RFC9611].
 
 
 
-Klassert & Antony         Expires 19 June 2025                  [Page 3]
+
+
+Klassert & Antony         Expires 21 June 2025                  [Page 3]
 
 Internet-Draft               KEv2 KDF Notes                December 2024
 
 
+   A practical solution is to encapsulate ESP in UDP.  By varying the
+   UDP source port based on inner flow characteristics, traffic can be
+   spread across multiple flows.  This bypasses bandwidth restrictions
+   and improves throughput.  Test results supporting this were presented
+   in [AWS-IPsec-NetDev].
+
+   For further details, see:
+
+   [Azure-Network]
+
+   [AWS-Network]
+
+   [GCP-Network]
+
 4.  WESP UDP Encap
 
    [RFC5840] WESP has the same issue, because they re-use destination
-   port 4500.  WESP-in-UP add additoonal 32 bit, SPI 0x2 to disinguish
+   port 4500.  WESP-in-UP add additoonal 32 bits, SPI 0x2, to disinguish
    from EESP.  It is 32 bits at the top.  SPI 0x2 is from the reserved
-   range.  I think they say not use the first nibble, 4 bits, numbers 4
-   and 6 could be used by IPv4 or IPv6.
+   range SPIs (0-255).  I think, the RFC 5840 also advise not to use the
+   first nibble, 4 bits, numbers 4 and 6 could be used by IPv4 or IPv6.
 
    0                   1                   2                   3
    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
@@ -196,10 +210,21 @@ Internet-Draft               KEv2 KDF Notes                December 2024
 
               Figure 1: Figure 4: UDP-Encapsulated WESP Header
 
-   However, this 4 bytes would lead to waste of 4 bytes every EESP
-   packet.
+   EESP could use another spi say 3 as an EESP marker.  However, this 4
+   bytes would lead to waste of 4 bytes every EESP packet.
 
 5.  Normative References
+
+
+
+
+
+
+
+Klassert & Antony         Expires 21 June 2025                  [Page 4]
+
+Internet-Draft               KEv2 KDF Notes                December 2024
+
 
    [NIST800-108]
               NIST, "Recommendation for Key Derivation Using
@@ -211,20 +236,6 @@ Internet-Draft               KEv2 KDF Notes                December 2024
               Multicast: Issues and Architectures", RFC 2627,
               DOI 10.17487/RFC2627, June 1999,
               <https://www.rfc-editor.org/info/rfc2627>.
-
-   [RFC3947]  Kivinen, T., Swander, B., Huttunen, A., and V. Volpe,
-              "Negotiation of NAT-Traversal in the IKE", RFC 3947,
-              DOI 10.17487/RFC3947, January 2005,
-              <https://www.rfc-editor.org/info/rfc3947>.
-
-
-
-
-
-Klassert & Antony         Expires 19 June 2025                  [Page 4]
-
-Internet-Draft               KEv2 KDF Notes                December 2024
-
 
    [RFC3948]  Huttunen, A., Swander, B., Volpe, V., DiBurro, L., and M.
               Stenberg, "UDP Encapsulation of IPsec ESP Packets",
@@ -243,12 +254,50 @@ Internet-Draft               KEv2 KDF Notes                December 2024
 
 6.  Informative References
 
+   [AWS-IPsec-NetDev]
+              Amazon AWS, "NetDev Talk : Multi-core IPsec tunnels",
+              <https://learn.microsoft.com/en-us/azure/virtual-network/
+              virtual-machine-network-throughput>.
+
+   [AWS-Network]
+              Amazon AWS, "Google Compute Engine Network bandwidth",
+              <https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-
+              instance-network-bandwidth.html>.
+
+   [Azure-Network]
+              Microsoft Azure, "Azure Virtual machine network
+              bandwidth", <https://learn.microsoft.com/en-us/azure/
+              virtual-network/virtual-machine-network-throughput>.
+
+   [GCP-Network]
+              Google, "Google Compute Engine Network bandwidth",
+              <https://cloud.google.com/compute/docs/network-bandwidth>.
+
+
+
+
+
+Klassert & Antony         Expires 21 June 2025                  [Page 5]
+
+Internet-Draft               KEv2 KDF Notes                December 2024
+
+
    [I-D.ietf-ipsecme-g-ikev2]
               Smyslov, V. and B. Weis, "Group Key Management using
               IKEv2", Work in Progress, Internet-Draft, draft-ietf-
               ipsecme-g-ikev2-18, 11 December 2024,
               <https://datatracker.ietf.org/doc/html/draft-ietf-ipsecme-
               g-ikev2-18>.
+
+   [PRGS20]   Technische Universität Ilmenau, "Vector Packet
+              Encapsulation: The Case for a Scalable IPsec Encryption
+              Protocol", <https://doi.org/10.1145/3407023.3407060>.
+
+   [RFC9611]  Antony, A., Brunner, T., Klassert, S., and P. Wouters,
+              "Internet Key Exchange Protocol Version 2 (IKEv2) Support
+              for Per-Resource Child Security Associations (SAs)",
+              RFC 9611, DOI 10.17487/RFC9611, July 2024,
+              <https://www.rfc-editor.org/info/rfc9611>.
 
 Authors' Addresses
 
@@ -277,4 +326,11 @@ Authors' Addresses
 
 
 
-Klassert & Antony         Expires 19 June 2025                  [Page 5]
+
+
+
+
+
+
+
+Klassert & Antony         Expires 21 June 2025                  [Page 6]
