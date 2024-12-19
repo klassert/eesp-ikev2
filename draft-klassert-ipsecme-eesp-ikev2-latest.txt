@@ -5,9 +5,9 @@
 IPSECME Working Group                                        S. Klassert
 Internet-Draft                                                 A. Antony
 Intended status: Standards Track                                 secunet
-Expires: 21 June 2025                                         T. Brunner
+Expires: 22 June 2025                                         T. Brunner
                                                            codelabs GmbH
-                                                        18 December 2024
+                                                        19 December 2024
 
 
      IKEv2 negotiation for Enhanced Encapsulating Security Payload
@@ -38,7 +38,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 21 June 2025.
+   This Internet-Draft will expire on 22 June 2025.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Klassert, et al.          Expires 21 June 2025                  [Page 1]
+Klassert, et al.          Expires 22 June 2025                  [Page 1]
 
 Internet-Draft           EESP IKEv2 negotiation            December 2024
 
@@ -68,22 +68,23 @@ Table of Contents
      1.1.  Requirements Language . . . . . . . . . . . . . . . . . .   3
      1.2.  Terminology . . . . . . . . . . . . . . . . . . . . . . .   3
    2.  EESP SA IKEv2 Negotiation . . . . . . . . . . . . . . . . . .   4
-   3.  EESP SA IKEv2 negotiation . . . . . . . . . . . . . . . . . .   4
-     3.1.  Negotiating an EESP SA using IKE_AUTH or
-           CREATE_CHILD_SA . . . . . . . . . . . . . . . . . . . . .   5
-     3.2.  Rekeying an EESP SA with the CREATE_CHILD_SA Exchange . .   5
-     3.3.  Deleting EESP SA with INFORMATIONAL Exchange  . . . . . .   5
-   4.  EESP SA Transforms  . . . . . . . . . . . . . . . . . . . . .   5
-     4.1.  Anti-Replay Service . . . . . . . . . . . . . . . . . . .   6
-     4.2.  Explicit Initialization Vector  . . . . . . . . . . . . .   6
-     4.3.  Implicit Initialization Vectors . . . . . . . . . . . . .   7
-     4.4.  EESP Version  . . . . . . . . . . . . . . . . . . . . . .   7
-     4.5.  EESP Flow Identifier  . . . . . . . . . . . . . . . . . .   7
-     4.6.  Sub SAs . . . . . . . . . . . . . . . . . . . . . . . . .   7
-       4.6.1.  Key derivation for Sub SA Independent keys. . . . . .   8
-       4.6.2.  Rekey Key Derivation. . . . . . . . . . . . . . . . .   9
-     4.7.  Session ID  . . . . . . . . . . . . . . . . . . . . . . .  10
-   5.  UDP Encapsulation for EESP  . . . . . . . . . . . . . . . . .  10
+     2.1.  Negotiating an EESP SA using IKE_AUTH or
+           CREATE_CHILD_SA . . . . . . . . . . . . . . . . . . . . .   4
+     2.2.  Rekeying an EESP SA with the CREATE_CHILD_SA Exchange . .   5
+     2.3.  Deleting EESP SA with INFORMATIONAL Exchange  . . . . . .   5
+   3.  EESP SA Transforms  . . . . . . . . . . . . . . . . . . . . .   5
+     3.1.  Replay Protection Service . . . . . . . . . . . . . . . .   6
+     3.2.  Explicit Initialization Vector  . . . . . . . . . . . . .   6
+     3.3.  Implicit Initialization Vectors . . . . . . . . . . . . .   7
+     3.4.  EESP Version  . . . . . . . . . . . . . . . . . . . . . .   7
+     3.5.  EESP Flow Identifier  . . . . . . . . . . . . . . . . . .   7
+   4.  Sub SAs . . . . . . . . . . . . . . . . . . . . . . . . . . .   7
+     4.1.  Key derivation for Sub SA . . . . . . . . . . . . . . . .   8
+       4.1.1.  Iterative key derivation  . . . . . . . . . . . . . .   8
+       4.1.2.  Hierarchical key derivation . . . . . . . . . . . . .   9
+     4.2.  Rekey Key Derivation. . . . . . . . . . . . . . . . . . .  10
+     4.3.  Session ID  . . . . . . . . . . . . . . . . . . . . . . .  10
+   5.  UDP Encapsulation for EESP  . . . . . . . . . . . . . . . . .  11
    6.  EESP Crypt Offset Option  . . . . . . . . . . . . . . . . . .  11
    7.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  11
      7.1.  Changes in the Existing IKEv2 Registries  . . . . . . . .  11
@@ -92,14 +93,14 @@ Table of Contents
        7.1.3.  IKEv2 Notify Message Status Types registry. . . . . .  12
        7.1.4.  Extending ESP with EESP . . . . . . . . . . . . . . .  12
        7.1.5.  Notify Message Error Types  . . . . . . . . . . . . .  12
-     7.2.  New Registries  . . . . . . . . . . . . . . . . . . . . .  12
-       7.2.1.  EESP Session ID registry  . . . . . . . . . . . . . .  12
+     7.2.  New Registries  . . . . . . . . . . . . . . . . . . . . .  13
+       7.2.1.  EESP Session ID registry  . . . . . . . . . . . . . .  13
        7.2.2.  EESP Flow ID registry . . . . . . . . . . . . . . . .  13
-   8.  Implementation Status . . . . . . . . . . . . . . . . . . . .  13
+   8.  Implementation Status . . . . . . . . . . . . . . . . . . . .  14
    9.  Security Considerations . . . . . . . . . . . . . . . . . . .  14
-   10. Acknowledgments . . . . . . . . . . . . . . . . . . . . . . .  14
-   11. Normative References  . . . . . . . . . . . . . . . . . . . .  14
-   12. Informative References  . . . . . . . . . . . . . . . . . . .  15
+   10. Acknowledgments . . . . . . . . . . . . . . . . . . . . . . .  15
+   11. Normative References  . . . . . . . . . . . . . . . . . . . .  15
+   12. Informative References  . . . . . . . . . . . . . . . . . . .  16
    Appendix A.  Additional Stuff . . . . . . . . . . . . . . . . . .  18
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  18
 
@@ -108,8 +109,7 @@ Table of Contents
 
 
 
-
-Klassert, et al.          Expires 21 June 2025                  [Page 2]
+Klassert, et al.          Expires 22 June 2025                  [Page 2]
 
 Internet-Draft           EESP IKEv2 negotiation            December 2024
 
@@ -126,7 +126,7 @@ Internet-Draft           EESP IKEv2 negotiation            December 2024
    prior to decryption.  EESP also enables the establishment of Sub
    Child SAs with independent sequence number spaces.  Additionally, it
    supports the use of 64-bit sequence numbers in each packet or the
-   omission of sequence numbers when the Anti-Replay service is
+   omission of sequence numbers when the Replay Protection service is
    disabled.  EESP packets carry a version number, enabling easier
    support for future extensions.
 
@@ -165,7 +165,7 @@ Internet-Draft           EESP IKEv2 negotiation            December 2024
 
 
 
-Klassert, et al.          Expires 21 June 2025                  [Page 3]
+Klassert, et al.          Expires 22 June 2025                  [Page 3]
 
 Internet-Draft           EESP IKEv2 negotiation            December 2024
 
@@ -197,13 +197,6 @@ Internet-Draft           EESP IKEv2 negotiation            December 2024
    attributes in the proposal, allowing the responder to evaluate and
    establish the SA if supported.
 
-3.  EESP SA IKEv2 negotiation
-
-   EESP IKEv2 is an extension to IKEv2 [RFC7296] to negotiate on EESP SA
-   specified in [I-D.klassert-ipsecme-eesp].  An EESP SA can be
-   negotiated using IKEv2 either with the IKE_AUTH or CREATE_CHILD_SA
-   new SA, exchange.
-
    IKEv2 Notify Message Status Type USE_WESP_MODE, [RFC5840], is not
    supported when negotiating EESP SA.  As the WESP functionality is
    part of EESP protocol.  If this notification is received it MUST be
@@ -213,41 +206,40 @@ Internet-Draft           EESP IKEv2 negotiation            December 2024
    supported in EESP, instead use IP-TFS, USE_AGGFRAG, [RFC9347].  If
    this notification is received it MUST be discarded.
 
-
-
-
-
-
-
-
-
-Klassert, et al.          Expires 21 June 2025                  [Page 4]
-
-Internet-Draft           EESP IKEv2 negotiation            December 2024
-
-
-3.1.  Negotiating an EESP SA using IKE_AUTH or CREATE_CHILD_SA
+2.1.  Negotiating an EESP SA using IKE_AUTH or CREATE_CHILD_SA
 
    To negotiate an EESP Child SA, use the IKEv2 IKE_AUTH or
    CREATE_CHILD_SA new SA exchange.  The SA Payload, Proposal MUST have
    Security Protocol Identifier, Proto Id = EESP which is specified in
    [I-D.klassert-ipsecme-eesp], as specified in this document, and uses
-   the EESP Transform attributes defined in Section 4.
+   the EESP Transform attributes defined in Section 3.
 
-3.2.  Rekeying an EESP SA with the CREATE_CHILD_SA Exchange
+
+
+
+
+
+
+
+Klassert, et al.          Expires 22 June 2025                  [Page 4]
+
+Internet-Draft           EESP IKEv2 negotiation            December 2024
+
+
+2.2.  Rekeying an EESP SA with the CREATE_CHILD_SA Exchange
 
    Rekeying an EESP SA follows the same procedure as rekeying an ESP SA,
    as specified in Sections 1.3.3 and 2.8 of [RFC7296].  During the
-   rekeying process, the Section 4 MUST remain identical to those
+   rekeying process, the Section 3 MUST remain identical to those
    negotiated when the SA was initially established.
 
-3.3.  Deleting EESP SA with INFORMATIONAL Exchange
+2.3.  Deleting EESP SA with INFORMATIONAL Exchange
 
    EESP SA always exist in pairs.  Deleting EESP SA follows the same
    procedure as deleting Child SA using IKEv2 INFORMATIONAL exchange as
    specified in Section 1.4.1 [RFC7296]
 
-4.  EESP SA Transforms
+3.  EESP SA Transforms
 
    EESP introduces several transform properties that are negotiated
    during the establishment of an EESP SA.  These properties MUST be
@@ -277,7 +269,15 @@ Internet-Draft           EESP IKEv2 negotiation            December 2024
 
 
 
-Klassert, et al.          Expires 21 June 2025                  [Page 5]
+
+
+
+
+
+
+
+
+Klassert, et al.          Expires 22 June 2025                  [Page 5]
 
 Internet-Draft           EESP IKEv2 negotiation            December 2024
 
@@ -299,14 +299,14 @@ Internet-Draft           EESP IKEv2 negotiation            December 2024
 
                          Figure 1: EESP SA proposal
 
-4.1.  Anti-Replay Service
+3.1.  Replay Protection Service
 
-   EESP provides an optional Anti-Replay service using a 64 bit Sequence
-   Number, carried in the packet.  To enable Anti-Replay service the
+   EESP provides an optional Replay service using a 64 bit Sequence
+   Number, carried in the packet.  To enable Replay service the
    initiator SHOULD propose SNP Transforms SNP = (1, Name 64 bit ESN) in
    Substructure of the Proposal Substructure inside the Security
    Association (SA) payload in the IKEv2 Exchange.  When the responder
-   select 64 bit ESN a receiver MUST enable Anti-Reply.
+   select 64 bit ESN a receiver MUST enable Reply Protection.
 
    When the Transform Type [IKEv2-SNP] is not present in initiator's
    Child SA proposal during negotiation of an EESP Child SA, the
@@ -315,13 +315,13 @@ Internet-Draft           EESP IKEv2 negotiation            December 2024
    When SNP is not negotiated, i.e., when the 64 bit sequence number is
    not carried in the EESP packet, an EESP receiver should not act on
    address or port changes.  It should not initiate a dynamic address
-   update without the use of IKEv2 Mobility [RFC4555].  Since the Anti-
-   Replay service is disabled, an attacker could replay packets with a
-   different source address.  Otherwise, an attacker could disrupt the
+   update without the use of IKEv2 Mobility [RFC4555].  Since the Replay
+   Protection service is disabled, an attacker could replay packets with
+   a different source address.  Otherwise, an attacker could disrupt the
    connection by capturing and replaying a single packet with different
    source address or port number.
 
-4.2.  Explicit Initialization Vector
+3.2.  Explicit Initialization Vector
 
    If the algorithm used to encrypt the payload requires cryptographic
    synchronization data, e.g., an Initialization Vector (IV), then this
@@ -333,93 +333,100 @@ Internet-Draft           EESP IKEv2 negotiation            December 2024
 
 
 
-Klassert, et al.          Expires 21 June 2025                  [Page 6]
+Klassert, et al.          Expires 22 June 2025                  [Page 6]
 
 Internet-Draft           EESP IKEv2 negotiation            December 2024
 
 
-4.3.  Implicit Initialization Vectors
+3.3.  Implicit Initialization Vectors
 
    When using the Implicit Initialization Vector (IIV) encryption
    algorithm [RFC8750], the IV MUST be omitted.  To negotiate this, IIV
    transforms specified in [IKEv2-Enc] MUST be used.  Additionally,
-   Section 4.1 MUST be negotiated to carry a 64-bit ESN in the EESP
+   [IKEv2-SNP] MUST be negotiated to carry a 64-bit ESN in the EESP
    packet.
 
-4.4.  EESP Version
+3.4.  EESP Version
 
    Each SA need an EESP Base Header version which is specified
    [I-D.klassert-ipsecme-eesp].
 
-4.5.  EESP Flow Identifier
+3.5.  EESP Flow Identifier
 
    EESP Flow Identifier (EESPFID) Options are used to carry
    characteristic information of the inner flow and SHOULD NOT change on
    per packet basis inside any inner flow to avoid packet reordering.
    The Flow Identifier SHOULD be negotiated when creating EESP SA.
 
-4.6.  Sub SAs
+4.  Sub SAs
 
-   Advantages of Sub SAs compared Child SAs with different keys
+   A Sub SA is a unidirectional Security Association derived from an
+   existing EESP Child SA pair.  It inherits all properties except keys,
+   sequence number space, and IV space.  These three are unique for each
+   Sub SA.  This allows finer granularity for managing one-directional
+   traffic flows.  Sub SAs avoid the overhead associated with
+   bidirectional Child SAs for identical traffic selections[RFC7296],
+   [RFC9611].  They enable more efficient resource utilization and
+   improved performance, particularly in scenarios requiring high
+   flexibility.  Each Sub SA is uniquely identified by a Sub SA ID,
+   which is used to derive a unique key.  The Sub SA ID is carried in
+   each EESP packet, either in the Session ID field or the Flow ID
+   field, as negotiated during the establishment of the EESP Child SA.
 
-   *  Possiblity for unidirectional SA.  Compared to [RFC9611] when per
-      resource SA is brought up it is bidirectional.  However, both SA
-      MAY not be in use.  When using CREATE_CHILD_SA Unidirectional SAs
-      not possible.
+   Advantages of Sub SAs compared to Child SAs with different keys:
 
-   *  No extra setup time, a.k.a. zero round trip time to setup
-      additional Sub SAs.  Even though using IKE window size specified
-      in [RFC7296] to reduce multiple SAs, Sub SA setup would be
-      quicker.
+   *  Possibility for unidirectional SAs.  Compared to [RFC9611], when a
+      per-resource SA is established, it is bidirectional.  However,
+      both directions of the SA MAY not always be in use.  Using
+      CREATE_CHILD_SA does not allow unidirectional SAs.
 
-   *  Creating Sub SA is more efficient while creating as well as
-      rekeying and deleting, life cycle management of Sub SA is simple.
+   *  No extra setup time, i.e., zero round-trip time to set up
+      additional Sub SAs.  This would be more efficient than using large
+      IKE window size specified in [RFC7296] to manage multiple SAs.
 
-   *  When using Hierarchical key derivation, the Sub SA key could be
-      dervived on-the-fly, per packet for better performance, "Data-
-      plane performance degradation due to the use of a larger number of
-      keys", [I-D.ponchon-ipsecme-anti-replay-subspaces].
-
-   There are two types of Sub SAs, Session ID as: Replay Subspace ID,
-   specified in [I-D.klassert-ipsecme-eesp], and Sub SA with independent
-   keys.
-
-   To negotiate a Sub SA with with Replay Subspace, use SUB_SA_SN in
-   Session ID Transform.
-
+   *  Sub SAs are more efficient to create, rekey, and delete.  Their
 
 
-Klassert, et al.          Expires 21 June 2025                  [Page 7]
+
+
+Klassert, et al.          Expires 22 June 2025                  [Page 7]
 
 Internet-Draft           EESP IKEv2 negotiation            December 2024
 
 
-   To negotiate Sub SA with independent keys use transform, SUB_SA_K in
-   Session ID Transform.
+   lifecycle management is simpler compared to traditional Child SAs.
 
-4.6.1.  Key derivation for Sub SA Independent keys.
+   *  When using hierarchical key derivation, especially when using
+      hardware key derivation, Sub SA keys can be derived on-the-fly per
+      packet.  This reduces "Data-plane performance degradation due to
+      the use of a larger number of keys" as noted in
+      [I-D.ponchon-ipsecme-anti-replay-subspaces].
 
-   [RFC7296] section 2.17 specifies Child SA key generation.  When the
-   EESP SA is negotiated with a Sub SA Keys (SUB_SA_K), each Sub SA need
-   to derive its own unique key.  This allows each Sub SA its own
-   Sequence Number space, and independent IV space when using AEAD
-   counter mode algorithm.
+   To negotiate Sub SA SUB_SA_ID in Session ID Transform.  Or in a Flow
+   IDs Transform.  TBD: expand Sub SA with Flow ID negotiation
 
-   Initially we are proposing two Key Derivation Functions(KDF) for Sub
-   SAs.  Based on community feedback, further research and advise from
-   cryptographers one method will be chosen.
+4.1.  Key derivation for Sub SA
+
+   When the EESP SA is negotiated with a Sub SA Keys (SUB_SA_ID), each
+   Sub SA need to derive its own unique keys.  This allows each Sub SA
+   its own independent Sequence Number space, and independent IV space.
+
+   Initially we are proposing three Key Derivation Functions(KDF) for
+   Sub SAs.  Based on community feedback, further research and advise
+   from cryptographers one method will be chosen.
 
    The requirements:
 
    *  Independent keys for each Sub SA
 
-   *  Ability to derive Sub SA keys on the fly
+   *  Ability to derive Sub SA keys on the fly with least amount of
+      memory usage
 
    *  Minimal meomory requirements
 
    *  Keyderviation support multiple SAs, such as EESP, AH
 
-4.6.1.1.  Iterative key derivation
+4.1.1.  Iterative key derivation
 
    To iteratively derive keys create a large keymt. e.g. for the nth
 
@@ -432,6 +439,17 @@ Internet-Draft           EESP IKEv2 negotiation            December 2024
    Where SK_d is derived from IKE negotiation, as specified in
    Section 2.14 of [RFC7296]
 
+
+
+
+
+
+
+Klassert, et al.          Expires 22 June 2025                  [Page 8]
+
+Internet-Draft           EESP IKEv2 negotiation            December 2024
+
+
    Where g^ir (new) is the shared secret from the ephemeral Key Exchange
    of this CREATE_CHILD_SA exchange (represented as an octet string in
    big endian order padded with zeros in the high-order bits if
@@ -440,79 +458,77 @@ Internet-Draft           EESP IKEv2 negotiation            December 2024
    For example for Sub SA ID n, use nth set of keys from the KEYMAT.
    The order is specified in Section 2.17 of [RFC7296].
 
-
-
-
-
-
-Klassert, et al.          Expires 21 June 2025                  [Page 8]
-
-Internet-Draft           EESP IKEv2 negotiation            December 2024
-
-
    With existing prf+ function the keymat length is rather limited.
    [RFC7296] limit the iteration to 256.  However, with modern prf+,
    more specifically XOF, functions, such as KMAC specified in
    [NIST800-185], or HopMAC/TurboSHAKE specified
-   [I-D.irtf-cfrg-kangarootwelve] KEYMAT can be infinitely long.
+   [I-D.irtf-cfrg-kangarootwelve] the KEYMAT can be infinitely,(2^40
+   bytes), long.
 
-   Typical length of of 256 bit encryption is 36 bytes (32+4), in one
-   direction.  Using an AEAD for 64K Sub SAs maximum KEYMAT length would
-   be:
+   An XOF differs from a traditional PRF, hash, function in that it is
+   designed to generate very long, and variable length output.  Unlike
+   the IKEv2 prf+ an XOF can generate longer outputs directly without
+   iterative call.
+
+   Typical length of of 256 bit encryption is 36 bytes, (32 + 4 salt for
+   IV), in one direction.  Using an AEAD for 64K Sub SAs maximum KEYMAT
+   length would be:
 
    4718592 bytes = 2^16 * 2 * 36 bytes. i.e. 4.5 Mega Bytes
 
-   When using non AEAD algorithms KEMAT size would double of the abve,
-   about 9 Mega Bytes.
+   When using non AEAD algorithms KEMAT size would roughly double of the
+   above, about 9 Mega Bytes.
 
-   An XOF differs from a traditional hash function in that it is
-   designed generate very long, and variable length output.  Unlike the
-   IKEv2 prf+ an XOF can generate longer outputs directly without
-   iterative call.
+   The memory requirment fot generate could be reduced by changing prf+
+   function interface to return portion of the KEYMAT when using
+   iterative feedback mode.
 
-4.6.1.2.  Hierarchical key derivation
+4.1.2.  Hierarchical key derivation
 
-   Hierarchical key derivation use Sub SA ID, either carried in EESP
+   Hierarchical key derivation use Sub SA ID, which is carried in EESP
    Seesion ID or in EESP Flow ID(TLV), as an input the key dervivation.
+
+   Two KDF are propsed below and eventully choose one of them.
 
    KEYMAT = prf+(SK_child, Sub SA ID)
 
    Where SK_child is the key derived for the Child SA as specified in
    [RFC7296] section 2.17
 
+
+
+
+
+
+
+Klassert, et al.          Expires 22 June 2025                  [Page 9]
+
+Internet-Draft           EESP IKEv2 negotiation            December 2024
+
+
+   One advantage of Hierarchical KDF is KEYMAT for the Sub SAs can be
+   generated on the fly, for every packet, when available memory is
+   limited, for example [PSP].  This is usually the case when key
+   derivation is implemented in hardware.  When implimenting in hardware
+   choose a hardware friendly prf+.
+
    An alternative key derivation :
 
    KEYMAT = prf+(SK_d, Ni | Nr | Flow ID)
 
-   Does using using Ni|Nr|g^ir matters is there perfernece?
+   NOTE: does using using Ni|Nr|g^ir KDF input matters?  Is there a
+   perfernece?  Any advise from the cryptographers?
 
-   The KEYMAT for the Sub SAs can be generated on the fly, for every
-   packet, when available memory is limited.  This is usually the case
-   when key derivation is implemented in hardware.
-
-4.6.2.  Rekey Key Derivation.
+4.2.  Rekey Key Derivation.
 
    During the EESP SA rekey, new keys are derived using the new Ni and
    Nr values.  If a Key Exchange (KE) method was used in the rekying,
    CREATE_CHILD_SA exchange, the new key MAY also include g^ir as part
    of the derivation process.
 
-
-
-
-
-Klassert, et al.          Expires 21 June 2025                  [Page 9]
-
-Internet-Draft           EESP IKEv2 negotiation            December 2024
-
-
-   During the EESP SA rekey, a new key is derived using the new Ni, Nr,
-   and possibly g^ir, depending on whether a Key Exchange (KE) method
-   was used during the CREATE_CHILD_SA exchange.
-
    KEYMAT = prf+(SK_child, Sub SA ID)
 
-   or
+   or depending on which one of the above KDF is chossen.
 
    KEYMAT = prf+(SK_d, g^ir (new) | Ni | Nr | Sub SA ID)
 
@@ -520,26 +536,31 @@ Internet-Draft           EESP IKEv2 negotiation            December 2024
    and security, all Sub SAs MUST be rekeyed together when either a
    cryptographic limit or a time-based limit is reached.
 
-   The cryptographic limit ensures that keys are replaced after
-   processing a maximum number of packets or bytes, as specified in
-   Section 2.8 of [RFC7296].  This prevents the reuse of keys beyond
-   their safe operational bounds.
-
    The time-based limit, also described in Section 2.8 of [RFC7296],
    ensures periodic key replacement to minimize the risks associated
    with long-term key exposure, even if the cryptographic limit has not
    been reached.
 
-   Rekeying is triggered by whichever limit—cryptographic or time-
-   based—is reached first.
+   When rekeying is triggered for any of the Sub SA by whichever
+   limit—cryptographic or time- based—is reached first, subseqenty all
+   Sub SAs must rekeyed.
 
-4.7.  Session ID
+4.3.  Session ID
 
    The Session ID is a multi-purpose attribute with mutually exclusive
    values.  The initiator MUST propose a single value in the Child SA
    proposal, Transform EESPSSID (Value).  The responder MUST either
    accept the proposed value or reject it with an INVALID_SESSION_ID
    error message, indicating a supported value.
+
+
+
+
+
+Klassert, et al.          Expires 22 June 2025                 [Page 10]
+
+Internet-Draft           EESP IKEv2 negotiation            December 2024
+
 
 5.  UDP Encapsulation for EESP
 
@@ -550,17 +571,6 @@ Internet-Draft           EESP IKEv2 negotiation            December 2024
    The Sub SA ID 0, MUST use the identical source and destination ports
    as the IKE SA.  Other Sub SA may use use different source port while
    destination port 4500.
-
-
-
-
-
-
-
-Klassert, et al.          Expires 21 June 2025                 [Page 10]
-
-Internet-Draft           EESP IKEv2 negotiation            December 2024
-
 
 6.  EESP Crypt Offset Option
 
@@ -593,6 +603,21 @@ Internet-Draft           EESP IKEv2 negotiation            December 2024
    This document defines new transforms in "IKEv2 Transform Type Values"
    registry, [IKEv2-Transforms]
 
+
+
+
+
+
+
+
+
+
+
+Klassert, et al.          Expires 22 June 2025                 [Page 11]
+
+Internet-Draft           EESP IKEv2 negotiation            December 2024
+
+
       +======+==========================+=========+=================+
       | Type | Description              | Used In | Reference       |
       +======+==========================+=========+=================+
@@ -606,17 +631,6 @@ Internet-Draft           EESP IKEv2 negotiation            December 2024
       +------+--------------------------+---------+-----------------+
 
                                   Table 3
-
-
-
-
-
-
-
-Klassert, et al.          Expires 21 June 2025                 [Page 11]
-
-Internet-Draft           EESP IKEv2 negotiation            December 2024
-
 
 7.1.3.  IKEv2 Notify Message Status Types registry.
 
@@ -652,6 +666,14 @@ Internet-Draft           EESP IKEv2 negotiation            December 2024
 
                                  Table 5
 
+
+
+
+Klassert, et al.          Expires 22 June 2025                 [Page 12]
+
+Internet-Draft           EESP IKEv2 negotiation            December 2024
+
+
 7.2.  New Registries
 
    A new set of registries is created for EESP-IKEv2 on IKEv2 parameters
@@ -666,14 +688,6 @@ Internet-Draft           EESP IKEv2 negotiation            December 2024
 
    *  Name: EESP Session ID Transform Registry
 
-
-
-
-Klassert, et al.          Expires 21 June 2025                 [Page 12]
-
-Internet-Draft           EESP IKEv2 negotiation            December 2024
-
-
    *  Description: EESP Base Header Session ID
 
    *  Reference: This document
@@ -685,9 +699,7 @@ Internet-Draft           EESP IKEv2 negotiation            December 2024
               +------------+--------------+-----------------+
               |          1 | ENCRYPION_ID | [this document] |
               +------------+--------------+-----------------+
-              |          2 | SUB_SA_K     | [this document] |
-              +------------+--------------+-----------------+
-              |          3 | SUB_SA_SN    | [this document] |
+              |          2 | SUB_SA_ID    | [this document] |
               +------------+--------------+-----------------+
 
                                   Table 6
@@ -703,6 +715,20 @@ Internet-Draft           EESP IKEv2 negotiation            December 2024
    *  Description: EESP Flow Identifier
 
    *  Reference: This document
+
+
+
+
+
+
+
+
+
+
+Klassert, et al.          Expires 22 June 2025                 [Page 13]
+
+Internet-Draft           EESP IKEv2 negotiation            December 2024
+
 
                 +=========+=============+=================+
                 | Flow ID | Name        | Reference       |
@@ -722,13 +748,6 @@ Internet-Draft           EESP IKEv2 negotiation            December 2024
 
    [Note to RFC Editor: Please remove this section and the reference to
    [RFC7942] before publication.]
-
-
-
-Klassert, et al.          Expires 21 June 2025                 [Page 13]
-
-Internet-Draft           EESP IKEv2 negotiation            December 2024
-
 
    This section records the status of known implementations of the
    protocol defined by this specification at the time of posting of this
@@ -760,6 +779,13 @@ Internet-Draft           EESP IKEv2 negotiation            December 2024
    allows exposing transport headers for telemetry.  It is indented use
    of within data center.
 
+
+
+Klassert, et al.          Expires 22 June 2025                 [Page 14]
+
+Internet-Draft           EESP IKEv2 negotiation            December 2024
+
+
    When an EESP receiver implementation uses Stateless Decryption, it
    may not rely on single Security Policy Database (SPD) as specified in
    the IPsec Architecture document [RFC4301], section 4.4.1.  However,
@@ -777,14 +803,6 @@ Internet-Draft           EESP IKEv2 negotiation            December 2024
    TBD
 
 11.  Normative References
-
-
-
-
-Klassert, et al.          Expires 21 June 2025                 [Page 14]
-
-Internet-Draft           EESP IKEv2 negotiation            December 2024
-
 
    [I-D.klassert-ipsecme-eesp]
               Klassert, S., Antony, A., and C. Hopps, "Enhanced
@@ -816,6 +834,14 @@ Internet-Draft           EESP IKEv2 negotiation            December 2024
               (IKEv2)", STD 79, RFC 7296, DOI 10.17487/RFC7296, October
               2014, <https://www.rfc-editor.org/info/rfc7296>.
 
+
+
+
+Klassert, et al.          Expires 22 June 2025                 [Page 15]
+
+Internet-Draft           EESP IKEv2 negotiation            December 2024
+
+
    [RFC8126]  Cotton, M., Leiba, B., and T. Narten, "Guidelines for
               Writing an IANA Considerations Section in RFCs", BCP 26,
               RFC 8126, DOI 10.17487/RFC8126, June 2017,
@@ -833,14 +859,6 @@ Internet-Draft           EESP IKEv2 negotiation            December 2024
               Internet-Draft, draft-irtf-cfrg-kangarootwelve-15, 7
               November 2024, <https://datatracker.ietf.org/doc/html/
               draft-irtf-cfrg-kangarootwelve-15>.
-
-
-
-
-Klassert, et al.          Expires 21 June 2025                 [Page 15]
-
-Internet-Draft           EESP IKEv2 negotiation            December 2024
-
 
    [I-D.mrossberg-ipsecme-multiple-sequence-counters]
               Rossberg, M., Klassert, S., and M. Pfeiffer, "Broadening
@@ -869,6 +887,17 @@ Internet-Draft           EESP IKEv2 negotiation            December 2024
               <https://www.iana.org/assignments/ikev2-parameters/
               ikev2-parameters.xhtml>.
 
+
+
+
+
+
+
+Klassert, et al.          Expires 22 June 2025                 [Page 16]
+
+Internet-Draft           EESP IKEv2 negotiation            December 2024
+
+
    [IKEv2-SNP]
               IANA, "IKEv2 Parameters: Encryption Algorithm Transform
               IDs", <https://www.iana.org/assignments/ikev2-parameters/
@@ -887,16 +916,6 @@ Internet-Draft           EESP IKEv2 negotiation            December 2024
               NIST, "SHA-3 Derived Functions: cSHAKE, KMAC, TupleHash
               and ParallelHash",
               <https://csrc.nist.gov/pubs/sp/800/185/final>.
-
-
-
-
-
-
-Klassert, et al.          Expires 21 June 2025                 [Page 16]
-
-Internet-Draft           EESP IKEv2 negotiation            December 2024
-
 
    [PSP]      Google, "PSP Architecture Specification",
               <https://github.com/google/psp/blob/main/doc/
@@ -925,6 +944,16 @@ Internet-Draft           EESP IKEv2 negotiation            December 2024
               RFC 7942, DOI 10.17487/RFC7942, July 2016,
               <https://www.rfc-editor.org/info/rfc7942>.
 
+
+
+
+
+
+Klassert, et al.          Expires 22 June 2025                 [Page 17]
+
+Internet-Draft           EESP IKEv2 negotiation            December 2024
+
+
    [RFC8750]  Migault, D., Guggemos, T., and Y. Nir, "Implicit
               Initialization Vector (IV) for Counter-Based Ciphers in
               Encapsulating Security Payload (ESP)", RFC 8750,
@@ -942,17 +971,6 @@ Internet-Draft           EESP IKEv2 negotiation            December 2024
               for Per-Resource Child Security Associations (SAs)",
               RFC 9611, DOI 10.17487/RFC9611, July 2024,
               <https://www.rfc-editor.org/info/rfc9611>.
-
-
-
-
-
-
-
-Klassert, et al.          Expires 21 June 2025                 [Page 17]
-
-Internet-Draft           EESP IKEv2 negotiation            December 2024
-
 
 Appendix A.  Additional Stuff
 
@@ -987,22 +1005,4 @@ Authors' Addresses
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Klassert, et al.          Expires 21 June 2025                 [Page 18]
+Klassert, et al.          Expires 22 June 2025                 [Page 18]
