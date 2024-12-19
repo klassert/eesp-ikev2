@@ -46,12 +46,13 @@ Encapsulating Security Payload (ESP) defined in [RFC4303]. These
 improvements address evolving requirements in modern IPsec
 deployments. EESP offers increased flexibility for hardware
 offloads at the packet level. It supports carrying inner packet flow
-identifiers foe the use with ECMP, RSS hardware, and IPsec peers prior to
-decryption. EESP also enables the establishment of Sub Child SAs with
-independent sequence number spaces. Additionally, it supports the use
-of 64-bit sequence numbers in each packet or the omission of sequence
-numbers when the Replay Protection service is disabled. EESP packets carry
-a version number, enabling easier support for future extensions.
+identifiers foe the use with ECMP, RSS hardware, and IPsec peers
+prior to decryption. EESP also enables the establishment of Sub Child
+SAs with independent sequence number spaces. Additionally, it
+supports the use of 64-bit sequence numbers in each packet or the
+omission of sequence numbers when the Replay Protection service is
+disabled. EESP packets carry a version number, enabling easier
+support for future extensions.
 
 This document specifies the negotiation of EESP Security
 Associations (SAs) within the Internet Key Exchange Protocol
@@ -208,7 +209,7 @@ may be carried explicitly in every EESP packet.
 When using the Implicit Initialization Vector (IIV) encryption
 algorithm [[RFC8750]], the IV MUST be omitted. To negotiate this,
 IIV transforms specified in [[IKEv2-Enc]] MUST be used. Additionally,
-[[Anti-Replay Service]] MUST be negotiated to carry a 64-bit ESN
+[[IKEv2-SNP]] MUST be negotiated to carry a 64-bit ESN
 in the EESP packet.
 
 ** EESP Version
@@ -401,7 +402,8 @@ use different source port while destination port 4500.
 This option is typically used for within one Datacenter use case
 such as [[PSP]]. To negotiate, the initiator sends USE_CRYPTOFFSET
 together with USE_TRANSPORT_MODE and the responder respond with the
-same. USE_EESP_CRYPTOFFSET is not supported in Tunnel mode or BEET mode.
+same. USE_EESP_CRYPTOFFSET is not supported in Tunnel mode or BEET
+mode.
 # Note STK:  This needs discussion
 #
 ~NOTE~ Add EESP draft section reference.
@@ -446,7 +448,8 @@ replace 'IKE and ESP' with 'IKE, ESP, and EESP'
 Changes the "Used In" column for the existing allocations as follows;
 
 *** Notify Message Error Types
-This document defines new Notify Message types in the "IKEv2 Notify Message Error Types" registry:
+This document defines new Notify Message types in the
+"IKEv2 Notify Message Error Types" registry:
 
 | Value  | Notify Message Error Type |  Reference      |
 |-------------+----------------------+-----------------+
@@ -478,7 +481,8 @@ IANA is requested to create a new registry named
 *** EESP Flow ID registry
 
 IANA is requested to create a new registry named
-'EESP Session Flow ID Transform' in the 'Internet Key Exchange Version 2
+'EESP Session Flow ID Transform' in the
+'Internet Key Exchange Version 2
 (IKEv2) Parameters', [[IKEv2-IANA]] page.
 
 - Name: EESP Flow ID Transform Registry
