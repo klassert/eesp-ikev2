@@ -46,7 +46,7 @@ Encapsulating Security Payload (ESP) defined in [RFC4303]. These
 improvements address evolving requirements in modern IPsec
 deployments. EESP offers increased flexibility for hardware
 offloads at the packet level. It supports carrying inner packet flow
-identifiers foe the use with ECMP, RSS hardware, and IPsec peers
+identifiers for the use with ECMP, RSS hardware, and IPsec peers
 prior to decryption. EESP also enables the establishment of Sub Child
 SAs with independent sequence number spaces. Additionally, it
 supports the use of 64-bit sequence numbers in each packet or the
@@ -63,9 +63,13 @@ EESP specific transform properties and properties.
 The extensions defined here enable EESP SAs to coexist with ESP SAs
 in stateful decryption configurations, sharing a common SPI namespace
 while introducing new capabilities to enhance IPsec’s performance
-and versatility in modern use cases. By starting with the SPI in the
-Base Header, EESP maintains compatibility with existing ESP UDP
-encapsulation formats, simplifying integration.
+and versatility in modern use cases.
+
+# XXX: This changed in the EESP draft!
+#
+# By starting with the SPI in the
+# Base Header, EESP maintains compatibility with existing ESP UDP
+# encapsulation formats, simplifying integration.
 
 This document does not obsolete or update any existing RFCs. While
 stateless implementations of EESP are referenced, their negotiation,
@@ -278,7 +282,7 @@ cryptographers one method will be chosen.
 The requirements:
 - Independent keys for each Sub SA
 - Ability to derive Sub SA keys on the fly with least amount of memory usage
-- Minimal meomory requirements
+- Minimal memory requirements
 - Keyderviation support multiple SAs, such as EESP, AH
 
 **** Iterative key derivation
@@ -330,9 +334,9 @@ iterative feedback mode.
 **** Hierarchical key derivation
 
 Hierarchical key derivation use Sub SA ID, which is carried in EESP
-Seesion ID or in EESP Flow ID(TLV), as an input the key dervivation.
+Seesion ID or in EESP Flow ID(TLV), as an input to the key dervivation.
 
-Two KDF are propsed below and eventully choose one of them.
+Two KDF are propsed below and eventually choose one of them.
 
 KEYMAT = prf+(SK_child, Sub SA ID)
 
