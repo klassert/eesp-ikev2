@@ -5,9 +5,9 @@
 IPSECME Working Group                                        S. Klassert
 Internet-Draft                                                 A. Antony
 Intended status: Standards Track                                 secunet
-Expires: 22 June 2025                                         T. Brunner
+Expires: 26 June 2025                                         T. Brunner
                                                            codelabs GmbH
-                                                        19 December 2024
+                                                        23 December 2024
 
 
      IKEv2 negotiation for Enhanced Encapsulating Security Payload
@@ -38,7 +38,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 22 June 2025.
+   This Internet-Draft will expire on 26 June 2025.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Klassert, et al.          Expires 22 June 2025                  [Page 1]
+Klassert, et al.          Expires 26 June 2025                  [Page 1]
 
 Internet-Draft           EESP IKEv2 negotiation            December 2024
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Klassert, et al.          Expires 22 June 2025                  [Page 2]
+Klassert, et al.          Expires 26 June 2025                  [Page 2]
 
 Internet-Draft           EESP IKEv2 negotiation            December 2024
 
@@ -122,7 +122,7 @@ Internet-Draft           EESP IKEv2 negotiation            December 2024
    improvements address evolving requirements in modern IPsec
    deployments.  EESP offers increased flexibility for hardware offloads
    at the packet level.  It supports carrying inner packet flow
-   identifiers foe the use with ECMP, RSS hardware, and IPsec peers
+   identifiers for the use with ECMP, RSS hardware, and IPsec peers
    prior to decryption.  EESP also enables the establishment of Sub
    Child SAs with independent sequence number spaces.  Additionally, it
    supports the use of 64-bit sequence numbers in each packet or the
@@ -139,9 +139,7 @@ Internet-Draft           EESP IKEv2 negotiation            December 2024
    The extensions defined here enable EESP SAs to coexist with ESP SAs
    in stateful decryption configurations, sharing a common SPI namespace
    while introducing new capabilities to enhance IPsec’s performance and
-   versatility in modern use cases.  By starting with the SPI in the
-   Base Header, EESP maintains compatibility with existing ESP UDP
-   encapsulation formats, simplifying integration.
+   versatility in modern use cases.
 
    This document does not obsolete or update any existing RFCs.  While
    stateless implementations of EESP are referenced, their negotiation,
@@ -165,7 +163,9 @@ Internet-Draft           EESP IKEv2 negotiation            December 2024
 
 
 
-Klassert, et al.          Expires 22 June 2025                  [Page 3]
+
+
+Klassert, et al.          Expires 26 June 2025                  [Page 3]
 
 Internet-Draft           EESP IKEv2 negotiation            December 2024
 
@@ -221,7 +221,7 @@ Internet-Draft           EESP IKEv2 negotiation            December 2024
 
 
 
-Klassert, et al.          Expires 22 June 2025                  [Page 4]
+Klassert, et al.          Expires 26 June 2025                  [Page 4]
 
 Internet-Draft           EESP IKEv2 negotiation            December 2024
 
@@ -277,7 +277,7 @@ Internet-Draft           EESP IKEv2 negotiation            December 2024
 
 
 
-Klassert, et al.          Expires 22 June 2025                  [Page 5]
+Klassert, et al.          Expires 26 June 2025                  [Page 5]
 
 Internet-Draft           EESP IKEv2 negotiation            December 2024
 
@@ -333,7 +333,7 @@ Internet-Draft           EESP IKEv2 negotiation            December 2024
 
 
 
-Klassert, et al.          Expires 22 June 2025                  [Page 6]
+Klassert, et al.          Expires 26 June 2025                  [Page 6]
 
 Internet-Draft           EESP IKEv2 negotiation            December 2024
 
@@ -389,7 +389,7 @@ Internet-Draft           EESP IKEv2 negotiation            December 2024
 
 
 
-Klassert, et al.          Expires 22 June 2025                  [Page 7]
+Klassert, et al.          Expires 26 June 2025                  [Page 7]
 
 Internet-Draft           EESP IKEv2 negotiation            December 2024
 
@@ -422,7 +422,7 @@ Internet-Draft           EESP IKEv2 negotiation            December 2024
    *  Ability to derive Sub SA keys on the fly with least amount of
       memory usage
 
-   *  Minimal meomory requirements
+   *  Minimal memory requirements
 
    *  Keyderviation support multiple SAs, such as EESP, AH
 
@@ -445,7 +445,7 @@ Internet-Draft           EESP IKEv2 negotiation            December 2024
 
 
 
-Klassert, et al.          Expires 22 June 2025                  [Page 8]
+Klassert, et al.          Expires 26 June 2025                  [Page 8]
 
 Internet-Draft           EESP IKEv2 negotiation            December 2024
 
@@ -486,9 +486,10 @@ Internet-Draft           EESP IKEv2 negotiation            December 2024
 4.1.2.  Hierarchical key derivation
 
    Hierarchical key derivation use Sub SA ID, which is carried in EESP
-   Seesion ID or in EESP Flow ID(TLV), as an input the key dervivation.
+   Seesion ID or in EESP Flow ID(TLV), as an input to the key
+   dervivation.
 
-   Two KDF are propsed below and eventully choose one of them.
+   Two KDF are propsed below and eventually choose one of them.
 
    KEYMAT = prf+(SK_child, Sub SA ID)
 
@@ -500,8 +501,7 @@ Internet-Draft           EESP IKEv2 negotiation            December 2024
 
 
 
-
-Klassert, et al.          Expires 22 June 2025                  [Page 9]
+Klassert, et al.          Expires 26 June 2025                  [Page 9]
 
 Internet-Draft           EESP IKEv2 negotiation            December 2024
 
@@ -557,7 +557,7 @@ Internet-Draft           EESP IKEv2 negotiation            December 2024
 
 
 
-Klassert, et al.          Expires 22 June 2025                 [Page 10]
+Klassert, et al.          Expires 26 June 2025                 [Page 10]
 
 Internet-Draft           EESP IKEv2 negotiation            December 2024
 
@@ -613,7 +613,7 @@ Internet-Draft           EESP IKEv2 negotiation            December 2024
 
 
 
-Klassert, et al.          Expires 22 June 2025                 [Page 11]
+Klassert, et al.          Expires 26 June 2025                 [Page 11]
 
 Internet-Draft           EESP IKEv2 negotiation            December 2024
 
@@ -669,7 +669,7 @@ Internet-Draft           EESP IKEv2 negotiation            December 2024
 
 
 
-Klassert, et al.          Expires 22 June 2025                 [Page 12]
+Klassert, et al.          Expires 26 June 2025                 [Page 12]
 
 Internet-Draft           EESP IKEv2 negotiation            December 2024
 
@@ -725,7 +725,7 @@ Internet-Draft           EESP IKEv2 negotiation            December 2024
 
 
 
-Klassert, et al.          Expires 22 June 2025                 [Page 13]
+Klassert, et al.          Expires 26 June 2025                 [Page 13]
 
 Internet-Draft           EESP IKEv2 negotiation            December 2024
 
@@ -781,7 +781,7 @@ Internet-Draft           EESP IKEv2 negotiation            December 2024
 
 
 
-Klassert, et al.          Expires 22 June 2025                 [Page 14]
+Klassert, et al.          Expires 26 June 2025                 [Page 14]
 
 Internet-Draft           EESP IKEv2 negotiation            December 2024
 
@@ -837,7 +837,7 @@ Internet-Draft           EESP IKEv2 negotiation            December 2024
 
 
 
-Klassert, et al.          Expires 22 June 2025                 [Page 15]
+Klassert, et al.          Expires 26 June 2025                 [Page 15]
 
 Internet-Draft           EESP IKEv2 negotiation            December 2024
 
@@ -856,9 +856,9 @@ Internet-Draft           EESP IKEv2 negotiation            December 2024
    [I-D.irtf-cfrg-kangarootwelve]
               Viguier, B., Wong, D., Van Assche, G., Dang, Q., and J.
               Daemen, "KangarooTwelve and TurboSHAKE", Work in Progress,
-              Internet-Draft, draft-irtf-cfrg-kangarootwelve-15, 7
-              November 2024, <https://datatracker.ietf.org/doc/html/
-              draft-irtf-cfrg-kangarootwelve-15>.
+              Internet-Draft, draft-irtf-cfrg-kangarootwelve-16, 21
+              December 2024, <https://datatracker.ietf.org/doc/html/
+              draft-irtf-cfrg-kangarootwelve-16>.
 
    [I-D.mrossberg-ipsecme-multiple-sequence-counters]
               Rossberg, M., Klassert, S., and M. Pfeiffer, "Broadening
@@ -893,7 +893,7 @@ Internet-Draft           EESP IKEv2 negotiation            December 2024
 
 
 
-Klassert, et al.          Expires 22 June 2025                 [Page 16]
+Klassert, et al.          Expires 26 June 2025                 [Page 16]
 
 Internet-Draft           EESP IKEv2 negotiation            December 2024
 
@@ -949,7 +949,7 @@ Internet-Draft           EESP IKEv2 negotiation            December 2024
 
 
 
-Klassert, et al.          Expires 22 June 2025                 [Page 17]
+Klassert, et al.          Expires 26 June 2025                 [Page 17]
 
 Internet-Draft           EESP IKEv2 negotiation            December 2024
 
@@ -1005,4 +1005,4 @@ Authors' Addresses
 
 
 
-Klassert, et al.          Expires 22 June 2025                 [Page 18]
+Klassert, et al.          Expires 26 June 2025                 [Page 18]
