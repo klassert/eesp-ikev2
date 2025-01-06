@@ -394,13 +394,48 @@ INVALID_SESSION_ID error message, indicating a supported value.
 # Note STK: With the Verion in front, we likely need
 # a new port number.
 UDP encapsulation is similar to ESP UDP encapsulation,
-specified in [[RFC3948]], with one
-difference on source port. The EESP
-allows use fo different source port than IKE as specified in
+specified in [[RFC3948]], with one difference on source port. The EESP
+allows use peer to send different source port than IKE as specified in
 [[RFC3947]], [[RFC7296]] for Address and Port Agility and ECMP
 when using Sub SA. The Sub SA ID 0, MUST use the identical
 source and destination ports as the IKE SA. Other Sub SA may use
 use different source port while destination port 4500.
+
+
+** UDP Encapsulation and EESP and ESP Between Same Peers
+
+The packet format of encapsulated EESP-in-UDP is identical to that of
+ESP-in-UDP. A straightforward scenario is to designate the IKE
+endpoint to handle either ESP or EESP exclusively when using UDP
+encapsulation and mapping changes. However, in cases where mixed SAs
+between different peers are supported, specific considerations are
+required. Between any pair of IKE peers, there can only be either ESP
+or EESP SAs active at a time.
+
+In configurations where both ESP and EESP are supported, the 32-bit
+SPI number space MUST be shared. This means that the locally receiver
+SA's 32-bit SPI must be unique across both EESP and ESP SAs.
+
+When a packet arrives on UDP port 4500, the SA lookup process should
+use the destination 4-tuple: destination port, destination IP address,
+source port, and source IP address. If a peer match is found, the SA
+type will be known, and the SPI can then be parsed from the packet
+for a lookup. Alternatively, the Peer DB lookup may return a list of
+SPIs if the list is short. When the list is long, there may be an
+additional lookup necessary.
+
+This method works well as long as there are no address mapping
+changes. Mapping changes should be transient and SHOULD be fixed using
+mapping change notification, MOBIKE, or dropping connection.
+
+However, in short term scenarios where the network mapping changes,
+the source address, source port, or both may no longer match the
+entries in the receiver’s Peer DB. In such cases, if no match is
+found, the receiver may have to perform two additional look-ups in the
+worst case. The first assumes the packet is an ESP packet and attempts
+to find an appropriate SA using the SPI. Then the receiver should
+treat the packet as an EESP packet and attempt a second lookup to
+identify the correct SA. Only one of the two SHALL match.
 
 * EESP Crypt Offset Option
 This option is typically used for within one Datacenter use case
