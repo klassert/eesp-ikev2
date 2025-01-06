@@ -5,9 +5,9 @@
 IPSECME Working Group                                        S. Klassert
 Internet-Draft                                                 A. Antony
 Intended status: Standards Track                                 secunet
-Expires: 26 June 2025                                         T. Brunner
+Expires: 10 July 2025                                         T. Brunner
                                                            codelabs GmbH
-                                                        23 December 2024
+                                                          6 January 2025
 
 
      IKEv2 negotiation for Enhanced Encapsulating Security Payload
@@ -38,11 +38,11 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 26 June 2025.
+   This Internet-Draft will expire on 10 July 2025.
 
 Copyright Notice
 
-   Copyright (c) 2024 IETF Trust and the persons identified as the
+   Copyright (c) 2025 IETF Trust and the persons identified as the
    document authors.  All rights reserved.
 
    This document is subject to BCP 78 and the IETF Trust's Legal
@@ -53,9 +53,9 @@ Copyright Notice
 
 
 
-Klassert, et al.          Expires 26 June 2025                  [Page 1]
+Klassert, et al.          Expires 10 July 2025                  [Page 1]
 
-Internet-Draft           EESP IKEv2 negotiation            December 2024
+Internet-Draft           EESP IKEv2 negotiation             January 2025
 
 
    extracted from this document must include Revised BSD License text as
@@ -85,33 +85,33 @@ Table of Contents
      4.2.  Rekey Key Derivation. . . . . . . . . . . . . . . . . . .  10
      4.3.  Session ID  . . . . . . . . . . . . . . . . . . . . . . .  10
    5.  UDP Encapsulation for EESP  . . . . . . . . . . . . . . . . .  11
-   6.  EESP Crypt Offset Option  . . . . . . . . . . . . . . . . . .  11
-   7.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  11
-     7.1.  Changes in the Existing IKEv2 Registries  . . . . . . . .  11
-       7.1.1.  IKEv2 Security Protocol Identifiers registry  . . . .  11
-       7.1.2.  IKEv2 Transform Type Values registry  . . . . . . . .  11
-       7.1.3.  IKEv2 Notify Message Status Types registry. . . . . .  12
-       7.1.4.  Extending ESP with EESP . . . . . . . . . . . . . . .  12
-       7.1.5.  Notify Message Error Types  . . . . . . . . . . . . .  12
+     5.1.  UDP Encapsulation and EESP and ESP Between Same Peers . .  11
+   6.  EESP Crypt Offset Option  . . . . . . . . . . . . . . . . . .  12
+   7.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  12
+     7.1.  Changes in the Existing IKEv2 Registries  . . . . . . . .  12
+       7.1.1.  IKEv2 Security Protocol Identifiers registry  . . . .  12
+       7.1.2.  IKEv2 Transform Type Values registry  . . . . . . . .  12
+       7.1.3.  IKEv2 Notify Message Status Types registry. . . . . .  13
+       7.1.4.  Extending ESP with EESP . . . . . . . . . . . . . . .  13
+       7.1.5.  Notify Message Error Types  . . . . . . . . . . . . .  13
      7.2.  New Registries  . . . . . . . . . . . . . . . . . . . . .  13
        7.2.1.  EESP Session ID registry  . . . . . . . . . . . . . .  13
-       7.2.2.  EESP Flow ID registry . . . . . . . . . . . . . . . .  13
+       7.2.2.  EESP Flow ID registry . . . . . . . . . . . . . . . .  14
    8.  Implementation Status . . . . . . . . . . . . . . . . . . . .  14
-   9.  Security Considerations . . . . . . . . . . . . . . . . . . .  14
+   9.  Security Considerations . . . . . . . . . . . . . . . . . . .  15
    10. Acknowledgments . . . . . . . . . . . . . . . . . . . . . . .  15
    11. Normative References  . . . . . . . . . . . . . . . . . . . .  15
    12. Informative References  . . . . . . . . . . . . . . . . . . .  16
-   Appendix A.  Additional Stuff . . . . . . . . . . . . . . . . . .  18
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  18
+   Appendix A.  Additional Stuff . . . . . . . . . . . . . . . . . .  19
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  19
 
 
 
 
 
-
-Klassert, et al.          Expires 26 June 2025                  [Page 2]
+Klassert, et al.          Expires 10 July 2025                  [Page 2]
 
-Internet-Draft           EESP IKEv2 negotiation            December 2024
+Internet-Draft           EESP IKEv2 negotiation             January 2025
 
 
 1.  Introduction
@@ -165,9 +165,9 @@ Internet-Draft           EESP IKEv2 negotiation            December 2024
 
 
 
-Klassert, et al.          Expires 26 June 2025                  [Page 3]
+Klassert, et al.          Expires 10 July 2025                  [Page 3]
 
-Internet-Draft           EESP IKEv2 negotiation            December 2024
+Internet-Draft           EESP IKEv2 negotiation             January 2025
 
 
    This document uses the following terms defined in IKEv2 [RFC7296]:
@@ -221,9 +221,9 @@ Internet-Draft           EESP IKEv2 negotiation            December 2024
 
 
 
-Klassert, et al.          Expires 26 June 2025                  [Page 4]
+Klassert, et al.          Expires 10 July 2025                  [Page 4]
 
-Internet-Draft           EESP IKEv2 negotiation            December 2024
+Internet-Draft           EESP IKEv2 negotiation             January 2025
 
 
 2.2.  Rekeying an EESP SA with the CREATE_CHILD_SA Exchange
@@ -277,9 +277,9 @@ Internet-Draft           EESP IKEv2 negotiation            December 2024
 
 
 
-Klassert, et al.          Expires 26 June 2025                  [Page 5]
+Klassert, et al.          Expires 10 July 2025                  [Page 5]
 
-Internet-Draft           EESP IKEv2 negotiation            December 2024
+Internet-Draft           EESP IKEv2 negotiation             January 2025
 
 
    SA Payload
@@ -333,9 +333,9 @@ Internet-Draft           EESP IKEv2 negotiation            December 2024
 
 
 
-Klassert, et al.          Expires 26 June 2025                  [Page 6]
+Klassert, et al.          Expires 10 July 2025                  [Page 6]
 
-Internet-Draft           EESP IKEv2 negotiation            December 2024
+Internet-Draft           EESP IKEv2 negotiation             January 2025
 
 
 3.3.  Implicit Initialization Vectors
@@ -389,9 +389,9 @@ Internet-Draft           EESP IKEv2 negotiation            December 2024
 
 
 
-Klassert, et al.          Expires 26 June 2025                  [Page 7]
+Klassert, et al.          Expires 10 July 2025                  [Page 7]
 
-Internet-Draft           EESP IKEv2 negotiation            December 2024
+Internet-Draft           EESP IKEv2 negotiation             January 2025
 
 
    lifecycle management is simpler compared to traditional Child SAs.
@@ -445,9 +445,9 @@ Internet-Draft           EESP IKEv2 negotiation            December 2024
 
 
 
-Klassert, et al.          Expires 26 June 2025                  [Page 8]
+Klassert, et al.          Expires 10 July 2025                  [Page 8]
 
-Internet-Draft           EESP IKEv2 negotiation            December 2024
+Internet-Draft           EESP IKEv2 negotiation             January 2025
 
 
    Where g^ir (new) is the shared secret from the ephemeral Key Exchange
@@ -501,9 +501,9 @@ Internet-Draft           EESP IKEv2 negotiation            December 2024
 
 
 
-Klassert, et al.          Expires 26 June 2025                  [Page 9]
+Klassert, et al.          Expires 10 July 2025                  [Page 9]
 
-Internet-Draft           EESP IKEv2 negotiation            December 2024
+Internet-Draft           EESP IKEv2 negotiation             January 2025
 
 
    One advantage of Hierarchical KDF is KEYMAT for the Sub SAs can be
@@ -557,20 +557,66 @@ Internet-Draft           EESP IKEv2 negotiation            December 2024
 
 
 
-Klassert, et al.          Expires 26 June 2025                 [Page 10]
+Klassert, et al.          Expires 10 July 2025                 [Page 10]
 
-Internet-Draft           EESP IKEv2 negotiation            December 2024
+Internet-Draft           EESP IKEv2 negotiation             January 2025
 
 
 5.  UDP Encapsulation for EESP
 
    UDP encapsulation is similar to ESP UDP encapsulation, specified in
    [RFC3948], with one difference on source port.  The EESP allows use
-   fo different source port than IKE as specified in [RFC3947],
-   [RFC7296] for Address and Port Agility and ECMP when using Sub SA.
-   The Sub SA ID 0, MUST use the identical source and destination ports
-   as the IKE SA.  Other Sub SA may use use different source port while
-   destination port 4500.
+   peer to send different source port than IKE as specified in
+   [RFC3947], [RFC7296] for Address and Port Agility and ECMP when using
+   Sub SA.  The Sub SA ID 0, MUST use the identical source and
+   destination ports as the IKE SA.  Other Sub SA may use use different
+   source port while destination port 4500.
+
+5.1.  UDP Encapsulation and EESP and ESP Between Same Peers
+
+   The packet format of encapsulated EESP-in-UDP is identical to that of
+   ESP-in-UDP.  A straightforward scenario is to designate the IKE
+   endpoint to handle either ESP or EESP exclusively when using UDP
+   encapsulation and mapping changes.  However, in cases where mixed SAs
+   between different peers are supported, specific considerations are
+   required.  Between any pair of IKE peers, there can only be either
+   ESP or EESP SAs active at a time.
+
+   In configurations where both ESP and EESP are supported, the 32-bit
+   SPI number space MUST be shared.  This means that the locally
+   receiver SA's 32-bit SPI must be unique across both EESP and ESP SAs.
+
+   When a packet arrives on UDP port 4500, the SA lookup process should
+   use the destination 4-tuple: destination port, destination IP
+   address, source port, and source IP address.  If a peer match is
+   found, the SA type will be known, and the SPI can then be parsed from
+   the packet for a lookup.  Alternatively, the Peer DB lookup may
+   return a list of SPIs if the list is short.  When the list is long,
+   there may be an additional lookup necessary.
+
+   This method works well as long as there are no address mapping
+   changes.  Mapping changes should be transient and SHOULD be fixed
+   using mapping change notification, MOBIKE, or dropping connection.
+
+   However, in short term scenarios where the network mapping changes,
+   the source address, source port, or both may no longer match the
+   entries in the receiver’s Peer DB.  In such cases, if no match is
+   found, the receiver may have to perform two additional look-ups in
+   the worst case.  The first assumes the packet is an ESP packet and
+   attempts to find an appropriate SA using the SPI.  Then the receiver
+   should treat the packet as an EESP packet and attempt a second lookup
+   to identify the correct SA.  Only one of the two SHALL match.
+
+
+
+
+
+
+
+Klassert, et al.          Expires 10 July 2025                 [Page 11]
+
+Internet-Draft           EESP IKEv2 negotiation             January 2025
+
 
 6.  EESP Crypt Offset Option
 
@@ -603,21 +649,6 @@ Internet-Draft           EESP IKEv2 negotiation            December 2024
    This document defines new transforms in "IKEv2 Transform Type Values"
    registry, [IKEv2-Transforms]
 
-
-
-
-
-
-
-
-
-
-
-Klassert, et al.          Expires 26 June 2025                 [Page 11]
-
-Internet-Draft           EESP IKEv2 negotiation            December 2024
-
-
       +======+==========================+=========+=================+
       | Type | Description              | Used In | Reference       |
       +======+==========================+=========+=================+
@@ -631,6 +662,17 @@ Internet-Draft           EESP IKEv2 negotiation            December 2024
       +------+--------------------------+---------+-----------------+
 
                                   Table 3
+
+
+
+
+
+
+
+Klassert, et al.          Expires 10 July 2025                 [Page 12]
+
+Internet-Draft           EESP IKEv2 negotiation             January 2025
+
 
 7.1.3.  IKEv2 Notify Message Status Types registry.
 
@@ -666,14 +708,6 @@ Internet-Draft           EESP IKEv2 negotiation            December 2024
 
                                  Table 5
 
-
-
-
-Klassert, et al.          Expires 26 June 2025                 [Page 12]
-
-Internet-Draft           EESP IKEv2 negotiation            December 2024
-
-
 7.2.  New Registries
 
    A new set of registries is created for EESP-IKEv2 on IKEv2 parameters
@@ -687,6 +721,14 @@ Internet-Draft           EESP IKEv2 negotiation            December 2024
    Parameters', [IKEv2-IANA] page.
 
    *  Name: EESP Session ID Transform Registry
+
+
+
+
+Klassert, et al.          Expires 10 July 2025                 [Page 13]
+
+Internet-Draft           EESP IKEv2 negotiation             January 2025
+
 
    *  Description: EESP Base Header Session ID
 
@@ -716,20 +758,6 @@ Internet-Draft           EESP IKEv2 negotiation            December 2024
 
    *  Reference: This document
 
-
-
-
-
-
-
-
-
-
-Klassert, et al.          Expires 26 June 2025                 [Page 13]
-
-Internet-Draft           EESP IKEv2 negotiation            December 2024
-
-
                 +=========+=============+=================+
                 | Flow ID | Name        | Reference       |
                 +=========+=============+=================+
@@ -748,6 +776,15 @@ Internet-Draft           EESP IKEv2 negotiation            December 2024
 
    [Note to RFC Editor: Please remove this section and the reference to
    [RFC7942] before publication.]
+
+
+
+
+
+Klassert, et al.          Expires 10 July 2025                 [Page 14]
+
+Internet-Draft           EESP IKEv2 negotiation             January 2025
+
 
    This section records the status of known implementations of the
    protocol defined by this specification at the time of posting of this
@@ -779,13 +816,6 @@ Internet-Draft           EESP IKEv2 negotiation            December 2024
    allows exposing transport headers for telemetry.  It is indented use
    of within data center.
 
-
-
-Klassert, et al.          Expires 26 June 2025                 [Page 14]
-
-Internet-Draft           EESP IKEv2 negotiation            December 2024
-
-
    When an EESP receiver implementation uses Stateless Decryption, it
    may not rely on single Security Policy Database (SPD) as specified in
    the IPsec Architecture document [RFC4301], section 4.4.1.  However,
@@ -803,6 +833,14 @@ Internet-Draft           EESP IKEv2 negotiation            December 2024
    TBD
 
 11.  Normative References
+
+
+
+
+Klassert, et al.          Expires 10 July 2025                 [Page 15]
+
+Internet-Draft           EESP IKEv2 negotiation             January 2025
+
 
    [I-D.klassert-ipsecme-eesp]
               Klassert, S., Antony, A., and C. Hopps, "Enhanced
@@ -834,14 +872,6 @@ Internet-Draft           EESP IKEv2 negotiation            December 2024
               (IKEv2)", STD 79, RFC 7296, DOI 10.17487/RFC7296, October
               2014, <https://www.rfc-editor.org/info/rfc7296>.
 
-
-
-
-Klassert, et al.          Expires 26 June 2025                 [Page 15]
-
-Internet-Draft           EESP IKEv2 negotiation            December 2024
-
-
    [RFC8126]  Cotton, M., Leiba, B., and T. Narten, "Guidelines for
               Writing an IANA Considerations Section in RFCs", BCP 26,
               RFC 8126, DOI 10.17487/RFC8126, June 2017,
@@ -859,6 +889,14 @@ Internet-Draft           EESP IKEv2 negotiation            December 2024
               Internet-Draft, draft-irtf-cfrg-kangarootwelve-16, 21
               December 2024, <https://datatracker.ietf.org/doc/html/
               draft-irtf-cfrg-kangarootwelve-16>.
+
+
+
+
+Klassert, et al.          Expires 10 July 2025                 [Page 16]
+
+Internet-Draft           EESP IKEv2 negotiation             January 2025
+
 
    [I-D.mrossberg-ipsecme-multiple-sequence-counters]
               Rossberg, M., Klassert, S., and M. Pfeiffer, "Broadening
@@ -887,17 +925,6 @@ Internet-Draft           EESP IKEv2 negotiation            December 2024
               <https://www.iana.org/assignments/ikev2-parameters/
               ikev2-parameters.xhtml>.
 
-
-
-
-
-
-
-Klassert, et al.          Expires 26 June 2025                 [Page 16]
-
-Internet-Draft           EESP IKEv2 negotiation            December 2024
-
-
    [IKEv2-SNP]
               IANA, "IKEv2 Parameters: Encryption Algorithm Transform
               IDs", <https://www.iana.org/assignments/ikev2-parameters/
@@ -916,6 +943,16 @@ Internet-Draft           EESP IKEv2 negotiation            December 2024
               NIST, "SHA-3 Derived Functions: cSHAKE, KMAC, TupleHash
               and ParallelHash",
               <https://csrc.nist.gov/pubs/sp/800/185/final>.
+
+
+
+
+
+
+Klassert, et al.          Expires 10 July 2025                 [Page 17]
+
+Internet-Draft           EESP IKEv2 negotiation             January 2025
+
 
    [PSP]      Google, "PSP Architecture Specification",
               <https://github.com/google/psp/blob/main/doc/
@@ -944,16 +981,6 @@ Internet-Draft           EESP IKEv2 negotiation            December 2024
               RFC 7942, DOI 10.17487/RFC7942, July 2016,
               <https://www.rfc-editor.org/info/rfc7942>.
 
-
-
-
-
-
-Klassert, et al.          Expires 26 June 2025                 [Page 17]
-
-Internet-Draft           EESP IKEv2 negotiation            December 2024
-
-
    [RFC8750]  Migault, D., Guggemos, T., and Y. Nir, "Implicit
               Initialization Vector (IV) for Counter-Based Ciphers in
               Encapsulating Security Payload (ESP)", RFC 8750,
@@ -971,6 +998,17 @@ Internet-Draft           EESP IKEv2 negotiation            December 2024
               for Per-Resource Child Security Associations (SAs)",
               RFC 9611, DOI 10.17487/RFC9611, July 2024,
               <https://www.rfc-editor.org/info/rfc9611>.
+
+
+
+
+
+
+
+Klassert, et al.          Expires 10 July 2025                 [Page 18]
+
+Internet-Draft           EESP IKEv2 negotiation             January 2025
+
 
 Appendix A.  Additional Stuff
 
@@ -1005,4 +1043,22 @@ Authors' Addresses
 
 
 
-Klassert, et al.          Expires 26 June 2025                 [Page 18]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Klassert, et al.          Expires 10 July 2025                 [Page 19]

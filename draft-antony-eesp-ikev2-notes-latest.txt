@@ -5,7 +5,7 @@
 IPSECME Working Group                                        S. Klassert
 Internet-Draft                                                 A. Antony
 Intended status: Informational                                   secunet
-Expires: 26 June 2025                                   23 December 2024
+Expires: 10 July 2025                                     6 January 2025
 
 
                  Notes on IKEv2 Key Derivation Function
@@ -26,11 +26,11 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 26 June 2025.
+   This Internet-Draft will expire on 10 July 2025.
 
 Copyright Notice
 
-   Copyright (c) 2024 IETF Trust and the persons identified as the
+   Copyright (c) 2025 IETF Trust and the persons identified as the
    document authors.  All rights reserved.
 
    This document is subject to BCP 78 and the IETF Trust's Legal
@@ -53,9 +53,9 @@ Table of Contents
 
 
 
-Klassert & Antony         Expires 26 June 2025                  [Page 1]
+Klassert & Antony         Expires 10 July 2025                  [Page 1]
 
-Internet-Draft               KEv2 KDF Notes                December 2024
+Internet-Draft               KEv2 KDF Notes                 January 2025
 
 
    5.  Normative References  . . . . . . . . . . . . . . . . . . . .   4
@@ -109,9 +109,9 @@ Internet-Draft               KEv2 KDF Notes                December 2024
 
 
 
-Klassert & Antony         Expires 26 June 2025                  [Page 2]
+Klassert & Antony         Expires 10 July 2025                  [Page 2]
 
-Internet-Draft               KEv2 KDF Notes                December 2024
+Internet-Draft               KEv2 KDF Notes                 January 2025
 
 
    For CREATE_CHILD_SA exchanges including an optional Diffie-Hellman
@@ -165,9 +165,9 @@ Internet-Draft               KEv2 KDF Notes                December 2024
 
 
 
-Klassert & Antony         Expires 26 June 2025                  [Page 3]
+Klassert & Antony         Expires 10 July 2025                  [Page 3]
 
-Internet-Draft               KEv2 KDF Notes                December 2024
+Internet-Draft               KEv2 KDF Notes                 January 2025
 
 
    A practical solution is to encapsulate ESP in UDP.  By varying the
@@ -221,9 +221,9 @@ Internet-Draft               KEv2 KDF Notes                December 2024
 
 
 
-Klassert & Antony         Expires 26 June 2025                  [Page 4]
+Klassert & Antony         Expires 10 July 2025                  [Page 4]
 
-Internet-Draft               KEv2 KDF Notes                December 2024
+Internet-Draft               KEv2 KDF Notes                 January 2025
 
 
    [NIST800-108]
@@ -277,17 +277,17 @@ Internet-Draft               KEv2 KDF Notes                December 2024
 
 
 
-Klassert & Antony         Expires 26 June 2025                  [Page 5]
+Klassert & Antony         Expires 10 July 2025                  [Page 5]
 
-Internet-Draft               KEv2 KDF Notes                December 2024
+Internet-Draft               KEv2 KDF Notes                 January 2025
 
 
    [I-D.ietf-ipsecme-g-ikev2]
               Smyslov, V. and B. Weis, "Group Key Management using
               IKEv2", Work in Progress, Internet-Draft, draft-ietf-
-              ipsecme-g-ikev2-18, 11 December 2024,
+              ipsecme-g-ikev2-19, 28 December 2024,
               <https://datatracker.ietf.org/doc/html/draft-ietf-ipsecme-
-              g-ikev2-18>.
+              g-ikev2-19>.
 
    [PRGS20]   Technische Universität Ilmenau, "Vector Packet
               Encapsulation: The Case for a Scalable IPsec Encryption
@@ -333,4 +333,4 @@ Authors' Addresses
 
 
 
-Klassert & Antony         Expires 26 June 2025                  [Page 6]
+Klassert & Antony         Expires 10 July 2025                  [Page 6]
