@@ -267,7 +267,35 @@ lifecycle management is simpler compared to traditional Child SAs.
 To negotiate Sub SA SUB_SA_ID in Session ID Transform. Or in a Flow
 IDs Transform. TBD: expand Sub SA with Flow ID  negotiation
 
-*** Key derivation for Sub SA
+** UDP Encapsulation of Sub SA
+
+An EESP SA primarily uses UDP encapsulation to facilitate NAT
+traversal.  However, an additional use case for UDP encapsulation is
+to introduce source port entropy, which supports ECMP or/and
+RSS (Receive Side Scaling) mechanisms. In such scenarios, the
+initiator MAY use a distinct, ephemeral source port for Sub SA IDs
+greater than zero. Both peers MAY independently select different
+source ports for the same Sub SA ID.
+
+It is important to note that all IKE messages MUST NOT utilize these
+ephemeral source ports. Instead, IKE traffic should be confined to
+the source and destination ports to ensure proper protocol operation
+and maintain compatibility with existing implementations.
+
+When using ephemeral source ports, the receiver can only set the
+source port upon arrival of an EESP packet with that Sub SA ID. If
+the receiver
+is pre-populating a Sub SA, it may have to install it with a source
+port set to zero and, upon arrival of a packet, update the source
+port using a mapping change.
+
+Additionally, when multiple Sub SAs exist, the receiver SHOULD
+maintain a mapping table to track the source port associated with
+each Sub SA ID. This ensures that traffic is correctly routed and
+prevents ambiguity in handling packets associated with different Sub SAs.
+
+
+** Key derivation for Sub SA
 
 # [[RFC7296]] section 2.17 specifies Child SA key generation.
 
@@ -285,7 +313,7 @@ The requirements:
 - Minimal memory requirements
 - Keyderviation support multiple SAs, such as EESP, AH
 
-**** Iterative key derivation
+*** Iterative key derivation
 To iteratively derive keys create a large keymt. e.g. for the nth
 
 KEYMAT = prf+(SK_d, Ni | Nr)
@@ -331,7 +359,7 @@ The memory requirment fot generate could be reduced by changing prf+
 function interface to return portion of the KEYMAT when using
 iterative feedback mode.
 
-**** Hierarchical key derivation
+*** Hierarchical key derivation
 
 Hierarchical key derivation use Sub SA ID, which is carried in EESP
 Seesion ID or in EESP Flow ID(TLV), as an input to the key dervivation.
@@ -356,7 +384,7 @@ KEYMAT = prf+(SK_d, Ni | Nr | Flow ID)
 NOTE: does using using Ni|Nr|g^ir KDF input matters? Is there a
 perfernece? Any advise from the cryptographers?
 
-*** Rekey Key Derivation.
+** Rekey Key Derivation.
 During the EESP SA rekey, new keys are derived using the new Ni
 and Nr values. If a Key Exchange (KE) method was used in the rekying,
 CREATE_CHILD_SA exchange, the new key MAY also include g^ir as part of
@@ -382,7 +410,7 @@ When rekeying is triggered for any of the Sub SA by whichever
 limit—cryptographic or time- based—is reached first, subseqenty all
 Sub SAs must rekeyed.
 
-** Session ID
+* Session ID
 
 The Session ID is a multi-purpose attribute with mutually
 exclusive values. The initiator MUST propose a single value in the
