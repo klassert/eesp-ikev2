@@ -84,12 +84,12 @@ Logical Key Hierarchy (LKH) . I din't follow that completly.
 It is refered in G-IKEv2.
 
 ** Hardware friendly prf+
-Current IANA registry,[[IKEv2-prf]], specifies very few hardware friendly
-Pseudorandom Function Transforms. And IETF recmendations [[RFC8247]]
-has only PRF_AES128_XCBC.
+Current IKEv2 IANA registry,[[IKEv2-prf]], specifies very few
+hardware friendly Pseudorandom Function Transforms. And IETF
+recmendations [[RFC8247]] has only PRF_AES128_XCBC.
 
-While in practice many cloud providers appears to be using
-more hardware friendly PRF, such as AES-CMAC256 by [[PSP]]
+While in practice many cloud providers appears to be using more
+hardware friendly PRF, such as AES-CMAC256 by [[PSP]]
 and very likely AES-CTR by Amazon AWS. Any public citations of AWS
 PRF? I deduced AES-CTR from their comment to [[NIST-800-108-comments]].
 
@@ -102,6 +102,16 @@ function." And AES-GCM 256 is not yet an IKEv2 prf.
 TLS 1.3, Appendix B of [[RFC8446]] lst HASH. It need a minimum 256
 bit output, currently supports SHA256 and SHA384, a.k.a. HASH, HKDF.
 e.g. TLS_AES_128_GCM_SHA256 TLS_AES_256_GCM_SHA384.
+
+** KDF  References
+
+TLS 1.3[[8446]] use hkdf and their reference
+Krawczyk, H., "Cryptographic Extraction and Key Derivation: The HKDF
+Scheme", Proceedings of CRYPTO 2010, August 2010,
+<https://eprint.iacr.org/2010/264>.
+
+Another possibly related reference, work in cfrg, but for hardware
+wallets, [[I.D-dijkhuis-cfrg-hdkeys-03]]
 
 * UDP Encap
 
