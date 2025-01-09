@@ -5,7 +5,7 @@
 IPSECME Working Group                                        S. Klassert
 Internet-Draft                                                 A. Antony
 Intended status: Informational                                   secunet
-Expires: 10 July 2025                                     6 January 2025
+Expires: 13 July 2025                                     9 January 2025
 
 
                  Notes on IKEv2 Key Derivation Function
@@ -26,7 +26,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 10 July 2025.
+   This Internet-Draft will expire on 13 July 2025.
 
 Copyright Notice
 
@@ -46,21 +46,24 @@ Table of Contents
 
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
    2.  KDF methods . . . . . . . . . . . . . . . . . . . . . . . . .   2
-   3.  UDP Encap . . . . . . . . . . . . . . . . . . . . . . . . . .   3
-     3.1.  Use cases for UDP Encapsulation without NAT . . . . . . .   3
-       3.1.1.  UDP Encapsulation in Cloud Provider . . . . . . . . .   3
-   4.  WESP UDP Encap  . . . . . . . . . . . . . . . . . . . . . . .   4
+     2.1.  Hardware friendly prf+  . . . . . . . . . . . . . . . . .   3
+     2.2.  KDF References  . . . . . . . . . . . . . . . . . . . . .   3
+   3.  UDP Encap . . . . . . . . . . . . . . . . . . . . . . . . . .   4
+     3.1.  Use cases for UDP Encapsulation without NAT . . . . . . .   4
 
 
 
-Klassert & Antony         Expires 10 July 2025                  [Page 1]
+Klassert & Antony         Expires 13 July 2025                  [Page 1]
 
 Internet-Draft               KEv2 KDF Notes                 January 2025
 
 
-   5.  Normative References  . . . . . . . . . . . . . . . . . . . .   4
-   6.  Informative References  . . . . . . . . . . . . . . . . . . .   5
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .   6
+       3.1.1.  UDP Encapsulation in Cloud Provider . . . . . . . . .   4
+   4.  WESP UDP Encap  . . . . . . . . . . . . . . . . . . . . . . .   5
+   5.  UDP pot sharing on Linux  . . . . . . . . . . . . . . . . . .   5
+   6.  Normative References  . . . . . . . . . . . . . . . . . . . .   5
+   7.  Informative References  . . . . . . . . . . . . . . . . . . .   6
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .   7
 
 1.  Introduction
 
@@ -102,17 +105,18 @@ Internet-Draft               KEv2 KDF Notes                 January 2025
 
    KEYMAT = prf+(SK_d, Ni | Nr)
 
-   Where Ni and Nr are the nonces from the IKE_SA_INIT exchange if this
-   request is the first Child SA created or the fresh Ni and Nr from the
-   CREATE_CHILD_SA exchange if this is a subsequent creation.
 
 
 
 
-Klassert & Antony         Expires 10 July 2025                  [Page 2]
+Klassert & Antony         Expires 13 July 2025                  [Page 2]
 
 Internet-Draft               KEv2 KDF Notes                 January 2025
 
+
+   Where Ni and Nr are the nonces from the IKE_SA_INIT exchange if this
+   request is the first Child SA created or the fresh Ni and Nr from the
+   CREATE_CHILD_SA exchange if this is a subsequent creation.
 
    For CREATE_CHILD_SA exchanges including an optional Diffie-Hellman
    exchange, the keying material is defined as:
@@ -130,6 +134,44 @@ Internet-Draft               KEv2 KDF Notes                 January 2025
    In Section 5.4 of Key Management for Multicast [RFC2627] a Logical
    Key Hierarchy (LKH) . I din't follow that completly.  It is refered
    in G-IKEv2.
+
+2.1.  Hardware friendly prf+
+
+   Current IKEv2 IANA registry,[IKEv2-prf], specifies very few hardware
+   friendly Pseudorandom Function Transforms.  And IETF recmendations
+   [RFC8247] has only PRF_AES128_XCBC.
+
+   While in practice many cloud providers appears to be using more
+   hardware friendly PRF, such as AES-CMAC256 by [PSP] and very likely
+   AES-CTR by Amazon AWS.  Any public citations of AWS PRF?  I deduced
+   AES-CTR from their comment to [NIST-800-108-comments].
+
+   Section 2.14 of [RFC7296] "If the negotiated PRF is AES-XCBC-PRF-128
+   [RFC4434] or AES-CMAC-PRF-128 [RFC4615], only the first 64 bits of Ni
+   and the first 64 bits of Nr are used in calculating SKEYSEED, but all
+   the bits are used for input to the prf+ function."  And AES-GCM 256
+   is not yet an IKEv2 prf.
+
+   TLS 1.3, Appendix B of [RFC8446] lst HASH.  It need a minimum 256 bit
+   output, currently supports SHA256 and SHA384, a.k.a.  HASH, HKDF.
+   e.g.  TLS_AES_128_GCM_SHA256 TLS_AES_256_GCM_SHA384.
+
+2.2.  KDF References
+
+   TLS 1.3[RFC8446] use hkdf and their reference Krawczyk, H.,
+   "Cryptographic Extraction and Key Derivation: The HKDF Scheme",
+   Proceedings of CRYPTO 2010, August 2010,
+   https://eprint.iacr.org/2010/264.
+
+
+
+Klassert & Antony         Expires 13 July 2025                  [Page 3]
+
+Internet-Draft               KEv2 KDF Notes                 January 2025
+
+
+   Another possibly related reference, work in cfrg, but for hardware
+   wallets, I.D-dijkhuis-cfrg-hdkeys
 
 3.  UDP Encap
 
@@ -161,28 +203,28 @@ Internet-Draft               KEv2 KDF Notes                 January 2025
    These limits can severely impact IPsec throughput between peers,
    especially when using [RFC9611].
 
-
-
-
-
-Klassert & Antony         Expires 10 July 2025                  [Page 3]
-
-Internet-Draft               KEv2 KDF Notes                 January 2025
-
-
    A practical solution is to encapsulate ESP in UDP.  By varying the
    UDP source port based on inner flow characteristics, traffic can be
    spread across multiple flows.  This bypasses bandwidth restrictions
    and improves throughput.  Test results supporting this were presented
    in [AWS-IPsec-NetDev].
 
-   For further details, see:
-
-   [Azure-Network]
+   For further details, see: [Azure-Network]
 
    [AWS-Network]
 
    [GCP-Network]
+
+
+
+
+
+
+
+Klassert & Antony         Expires 13 July 2025                  [Page 4]
+
+Internet-Draft               KEv2 KDF Notes                 January 2025
+
 
 4.  WESP UDP Encap
 
@@ -213,18 +255,12 @@ Internet-Draft               KEv2 KDF Notes                 January 2025
    EESP could use another spi say 3 as an EESP marker.  However, this 4
    bytes would lead to waste of 4 bytes every EESP packet.
 
-5.  Normative References
+5.  UDP pot sharing on Linux
 
+   On linux define EESPINUDP, a type socket encapsulation.  It is
+   similar to ESPINUDP.  When set this socket will accept IKE pac
 
-
-
-
-
-
-Klassert & Antony         Expires 10 July 2025                  [Page 4]
-
-Internet-Draft               KEv2 KDF Notes                 January 2025
-
+6.  Normative References
 
    [NIST800-108]
               NIST, "Recommendation for Key Derivation Using
@@ -237,10 +273,26 @@ Internet-Draft               KEv2 KDF Notes                 January 2025
               DOI 10.17487/RFC2627, June 1999,
               <https://www.rfc-editor.org/info/rfc2627>.
 
+
+
+
+
+Klassert & Antony         Expires 13 July 2025                  [Page 5]
+
+Internet-Draft               KEv2 KDF Notes                 January 2025
+
+
    [RFC3948]  Huttunen, A., Swander, B., Volpe, V., DiBurro, L., and M.
               Stenberg, "UDP Encapsulation of IPsec ESP Packets",
               RFC 3948, DOI 10.17487/RFC3948, January 2005,
               <https://www.rfc-editor.org/info/rfc3948>.
+
+   [RFC4615]  Song, J., Poovendran, R., Lee, J., and T. Iwata, "The
+              Advanced Encryption Standard-Cipher-based Message
+              Authentication Code-Pseudo-Random Function-128 (AES-CMAC-
+              PRF-128) Algorithm for the Internet Key Exchange Protocol
+              (IKE)", RFC 4615, DOI 10.17487/RFC4615, August 2006,
+              <https://www.rfc-editor.org/info/rfc4615>.
 
    [RFC5840]  Grewal, K., Montenegro, G., and M. Bhatia, "Wrapped
               Encapsulating Security Payload (ESP) for Traffic
@@ -252,7 +304,13 @@ Internet-Draft               KEv2 KDF Notes                 January 2025
               (IKEv2)", STD 79, RFC 7296, DOI 10.17487/RFC7296, October
               2014, <https://www.rfc-editor.org/info/rfc7296>.
 
-6.  Informative References
+   [RFC8247]  Nir, Y., Kivinen, T., Wouters, P., and D. Migault,
+              "Algorithm Implementation Requirements and Usage Guidance
+              for the Internet Key Exchange Protocol Version 2 (IKEv2)",
+              RFC 8247, DOI 10.17487/RFC8247, September 2017,
+              <https://www.rfc-editor.org/info/rfc8247>.
+
+7.  Informative References
 
    [AWS-IPsec-NetDev]
               Amazon AWS, "NetDev Talk : Multi-core IPsec tunnels",
@@ -275,9 +333,7 @@ Internet-Draft               KEv2 KDF Notes                 January 2025
 
 
 
-
-
-Klassert & Antony         Expires 10 July 2025                  [Page 5]
+Klassert & Antony         Expires 13 July 2025                  [Page 6]
 
 Internet-Draft               KEv2 KDF Notes                 January 2025
 
@@ -289,9 +345,34 @@ Internet-Draft               KEv2 KDF Notes                 January 2025
               <https://datatracker.ietf.org/doc/html/draft-ietf-ipsecme-
               g-ikev2-19>.
 
+   [IKEv2-prf]
+              IANA, "IKEv2 Parameters: Extended Sequence Numbers
+              Transform IDs", <https://www.iana.org/assignments/ikev2-
+              parameters/ikev2-parameters.xhtml#ikev2- parameters-6>.
+
+   [NIST-800-108-comments]
+              NIST, "Public Comments and Resolutions on Draft NIST SP
+              800-108 Revision 1, Recommendation for Key
+              DerivationUsingPseudorandomFunctions, 2020",
+              <https://csrc.nist.gov/files/pubs/sp/800/108/r1/final/
+              docs/sp800-108r1-draft-comments-resolutions.pdf>.
+
    [PRGS20]   Technische Universität Ilmenau, "Vector Packet
               Encapsulation: The Case for a Scalable IPsec Encryption
               Protocol", <https://doi.org/10.1145/3407023.3407060>.
+
+   [PSP]      Google, "PSP Architecture Specification",
+              <https://github.com/google/psp/blob/main/doc/
+              PSP_Arch_Spec.pdf>.
+
+   [RFC4434]  Hoffman, P., "The AES-XCBC-PRF-128 Algorithm for the
+              Internet Key Exchange Protocol (IKE)", RFC 4434,
+              DOI 10.17487/RFC4434, February 2006,
+              <https://www.rfc-editor.org/info/rfc4434>.
+
+   [RFC8446]  Rescorla, E., "The Transport Layer Security (TLS) Protocol
+              Version 1.3", RFC 8446, DOI 10.17487/RFC8446, August 2018,
+              <https://www.rfc-editor.org/info/rfc8446>.
 
    [RFC9611]  Antony, A., Brunner, T., Klassert, S., and P. Wouters,
               "Internet Key Exchange Protocol Version 2 (IKEv2) Support
@@ -304,6 +385,13 @@ Authors' Addresses
    Steffen Klassert
    secunet Security Networks AG
    Email: steffen.klassert@secunet.com
+
+
+
+
+Klassert & Antony         Expires 13 July 2025                  [Page 7]
+
+Internet-Draft               KEv2 KDF Notes                 January 2025
 
 
    Antony Antony
@@ -333,4 +421,28 @@ Authors' Addresses
 
 
 
-Klassert & Antony         Expires 10 July 2025                  [Page 6]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Klassert & Antony         Expires 13 July 2025                  [Page 8]
