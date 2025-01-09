@@ -107,8 +107,7 @@ This document uses the following terms defined in
 [[I-D.mrossberg-ipsecme-multiple-sequence-counters]]: Sub-Child SA.
 
 This document uses the following terms defined in
-[[I-D.ietf-ipsecme-ikev2-rename-esn-02]] replay protection.
-
+I-D.ikev2-rename-esn replay protection.
 
 * EESP SA IKEv2 Negotiation
 To negotiate of EESP Security Associations (SAs), as specified
@@ -631,7 +630,7 @@ TBD
 ** RFC4301
 ** RFC8126
 ** I-D.klassert-ipsecme-eesp
-** I-D.ietf-ipsecme-ikev2-rename-esn-02
+#** I-D.ietf-ipsecme-ikev2-rename-esn
 
 
 * Informative References
