@@ -105,13 +105,13 @@ e.g. TLS_AES_128_GCM_SHA256 TLS_AES_256_GCM_SHA384.
 
 ** KDF  References
 
-TLS 1.3[[8446]] use hkdf and their reference
+TLS 1.3[[RFC8446]] use hkdf and their reference
 Krawczyk, H., "Cryptographic Extraction and Key Derivation: The HKDF
 Scheme", Proceedings of CRYPTO 2010, August 2010,
 <https://eprint.iacr.org/2010/264>.
 
 Another possibly related reference, work in cfrg, but for hardware
-wallets, [[I.D-dijkhuis-cfrg-hdkeys-03]]
+wallets, I.D-dijkhuis-cfrg-hdkeys
 
 * UDP Encap
 
@@ -194,6 +194,7 @@ similar to ESPINUDP. When set this socket will accept IKE pac
 ** RFC5840
 ** RFC7296
 ** RFC8247
+** RFC4615
 
 ** NIST800-108
 :PROPERTIES:
@@ -206,6 +207,7 @@ similar to ESPINUDP. When set this socket will accept IKE pac
 
 ** RFC4434
 ** RFC9611
+** RFC8446
 
 ** I-D.ietf-ipsecme-g-ikev2
 
