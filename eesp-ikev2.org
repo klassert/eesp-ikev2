@@ -106,6 +106,9 @@ Encapsulating Security Payload (ESP).
 This document uses the following terms defined in
 [[I-D.mrossberg-ipsecme-multiple-sequence-counters]]: Sub-Child SA.
 
+This document uses the following terms defined in
+[[I-D.ietf-ipsecme-ikev2-rename-esn-02]] replay protection.
+
 
 * EESP SA IKEv2 Negotiation
 To negotiate of EESP Security Associations (SAs), as specified
@@ -171,7 +174,7 @@ the original EESP SA.
       |     |     +-- Attribute ( Key Length = 128 )
       |     +-- Transform INTEG ( Name = AUTH_HMAC_SHA1_96 )
       |     +-- Transform INTEG ( Name = AUTH_AES_XCBC_96 )
-      |     +-- Transform SNP   ( Name = ESN(1) )
+      |     +-- Transform RP   ( Name = ESN(1) )
       |     +-- Transform EESPV ( Name =  )
       |     +-- Transform EESPSUBSA ( Name =  )
       |     +-- Transform EESPSSID ( Name =  )
@@ -182,18 +185,18 @@ the original EESP SA.
 EESP provides an optional Replay service using a
 64 bit Sequence Number, carried in the packet.
 To enable Replay service the initiator SHOULD
-propose SNP Transforms SNP = (1, Name 64 bit ESN) in Substructure
-of the Proposal Substructure inside the Security Association (SA)
-payload in the IKEv2 Exchange. When the responder select 64 bit
-ESN a receiver MUST enable Reply Protection.
+propose replay protection(RP) Transforms RP = (1, Name 64 bit ESN)
+in Substructure of the Proposal Substructure inside the Security
+Association (SA) payload in the IKEv2 Exchange. When the responder
+select 64 bit ESN a receiver MUST enable Reply Protection.
 # NOTE STK: I'd say MUST above as we want to negotiate Anti-Replayservice
 # and not just the presense of the seq nr field.
 
-When the Transform Type [[IKEv2-SNP]] is not present in initiator's
+When the Transform Type [[IKEv2-RP]] is not present in initiator's
 Child SA proposal during negotiation of an EESP Child SA, the
 Sequence Number field MUST NOT be transmitted in the EESP packet.
 
-When SNP is not negotiated, i.e., when the 64 bit sequence number is
+When RP is not negotiated, i.e., when the 64 bit sequence number is
 not carried in the EESP packet, an EESP receiver should not act on
 address or port changes. It should not initiate a dynamic address
 update without the use of IKEv2 Mobility [[RFC4555]]. Since the Replay
@@ -213,8 +216,8 @@ may be carried explicitly in every EESP packet.
 When using the Implicit Initialization Vector (IIV) encryption
 algorithm [[RFC8750]], the IV MUST be omitted. To negotiate this,
 IIV transforms specified in [[IKEv2-Enc]] MUST be used. Additionally,
-[[IKEv2-SNP]] MUST be negotiated to carry a 64-bit ESN
-in the EESP packet.
+[[IKEv2-RP]] MUST be negotiated to carry a 64-bit ESN in the EESP
+packet if the peers
 
 ** EESP Version
 Each SA need an EESP Base Header version which is specified
@@ -628,6 +631,7 @@ TBD
 ** RFC4301
 ** RFC8126
 ** I-D.klassert-ipsecme-eesp
+** I-D.ietf-ipsecme-ikev2-rename-esn-02
 
 
 * Informative References
@@ -666,7 +670,7 @@ TBD
 :REF_ORG: IANA
 :END:
 
-** IKEv2-SNP
+** IKEv2-RP
 :PROPERTIES:
 :REF_TARGET: https://www.iana.org/assignments/ikev2-parameters/ikev2-parameters.xhtml#ikev2-parameters-9
 :REF_TITLE: IKEv2 Parameters: Encryption Algorithm Transform IDs
