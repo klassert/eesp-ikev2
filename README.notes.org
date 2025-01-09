@@ -204,6 +204,7 @@ similar to ESPINUDP. When set this socket will accept IKE pac
 
 * Informative References
 
+** RFC4434
 ** RFC9611
 
 ** I-D.ietf-ipsecme-g-ikev2
