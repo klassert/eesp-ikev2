@@ -1222,7 +1222,7 @@ li > p:last-of-type:only-child {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Klassert, et al.</td>
-<td class="center">Expires 13 July 2025</td>
+<td class="center">Expires 14 July 2025</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1233,12 +1233,12 @@ li > p:last-of-type:only-child {
 <dd class="workgroup">IPSECME Working Group</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-01-09" class="published">9 January 2025</time>
+<time datetime="2025-01-10" class="published">10 January 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2025-07-13">13 July 2025</time></dd>
+<dd class="expires"><time datetime="2025-07-14">14 July 2025</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1285,7 +1285,7 @@ type EESP.<a href="#section-abstract-2" class="pilcrow">¶</a></p>
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 13 July 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 14 July 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1627,7 +1627,7 @@ SA Payload
    |     +-- Transform INTEG ( Name = AUTH_HMAC_SHA1_96 )
    |     +-- Transform INTEG ( Name = AUTH_AES_XCBC_96 )
    |     +-- Transform RP   ( Name = ESN(1) )
-   |     +-- Transform EESPV ( Name =  )
+   |     +-- Transform EESPV ( Name = V1 )
    |     +-- Transform EESPSUBSA ( Name =  )
    |     +-- Transform EESPSSID ( Name =  )
    |     +-- Transform EESPFID ( Name =  )
@@ -1683,7 +1683,8 @@ packet if the peers<a href="#section-3.3-1" class="pilcrow">¶</a></p>
 <a href="#section-3.4" class="section-number selfRef">3.4. </a><a href="#name-eesp-version" class="section-name selfRef">EESP Version</a>
         </h3>
 <p id="section-3.4-1">Each SA need an EESP Base Header version which is specified
-<span>[<a href="#I-D.klassert-ipsecme-eesp" class="cite xref">I-D.klassert-ipsecme-eesp</a>]</span>.<a href="#section-3.4-1" class="pilcrow">¶</a></p>
+<span>[<a href="#I-D.klassert-ipsecme-eesp" class="cite xref">I-D.klassert-ipsecme-eesp</a>]</span>. An Initiator may propose multipe
+EESPV and the responder MUST choose one proposal.<a href="#section-3.4-1" class="pilcrow">¶</a></p>
 </section>
 <section id="section-3.5">
         <h3 id="name-eesp-flow-identifier">
@@ -1907,18 +1908,50 @@ number. This mechanism enables the responder to designate a unique
 port for EESP, distinct from the port used for ESP for UDP
 encapsulation. The intent is to utilize a single, preferred EESP
 receiver port for all EESP peers.<a href="#section-6.1-1" class="pilcrow">¶</a></p>
-<p id="section-6.1-2">The initiator MAY select its source port—the port where it will
+<div class="sourcecode" id="section-6.1-2">
+<pre>
+#+caption: EESP_IN_UDP_SUPPORT Notfier
+#+name: EESP_IN_UDP_SUPPORT
+         1                   2                   3
+0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-------------------------------+-------------------------------+
+| Next Payload  |C|  RESERVED   |         Payload Length        |
++---------------+---------------+-------------------------------+
+|  Protocol ID  |   SPI Size    |      Notify Message Type      |
++---------------+---------------+-------------------------------+
+| UDP Destination Port          |                               |
++-------------------------------+-------------------------------+
+</pre><a href="#section-6.1-2" class="pilcrow">¶</a>
+</div>
+<ul class="normal">
+<li class="normal" id="section-6.1-3.1">
+            <p id="section-6.1-3.1.1">(C)ritical flag - MUST be 0<a href="#section-6.1-3.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-6.1-3.2">
+            <p id="section-6.1-3.2.1">Protocol ID (1 octet) - MUST be 0. MUST be ignored if not 0.<a href="#section-6.1-3.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-6.1-3.3">
+            <p id="section-6.1-3.3.1">SPI Size (1 octet) - MUST be 0. MUST be ignored if not 0.<a href="#section-6.1-3.3.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-6.1-3.4">
+            <p id="section-6.1-3.4.1">Notify Status Message Type value (2 octets) - set to [TBD9]<a href="#section-6.1-3.4.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-6.1-3.5">
+            <p id="section-6.1-3.5.1">UDP Destination Port - MUST be non zero (two octets).<a href="#section-6.1-3.5.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="section-6.1-4">The initiator MAY select its source port—the port where it will
 receive UDP packets—during either the IKE_INIT or IKE_AUTH exchange.
 The source port used in the IKE_AUTH exchange SHALL become the source
-port for the EESP SA.<a href="#section-6.1-2" class="pilcrow">¶</a></p>
-<p id="section-6.1-3">An implementation detail: When a peer uses unique ports for ESP and
+port for the EESP SA.<a href="#section-6.1-4" class="pilcrow">¶</a></p>
+<p id="section-6.1-5">An implementation detail: When a peer uses unique ports for ESP and
 EESP, the designated port MUST only receive further IKE messages
 specific to the corresponding SA type. For example, if port 4500
 is assigned to ESP and port 4501 to EESP, port 4500 MUST only
 receive ESP SA-related IKE messages, while port 4501 MUST only
 receive EESP SA-related messages. This approach simplifies NAT
-mappings for the peer.<a href="#section-6.1-3" class="pilcrow">¶</a></p>
-<p id="section-6.1-4">A unique destination port is necessary to support ESP and EESP SA
+mappings for the peer.<a href="#section-6.1-5" class="pilcrow">¶</a></p>
+<p id="section-6.1-6">A unique destination port is necessary to support ESP and EESP SA
 on the same receiver with mapping changes. This ensures that packets
 are correctly matched to their respective SAs, avoiding ambiguity
 when there is a NAT mapping change, particularly with stateless NAT
@@ -1931,9 +1964,9 @@ ESP or EESP. It is strongly recommended to allocate unique SPIs for
 ESP and EESP on the receiver. This approach provides robust traffic
 classification, minimizes the risk of misinterpretation,
 enhances overall system mangability, and makes it easier for
-administrators to follow SAs.<a href="#section-6.1-4" class="pilcrow">¶</a></p>
-<p id="section-6.1-5">A stateless receiver can only support either ESP or EESP on a UDP
-port.<a href="#section-6.1-5" class="pilcrow">¶</a></p>
+administrators to follow SAs.<a href="#section-6.1-6" class="pilcrow">¶</a></p>
+<p id="section-6.1-7">A stateless receiver can only support either ESP or EESP on a UDP
+port.<a href="#section-6.1-7" class="pilcrow">¶</a></p>
 </section>
 </section>
 <section id="section-7">
@@ -2040,6 +2073,11 @@ mode.<a href="#section-7-1" class="pilcrow">¶</a></p>
               <tr>
                 <td class="text-left" rowspan="1" colspan="1">TBD8</td>
                 <td class="text-left" rowspan="1" colspan="1">USE_EESP_CRYPTOFFSET</td>
+                <td class="text-left" rowspan="1" colspan="1">[this document]</td>
+              </tr>
+              <tr>
+                <td class="text-left" rowspan="1" colspan="1">TBD9</td>
+                <td class="text-left" rowspan="1" colspan="1">EESP_IN_UDP_SUPPORT</td>
                 <td class="text-left" rowspan="1" colspan="1">[this document]</td>
               </tr>
             </tbody>

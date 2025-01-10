@@ -5,7 +5,7 @@
 IPSECME Working Group                                        S. Klassert
 Internet-Draft                                                 A. Antony
 Intended status: Informational                                   secunet
-Expires: 13 July 2025                                     9 January 2025
+Expires: 14 July 2025                                    10 January 2025
 
 
                  Notes on IKEv2 Key Derivation Function
@@ -26,7 +26,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 13 July 2025.
+   This Internet-Draft will expire on 14 July 2025.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Table of Contents
 
 
 
-Klassert & Antony         Expires 13 July 2025                  [Page 1]
+Klassert & Antony         Expires 14 July 2025                  [Page 1]
 
 Internet-Draft               KEv2 KDF Notes                 January 2025
 
@@ -109,7 +109,7 @@ Internet-Draft               KEv2 KDF Notes                 January 2025
 
 
 
-Klassert & Antony         Expires 13 July 2025                  [Page 2]
+Klassert & Antony         Expires 14 July 2025                  [Page 2]
 
 Internet-Draft               KEv2 KDF Notes                 January 2025
 
@@ -165,7 +165,7 @@ Internet-Draft               KEv2 KDF Notes                 January 2025
 
 
 
-Klassert & Antony         Expires 13 July 2025                  [Page 3]
+Klassert & Antony         Expires 14 July 2025                  [Page 3]
 
 Internet-Draft               KEv2 KDF Notes                 January 2025
 
@@ -221,7 +221,7 @@ Internet-Draft               KEv2 KDF Notes                 January 2025
 
 
 
-Klassert & Antony         Expires 13 July 2025                  [Page 4]
+Klassert & Antony         Expires 14 July 2025                  [Page 4]
 
 Internet-Draft               KEv2 KDF Notes                 January 2025
 
@@ -277,7 +277,7 @@ Internet-Draft               KEv2 KDF Notes                 January 2025
 
 
 
-Klassert & Antony         Expires 13 July 2025                  [Page 5]
+Klassert & Antony         Expires 14 July 2025                  [Page 5]
 
 Internet-Draft               KEv2 KDF Notes                 January 2025
 
@@ -333,7 +333,7 @@ Internet-Draft               KEv2 KDF Notes                 January 2025
 
 
 
-Klassert & Antony         Expires 13 July 2025                  [Page 6]
+Klassert & Antony         Expires 14 July 2025                  [Page 6]
 
 Internet-Draft               KEv2 KDF Notes                 January 2025
 
@@ -389,7 +389,7 @@ Authors' Addresses
 
 
 
-Klassert & Antony         Expires 13 July 2025                  [Page 7]
+Klassert & Antony         Expires 14 July 2025                  [Page 7]
 
 Internet-Draft               KEv2 KDF Notes                 January 2025
 
@@ -445,4 +445,4 @@ Internet-Draft               KEv2 KDF Notes                 January 2025
 
 
 
-Klassert & Antony         Expires 13 July 2025                  [Page 8]
+Klassert & Antony         Expires 14 July 2025                  [Page 8]
