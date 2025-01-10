@@ -174,7 +174,7 @@ the original EESP SA.
       |     +-- Transform INTEG ( Name = AUTH_HMAC_SHA1_96 )
       |     +-- Transform INTEG ( Name = AUTH_AES_XCBC_96 )
       |     +-- Transform RP   ( Name = ESN(1) )
-      |     +-- Transform EESPV ( Name =  )
+      |     +-- Transform EESPV ( Name = V1 )
       |     +-- Transform EESPSUBSA ( Name =  )
       |     +-- Transform EESPSSID ( Name =  )
       |     +-- Transform EESPFID ( Name =  )
@@ -220,7 +220,8 @@ packet if the peers
 
 ** EESP Version
 Each SA need an EESP Base Header version which is specified
-[[I-D.klassert-ipsecme-eesp]].
+[[I-D.klassert-ipsecme-eesp]]. An Initiator may propose multipe
+EESPV and the responder MUST choose one proposal.
 
 ** EESP Flow Identifier
 
@@ -278,6 +279,9 @@ RSS (Receive Side Scaling) mechanisms. In such scenarios, the
 initiator MAY use a distinct, ephemeral source port for Sub SA IDs
 greater than zero. Both peers MAY independently select different
 source ports for the same Sub SA ID.
+
+
+
 
 It is important to note that all IKE messages MUST NOT utilize these
 ephemeral source ports. Instead, IKE traffic should be confined to
@@ -439,6 +443,26 @@ port for EESP, distinct from the port used for ESP for UDP
 encapsulation. The intent is to utilize a single, preferred EESP
 receiver port for all EESP peers.
 
+#+begin_src
+#+caption: EESP_IN_UDP_SUPPORT Notfier
+#+name: EESP_IN_UDP_SUPPORT
+	 1                   2                   3
+0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-------------------------------+-------------------------------+
+| Next Payload  |C|  RESERVED   |         Payload Length        |
++---------------+---------------+-------------------------------+
+|  Protocol ID  |   SPI Size    |      Notify Message Type      |
++---------------+---------------+-------------------------------+
+| UDP Destination Port          |                               |
++-------------------------------+-------------------------------+
+#+end_src
+
+- (C)ritical flag - MUST be 0
+- Protocol ID (1 octet) - MUST be 0. MUST be ignored if not 0.
+- SPI Size (1 octet) - MUST be 0. MUST be ignored if not 0.
+- Notify Status Message Type value (2 octets) - set to [TBD9]
+- UDP Destination Port - MUST be non zero (two octets).
+
 The initiator MAY select its source port—the port where it will
 receive UDP packets—during either the IKE_INIT or IKE_AUTH exchange.
 The source port used in the IKE_AUTH exchange SHALL become the source
@@ -509,7 +533,8 @@ This document defines new transforms in
 
 | Value | Notify Message Status Type |  Reference      |
 |-------+----------------------------+-----------------+
-| TBD8  | USE_EESP_CRYPTOFFSET            | [this document] |
+| TBD8  | USE_EESP_CRYPTOFFSET       | [this document] |
+| TBD9  | EESP_IN_UDP_SUPPORT        | [this document] |
 
 *** Extending ESP with EESP
 Several tables in [[IKEv2-IANA]] that specify ESP as protocol
