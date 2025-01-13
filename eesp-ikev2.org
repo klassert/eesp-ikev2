@@ -107,7 +107,10 @@ This document uses the following terms defined in
 [[I-D.mrossberg-ipsecme-multiple-sequence-counters]]: Sub-Child SA.
 
 This document uses the following terms defined in
-I-D.ikev2-rename-esn replay protection.
+[[I-D.ietf-ipsecme-ikev2-rename-esn]] : Replay Protection.
+
+This document uses the following terms defined in
+[[I-D.ietf-ipsecme-g-ikev2]]: Sender-ID.
 
 * EESP SA IKEv2 Negotiation
 To negotiate of EESP Security Associations (SAs), as specified
@@ -416,6 +419,19 @@ When rekeying is triggered for any of the Sub SA by whichever
 limit—cryptographic or time- based—is reached first, subseqenty all
 Sub SAs must rekeyed.
 
+
+** Multiple Sender Group SA Data SA Key Derivation
+
+When using EESP with a group SA, as specified in
+[[I-D.ietf-ipsecme-g-ikev2]], the Sender-ID MUST be used for
+deriving a unique key for each sender. This ensures that each
+sender maintains a distinct IV and/or sequence number space.
+
+The Sender-ID is carried in each packet within the Session ID
+field, allowing efficient and reliable key differentiation for
+data security and integrity.
+
+
 * Session ID
 
 The Session ID is a multi-purpose attribute with mutually
@@ -655,7 +671,7 @@ TBD
 ** RFC4301
 ** RFC8126
 ** I-D.klassert-ipsecme-eesp
-#** I-D.ietf-ipsecme-ikev2-rename-esn
+** I-D.ietf-ipsecme-ikev2-rename-esn
 
 
 * Informative References
@@ -672,6 +688,7 @@ TBD
 ** I-D.irtf-cfrg-kangarootwelve
 ** I-D.mrossberg-ipsecme-multiple-sequence-counters
 ** I-D.ponchon-ipsecme-anti-replay-subspaces
+** I-D.ietf-ipsecme-g-ikev2
 
 ** PSP
 :PROPERTIES:
