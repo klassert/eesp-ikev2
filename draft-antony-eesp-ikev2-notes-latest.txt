@@ -132,7 +132,7 @@ Internet-Draft               KEv2 KDF Notes                 January 2025
    defines 'Key Hierarchy'
 
    In Section 5.4 of Key Management for Multicast [RFC2627] a Logical
-   Key Hierarchy (LKH) . I din't follow that completly.  It is refered
+   Key Hierarchy (LKH).  I din't follow that completly.  It is refered
    in G-IKEv2.
 
 2.1.  Hardware friendly prf+

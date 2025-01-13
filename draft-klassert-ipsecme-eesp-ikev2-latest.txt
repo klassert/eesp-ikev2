@@ -84,7 +84,7 @@ Table of Contents
        4.2.1.  Iterative key derivation  . . . . . . . . . . . . . .   9
        4.2.2.  Hierarchical key derivation . . . . . . . . . . . . .  10
      4.3.  Rekey Key Derivation. . . . . . . . . . . . . . . . . . .  10
-     4.4.  Multiple Sender Group SA Data SA Key Derivation . . . . .  11
+     4.4.  Multiple Sender Group SA Key Derivation . . . . . . . . .  11
    5.  Session ID  . . . . . . . . . . . . . . . . . . . . . . . . .  11
    6.  UDP Encapsulation for EESP  . . . . . . . . . . . . . . . . .  11
      6.1.  Responder Receiving Port  . . . . . . . . . . . . . . . .  12
@@ -191,7 +191,8 @@ Internet-Draft           EESP IKEv2 negotiation             January 2025
    [I-D.ietf-ipsecme-ikev2-rename-esn] : Replay Protection.
 
    This document uses the following terms defined in
-   [I-D.ietf-ipsecme-g-ikev2]: Sender-ID.
+   [I-D.ietf-ipsecme-g-ikev2]: Sender-ID, Data-Security SA,
+   GWP_SENDER_ID_BITS, GCKS policy.
 
 2.  EESP SA IKEv2 Negotiation
 
@@ -211,7 +212,6 @@ Internet-Draft           EESP IKEv2 negotiation             January 2025
    The ESP_TFC_PADDING_NOT_SUPPORTED, [RFC7296], notification is not
    supported in EESP, instead use IP-TFS, USE_AGGFRAG, [RFC9347].  If
    this notification is received it MUST be discarded.
-
 
 
 
@@ -575,16 +575,24 @@ Internet-Draft           EESP IKEv2 negotiation             January 2025
    limit—cryptographic or time- based—is reached first, subseqenty all
    Sub SAs must rekeyed.
 
-4.4.  Multiple Sender Group SA Data SA Key Derivation
+4.4.  Multiple Sender Group SA Key Derivation
 
    When using EESP with a group SA, as specified in
    [I-D.ietf-ipsecme-g-ikev2], the Sender-ID MUST be used for deriving a
    unique key for each sender.  This ensures that each sender maintains
-   a distinct IV and/or sequence number space.
+   a distinct IV and/or sequence number space.  When using independent
+   keys, the Implicit IV (IIV) transforms may be used.
 
    The Sender-ID is carried in each packet within the Session ID field,
    allowing efficient and reliable key differentiation for data security
    and integrity.
+
+   The maximum length of GWP_SENDER_ID_BITS in GCKS policy is 16 bits
+   when using the Session ID to carry the Sender-ID.
+
+   [Note: we could allow 32 bit or any lenght field for
+   GWP_SENDER_ID_BITS then it would have be carried in a EESP Options
+   TLV and not in Session ID]
 
 5.  Session ID
 
@@ -602,14 +610,6 @@ Internet-Draft           EESP IKEv2 negotiation             January 2025
    hence the IKE SA that negotiated the EESP SA.  This distinction
    allows for more flexible handling of EESP traffic, particularly ECMP
    support along the path and in the NIC.  This also allows supporting
-   EESP and ESP on the same IPsec gateway, however with different IKE
-   sesssions.
-
-
-
-
-
-
 
 
 
@@ -617,6 +617,9 @@ Klassert, et al.          Expires 17 July 2025                 [Page 11]
 
 Internet-Draft           EESP IKEv2 negotiation             January 2025
 
+
+   EESP and ESP on the same IPsec gateway, however with different IKE
+   sesssions.
 
 6.1.  Responder Receiving Port
 
@@ -662,10 +665,7 @@ Internet-Draft           EESP IKEv2 negotiation             January 2025
    SA-related messages.  This approach simplifies NAT mappings for the
    peer.
 
-   A unique destination port is necessary to support ESP and EESP SA on
-   the same receiver with mapping changes.  This ensures that packets
-   are correctly matched to their respective SAs, avoiding ambiguity
-   when there is a NAT mapping change, particularly with stateless NAT
+
 
 
 
@@ -674,6 +674,10 @@ Klassert, et al.          Expires 17 July 2025                 [Page 12]
 Internet-Draft           EESP IKEv2 negotiation             January 2025
 
 
+   A unique destination port is necessary to support ESP and EESP SA on
+   the same receiver with mapping changes.  This ensures that packets
+   are correctly matched to their respective SAs, avoiding ambiguity
+   when there is a NAT mapping change, particularly with stateless NAT
    gateways.  However, if mapping changes are not supported, ESP and
    EESP may share the same UDP destination port.  Mapping changes are
    necessary when there are NAT gateways, specifically a one-to-many
@@ -718,10 +722,6 @@ Internet-Draft           EESP IKEv2 negotiation             January 2025
 
    This document defines new transforms in "IKEv2 Transform Type Values"
    registry, [IKEv2-Transforms]
-
-
-
-
 
 
 

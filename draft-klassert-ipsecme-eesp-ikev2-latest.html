@@ -1380,7 +1380,7 @@ type EESP.<a href="#section-abstract-2" class="pilcrow">¶</a></p>
                 <p id="section-toc.1-1.4.2.3.1"><a href="#section-4.3" class="auto internal xref">4.3</a>.  <a href="#name-rekey-key-derivation" class="internal xref">Rekey Key Derivation.</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.4">
-                <p id="section-toc.1-1.4.2.4.1"><a href="#section-4.4" class="auto internal xref">4.4</a>.  <a href="#name-multiple-sender-group-sa-da" class="internal xref">Multiple Sender Group SA Data SA Key Derivation</a></p>
+                <p id="section-toc.1-1.4.2.4.1"><a href="#section-4.4" class="auto internal xref">4.4</a>.  <a href="#name-multiple-sender-group-sa-ke" class="internal xref">Multiple Sender Group SA Key Derivation</a></p>
 </li>
             </ul>
 </li>
@@ -1521,7 +1521,8 @@ Encapsulating Security Payload (ESP).<a href="#section-1.2-5" class="pilcrow">¶
 <p id="section-1.2-7">This document uses the following terms defined in
 <span>[<a href="#I-D.ietf-ipsecme-ikev2-rename-esn" class="cite xref">I-D.ietf-ipsecme-ikev2-rename-esn</a>]</span> : Replay Protection.<a href="#section-1.2-7" class="pilcrow">¶</a></p>
 <p id="section-1.2-8">This document uses the following terms defined in
-<span>[<a href="#I-D.ietf-ipsecme-g-ikev2" class="cite xref">I-D.ietf-ipsecme-g-ikev2</a>]</span>: Sender-ID.<a href="#section-1.2-8" class="pilcrow">¶</a></p>
+<span>[<a href="#I-D.ietf-ipsecme-g-ikev2" class="cite xref">I-D.ietf-ipsecme-g-ikev2</a>]</span>: Sender-ID, Data-Security SA,
+GWP_SENDER_ID_BITS, GCKS policy.<a href="#section-1.2-8" class="pilcrow">¶</a></p>
 </section>
 </section>
 <section id="section-2">
@@ -1882,16 +1883,23 @@ limit—cryptographic or time- based—is reached first, subseqenty all
 Sub SAs must rekeyed.<a href="#section-4.3-7" class="pilcrow">¶</a></p>
 </section>
 <section id="section-4.4">
-        <h3 id="name-multiple-sender-group-sa-da">
-<a href="#section-4.4" class="section-number selfRef">4.4. </a><a href="#name-multiple-sender-group-sa-da" class="section-name selfRef">Multiple Sender Group SA Data SA Key Derivation</a>
+        <h3 id="name-multiple-sender-group-sa-ke">
+<a href="#section-4.4" class="section-number selfRef">4.4. </a><a href="#name-multiple-sender-group-sa-ke" class="section-name selfRef">Multiple Sender Group SA Key Derivation</a>
         </h3>
 <p id="section-4.4-1">When using EESP with a group SA, as specified in
 <span>[<a href="#I-D.ietf-ipsecme-g-ikev2" class="cite xref">I-D.ietf-ipsecme-g-ikev2</a>]</span>, the Sender-ID MUST be used for
 deriving a unique key for each sender. This ensures that each
-sender maintains a distinct IV and/or sequence number space.<a href="#section-4.4-1" class="pilcrow">¶</a></p>
+sender maintains a distinct IV and/or sequence number space.
+When using independent keys, the Implicit IV (IIV) transforms
+may be used.<a href="#section-4.4-1" class="pilcrow">¶</a></p>
 <p id="section-4.4-2">The Sender-ID is carried in each packet within the Session ID
 field, allowing efficient and reliable key differentiation for
 data security and integrity.<a href="#section-4.4-2" class="pilcrow">¶</a></p>
+<p id="section-4.4-3">The maximum length of GWP_SENDER_ID_BITS in GCKS policy
+is 16 bits when using the Session ID to carry the Sender-ID.<a href="#section-4.4-3" class="pilcrow">¶</a></p>
+<p id="section-4.4-4">[Note: we could allow 32 bit or any lenght field for
+GWP_SENDER_ID_BITS then it would have be carried in
+a EESP Options TLV and not in Session ID]<a href="#section-4.4-4" class="pilcrow">¶</a></p>
 </section>
 </section>
 <section id="section-5">
