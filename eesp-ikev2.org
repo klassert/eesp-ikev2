@@ -110,7 +110,8 @@ This document uses the following terms defined in
 [[I-D.ietf-ipsecme-ikev2-rename-esn]] : Replay Protection.
 
 This document uses the following terms defined in
-[[I-D.ietf-ipsecme-g-ikev2]]: Sender-ID.
+[[I-D.ietf-ipsecme-g-ikev2]]: Sender-ID, Data-Security SA,
+GWP_SENDER_ID_BITS, GCKS policy.
 
 * EESP SA IKEv2 Negotiation
 To negotiate of EESP Security Associations (SAs), as specified
@@ -420,17 +421,25 @@ limit—cryptographic or time- based—is reached first, subseqenty all
 Sub SAs must rekeyed.
 
 
-** Multiple Sender Group SA Data SA Key Derivation
+** Multiple Sender Group SA Key Derivation
 
 When using EESP with a group SA, as specified in
 [[I-D.ietf-ipsecme-g-ikev2]], the Sender-ID MUST be used for
 deriving a unique key for each sender. This ensures that each
 sender maintains a distinct IV and/or sequence number space.
+When using independent keys, the Implicit IV (IIV) transforms
+may be used.
 
 The Sender-ID is carried in each packet within the Session ID
 field, allowing efficient and reliable key differentiation for
 data security and integrity.
 
+The maximum length of GWP_SENDER_ID_BITS in GCKS policy
+is 16 bits when using the Session ID to carry the Sender-ID.
+
+[Note: we could allow 32 bit or any lenght field for
+GWP_SENDER_ID_BITS then it would have be carried in
+a EESP Options TLV and not in Session ID]
 
 * Session ID
 
