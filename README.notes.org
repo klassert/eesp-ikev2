@@ -83,13 +83,20 @@ In Section 5.4 of Key Management for Multicast [[RFC2627]] a
 Logical Key Hierarchy (LKH). I din't follow that completly.
 It is refered in G-IKEv2.
 
-** Hardware friendly prf+
+** Hardware friendly prf
 Current IKEv2 IANA registry,[[IKEv2-prf]], specifies very few
 hardware friendly Pseudorandom Function Transforms. And IETF
 recmendations [[RFC8247]] has only PRF_AES128_XCBC.
 
-While in practice many cloud providers appears to be using more
-hardware friendly PRF, such as AES-CMAC256 by [[PSP]]
+Hardware friendly prf and prf+ are limited to maximum strength of
+128 bits! While the SHA2 does not have this limit. This comes
+from the limit of input and output block of AES underlying
+structure. Input is 128 bit and output are 128bits,
+even when using a 256 bit key. Hence the overall strength
+when using AES as prf would reduce to 128bit.
+
+In practice many cloud providers appears to be using more
+hardware friendly PRF, such as AES-CMAC-128 by [[PSP]]
 and very likely AES-CTR by Amazon AWS. Any public citations of AWS
 PRF? I deduced AES-CTR from their comment to [[NIST-800-108-comments]].
 
