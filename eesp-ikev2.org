@@ -177,7 +177,7 @@ the original EESP SA.
       |     |     +-- Attribute ( Key Length = 128 )
       |     +-- Transform INTEG ( Name = AUTH_HMAC_SHA1_96 )
       |     +-- Transform INTEG ( Name = AUTH_AES_XCBC_96 )
-      |     +-- Transform RP   ( Name = ESN(1) )
+      |     +-- Transform SNP ( Name = Full 64 bit Sequence Number)
       |     +-- Transform EESPV ( Name = V1 )
       |     +-- Transform EESPSUBSA ( Name =  )
       |     +-- Transform EESPSSID ( Name =  )
@@ -185,27 +185,28 @@ the original EESP SA.
 #+end_src
 
 ** Replay Protection Service
-EESP provides an optional Replay service using a
-64 bit Sequence Number, carried in the packet.
+EESP provides an optional Replay service using
+Full 64 bit Sequence Number(TBD10), carried in the packet.
 To enable Replay service the initiator SHOULD
-propose replay protection(RP) Transforms RP = (1, Name 64 bit ESN)
-in Substructure of the Proposal Substructure inside the Security
-Association (SA) payload in the IKEv2 Exchange. When the responder
-select 64 bit ESN a receiver MUST enable Reply Protection.
+propose Sequence Numbers Properties Transforms,
+SNP = (Full 64 bit Sequence Number(TBD10)) in Substructure of the
+Proposal Substructure inside the Security Association (SA) payload
+in the IKEv2 Exchange. When the responder select 64 bit ESN a
+receiver MUST enable Reply Protection.
 # NOTE STK: I'd say MUST above as we want to negotiate Anti-Replayservice
 # and not just the presense of the seq nr field.
 
-When the Transform Type [[IKEv2-RP]] is not present in initiator's
+When the Transform Type [[IKEv2-SNP]] is not present in initiator's
 Child SA proposal during negotiation of an EESP Child SA, the
 Sequence Number field MUST NOT be transmitted in the EESP packet.
 
-When RP is not negotiated, i.e., when the 64 bit sequence number is
-not carried in the EESP packet, an EESP receiver should not act on
-address or port changes. It should not initiate a dynamic address
-update without the use of IKEv2 Mobility [[RFC4555]]. Since the Replay
-Protection service is disabled, an attacker could replay packets with
-a different source address. Otherwise, an attacker could disrupt the
-connection by capturing and replaying a single packet with different
+When the Replay Prtection is not negotiated, i.e., when the 64 bit
+sequence number is not carried in the EESP packet, an EESP receiver
+should not act on address or port changes. It should not initiate a
+dynamic address update without the use of IKEv2 Mobility [[RFC4555]].
+Since the Replay Protection service is disabled, an attacker could
+replay packets with a different source address. An attacker could disrupt
+the connection by capturing and replaying a single packet with different
 source address or port number.
 
 ** Explicit Initialization Vector
@@ -219,8 +220,11 @@ may be carried explicitly in every EESP packet.
 When using the Implicit Initialization Vector (IIV) encryption
 algorithm [[RFC8750]], the IV MUST be omitted. To negotiate this,
 IIV transforms specified in [[IKEv2-Enc]] MUST be used. Additionally,
-[[IKEv2-RP]] MUST be negotiated to carry a 64-bit ESN in the EESP
-packet if the peers
+[[IKEv2-SNP]] MUST be negotiated to carry Full 64 bit Sequence Number
+in the EESP packet.
+
+[AA NOTE: should add error message when there no 64 bit SN
+and IIV is proposed??]
 
 ** EESP Version
 Each SA need an EESP Base Header version which is specified
@@ -283,9 +287,6 @@ RSS (Receive Side Scaling) mechanisms. In such scenarios, the
 initiator MAY use a distinct, ephemeral source port for Sub SA IDs
 greater than zero. Both peers MAY independently select different
 source ports for the same Sub SA ID.
-
-
-
 
 It is important to note that all IKE messages MUST NOT utilize these
 ephemeral source ports. Instead, IKE traffic should be confined to
@@ -578,6 +579,15 @@ This document defines new Notify Message types in the
 | [TBD2] | INVALID_SESSION_ID        | [this document] |
 | [TBD3] | INVALID_SUB_SA            | [this document] |
 
+*** Sequence Numbers Properties
+
+This document defines a new value in the IKEv2 "Transform Type 5 - Sequence
+   Numbers Properties Transform IDs" registry:
+
+| Value  | Name                          |  Reference       |
+|-------------+--------------------------+------------------+
+| [TBD10]| Full 64-bit Sequence Numbers  |  [this document] |
+
 ** New Registries
 
 A new set of registries is created for EESP-IKEv2 on IKEv2 parameters
@@ -720,7 +730,7 @@ TBD
 :REF_ORG: IANA
 :END:
 
-** IKEv2-RP
+** IKEv2-SNP
 :PROPERTIES:
 :REF_TARGET: https://www.iana.org/assignments/ikev2-parameters/ikev2-parameters.xhtml#ikev2-parameters-9
 :REF_TITLE: IKEv2 Parameters: Encryption Algorithm Transform IDs
