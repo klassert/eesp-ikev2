@@ -218,7 +218,7 @@ IIV transforms specified in [[IKEv2-Enc]] MUST be used. Additionally,
 in the EESP packet.
 
 [AA NOTE: should add error message when there no 64 bit SN
-and IIV is proposed??]
+and IIV is proposed and EESP is requested??]
 
 ** EESP Version
 Each SA need an EESP Base Header version which is specified
@@ -239,15 +239,15 @@ A Sub SA is a unidirectional Security Association derived from an
 existing EESP Child SA pair. It inherits all properties except
 keys, sequence number space, and IV space. These three are unique for
 each Sub SA. This allows finer granularity for managing
-one-directional traffic flows. Sub SAs avoid the overhead associated
+uni-directional traffic flows. Sub SAs avoid the overhead associated
 with bidirectional Child SAs for identical traffic
 selections[[RFC7296]], [[RFC9611]]. They enable more efficient
 resource utilization and improved performance, particularly in
 scenarios requiring high flexibility. Each Sub SA is uniquely
 identified by a Sub SA ID, which is used to derive a unique key. The
 Sub SA ID is carried in each EESP packet, either in the Session ID
-field or the Flow ID field, as negotiated during the establishment of
-the EESP Child SA.
+field or in the Flow ID field, as negotiated during the establishment
+of the EESP Child SA.
 
 Advantages of Sub SAs compared to Child SAs with different keys:
 
