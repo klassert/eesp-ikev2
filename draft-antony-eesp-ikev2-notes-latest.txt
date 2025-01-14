@@ -5,7 +5,7 @@
 IPSECME Working Group                                        S. Klassert
 Internet-Draft                                                 A. Antony
 Intended status: Informational                                   secunet
-Expires: 17 July 2025                                    13 January 2025
+Expires: 18 July 2025                                    14 January 2025
 
 
                  Notes on IKEv2 Key Derivation Function
@@ -26,7 +26,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 17 July 2025.
+   This Internet-Draft will expire on 18 July 2025.
 
 Copyright Notice
 
@@ -46,14 +46,14 @@ Table of Contents
 
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
    2.  KDF methods . . . . . . . . . . . . . . . . . . . . . . . . .   2
-     2.1.  Hardware friendly prf+  . . . . . . . . . . . . . . . . .   3
-     2.2.  KDF References  . . . . . . . . . . . . . . . . . . . . .   3
+     2.1.  Hardware friendly prf . . . . . . . . . . . . . . . . . .   3
+     2.2.  KDF References  . . . . . . . . . . . . . . . . . . . . .   4
    3.  UDP Encap . . . . . . . . . . . . . . . . . . . . . . . . . .   4
      3.1.  Use cases for UDP Encapsulation without NAT . . . . . . .   4
 
 
 
-Klassert & Antony         Expires 17 July 2025                  [Page 1]
+Klassert & Antony         Expires 18 July 2025                  [Page 1]
 
 Internet-Draft               KEv2 KDF Notes                 January 2025
 
@@ -63,7 +63,7 @@ Internet-Draft               KEv2 KDF Notes                 January 2025
    5.  UDP pot sharing on Linux  . . . . . . . . . . . . . . . . . .   5
    6.  Normative References  . . . . . . . . . . . . . . . . . . . .   5
    7.  Informative References  . . . . . . . . . . . . . . . . . . .   6
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .   7
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .   8
 
 1.  Introduction
 
@@ -109,7 +109,7 @@ Internet-Draft               KEv2 KDF Notes                 January 2025
 
 
 
-Klassert & Antony         Expires 17 July 2025                  [Page 2]
+Klassert & Antony         Expires 18 July 2025                  [Page 2]
 
 Internet-Draft               KEv2 KDF Notes                 January 2025
 
@@ -135,16 +135,23 @@ Internet-Draft               KEv2 KDF Notes                 January 2025
    Key Hierarchy (LKH).  I din't follow that completly.  It is refered
    in G-IKEv2.
 
-2.1.  Hardware friendly prf+
+2.1.  Hardware friendly prf
 
    Current IKEv2 IANA registry,[IKEv2-prf], specifies very few hardware
    friendly Pseudorandom Function Transforms.  And IETF recmendations
    [RFC8247] has only PRF_AES128_XCBC.
 
-   While in practice many cloud providers appears to be using more
-   hardware friendly PRF, such as AES-CMAC256 by [PSP] and very likely
-   AES-CTR by Amazon AWS.  Any public citations of AWS PRF?  I deduced
-   AES-CTR from their comment to [NIST-800-108-comments].
+   Hardware friendly prf and prf+ are limited to maximum strength of 128
+   bits!  While the SHA2 does not have this limit.  This comes from the
+   limit of input and output block of AES underlying structure.  Input
+   is 128 bit and output are 128bits, even when using a 256 bit key.
+   Hence the overall strength when using AES as prf would reduce to
+   128bit.
+
+   In practice many cloud providers appears to be using more hardware
+   friendly PRF, such as AES-CMAC-128 by [PSP] and very likely AES-CTR
+   by Amazon AWS.  Any public citations of AWS PRF?  I deduced AES-CTR
+   from their comment to [NIST-800-108-comments].
 
    Section 2.14 of [RFC7296] "If the negotiated PRF is AES-XCBC-PRF-128
    [RFC4434] or AES-CMAC-PRF-128 [RFC4615], only the first 64 bits of Ni
@@ -156,19 +163,19 @@ Internet-Draft               KEv2 KDF Notes                 January 2025
    output, currently supports SHA256 and SHA384, a.k.a.  HASH, HKDF.
    e.g.  TLS_AES_128_GCM_SHA256 TLS_AES_256_GCM_SHA384.
 
+
+
+Klassert & Antony         Expires 18 July 2025                  [Page 3]
+
+Internet-Draft               KEv2 KDF Notes                 January 2025
+
+
 2.2.  KDF References
 
    TLS 1.3[RFC8446] use hkdf and their reference Krawczyk, H.,
    "Cryptographic Extraction and Key Derivation: The HKDF Scheme",
    Proceedings of CRYPTO 2010, August 2010,
    https://eprint.iacr.org/2010/264.
-
-
-
-Klassert & Antony         Expires 17 July 2025                  [Page 3]
-
-Internet-Draft               KEv2 KDF Notes                 January 2025
-
 
    Another possibly related reference, work in cfrg, but for hardware
    wallets, I.D-dijkhuis-cfrg-hdkeys
@@ -211,20 +218,17 @@ Internet-Draft               KEv2 KDF Notes                 January 2025
 
    For further details, see: [Azure-Network]
 
-   [AWS-Network]
-
-   [GCP-Network]
 
 
 
-
-
-
-
-Klassert & Antony         Expires 17 July 2025                  [Page 4]
+Klassert & Antony         Expires 18 July 2025                  [Page 4]
 
 Internet-Draft               KEv2 KDF Notes                 January 2025
 
+
+   [AWS-Network]
+
+   [GCP-Network]
 
 4.  WESP UDP Encap
 
@@ -268,19 +272,20 @@ Internet-Draft               KEv2 KDF Notes                 January 2025
               <https://www.nist.gov/publications/recommendation-key-
               derivation-using-pseudorandom-functions-1>.
 
+
+
+
+
+
+Klassert & Antony         Expires 18 July 2025                  [Page 5]
+
+Internet-Draft               KEv2 KDF Notes                 January 2025
+
+
    [RFC2627]  Wallner, D., Harder, E., and R. Agee, "Key Management for
               Multicast: Issues and Architectures", RFC 2627,
               DOI 10.17487/RFC2627, June 1999,
               <https://www.rfc-editor.org/info/rfc2627>.
-
-
-
-
-
-Klassert & Antony         Expires 17 July 2025                  [Page 5]
-
-Internet-Draft               KEv2 KDF Notes                 January 2025
-
 
    [RFC3948]  Huttunen, A., Swander, B., Volpe, V., DiBurro, L., and M.
               Stenberg, "UDP Encapsulation of IPsec ESP Packets",
@@ -322,6 +327,17 @@ Internet-Draft               KEv2 KDF Notes                 January 2025
               <https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-
               instance-network-bandwidth.html>.
 
+
+
+
+
+
+
+Klassert & Antony         Expires 18 July 2025                  [Page 6]
+
+Internet-Draft               KEv2 KDF Notes                 January 2025
+
+
    [Azure-Network]
               Microsoft Azure, "Azure Virtual machine network
               bandwidth", <https://learn.microsoft.com/en-us/azure/
@@ -330,13 +346,6 @@ Internet-Draft               KEv2 KDF Notes                 January 2025
    [GCP-Network]
               Google, "Google Compute Engine Network bandwidth",
               <https://cloud.google.com/compute/docs/network-bandwidth>.
-
-
-
-Klassert & Antony         Expires 17 July 2025                  [Page 6]
-
-Internet-Draft               KEv2 KDF Notes                 January 2025
-
 
    [I-D.ietf-ipsecme-g-ikev2]
               Smyslov, V. and B. Weis, "Group Key Management using
@@ -374,6 +383,17 @@ Internet-Draft               KEv2 KDF Notes                 January 2025
               Version 1.3", RFC 8446, DOI 10.17487/RFC8446, August 2018,
               <https://www.rfc-editor.org/info/rfc8446>.
 
+
+
+
+
+
+
+Klassert & Antony         Expires 18 July 2025                  [Page 7]
+
+Internet-Draft               KEv2 KDF Notes                 January 2025
+
+
    [RFC9611]  Antony, A., Brunner, T., Klassert, S., and P. Wouters,
               "Internet Key Exchange Protocol Version 2 (IKEv2) Support
               for Per-Resource Child Security Associations (SAs)",
@@ -385,13 +405,6 @@ Authors' Addresses
    Steffen Klassert
    secunet Security Networks AG
    Email: steffen.klassert@secunet.com
-
-
-
-
-Klassert & Antony         Expires 17 July 2025                  [Page 7]
-
-Internet-Draft               KEv2 KDF Notes                 January 2025
 
 
    Antony Antony
@@ -432,17 +445,4 @@ Internet-Draft               KEv2 KDF Notes                 January 2025
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-Klassert & Antony         Expires 17 July 2025                  [Page 8]
+Klassert & Antony         Expires 18 July 2025                  [Page 8]
