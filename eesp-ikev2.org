@@ -278,9 +278,9 @@ An EESP SA primarily uses UDP encapsulation to facilitate NAT
 traversal.  However, an additional use case for UDP encapsulation is
 to introduce source port entropy, which supports ECMP or/and
 RSS (Receive Side Scaling) mechanisms. In such scenarios, the
-initiator MAY use a distinct, ephemeral source port for Sub SA IDs
-greater than zero. Both peers MAY independently select different
-source ports for the same Sub SA ID.
+initiator MAY also use a distinct, ephemeral source port for
+Sub SA IDs greater than zero. Both peers MAY independently select
+different source ports for the same Sub SA ID.
 
 It is important to note that all IKE messages MUST NOT utilize these
 ephemeral source ports. Instead, IKE traffic should be confined to
@@ -298,7 +298,6 @@ maintain a mapping table to track the source port associated with
 each Sub SA independently. This ensures that traffic is correctly
 routed and prevents ambiguity in handling packets associated with
 different Sub SAs when a NAT is present.
-
 
 ** Key derivation for Sub SA
 
