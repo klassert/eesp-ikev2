@@ -318,63 +318,32 @@ The requirements:
 - Minimal memory requirements
 - Keyderviation support multiple SAs, such as EESP, AH
 
-*** Iterative key derivation
-To iteratively derive keys create a large keymt. e.g. for the nth
-
-KEYMAT = prf+(SK_d, Ni | Nr)
-When there is no additional Key Exchange.
-
-KEYMAT = prf+(SK_d, g^ir (new) | Ni | Nr)
-When there is additional Key Exchange Paload, a.k.a. PFS.
-
-Where SK_d is derived from IKE negotiation, as specified in Section
-2.14 of [[RFC7296]]
-
-Where g^ir (new) is the shared secret from the ephemeral Key Exchange
-of this CREATE_CHILD_SA exchange (represented as an
-octet string in big endian order padded with zeros in the high-order
-bits if necessary to make it the length of the modulus).
-
-For example for Sub SA ID n, use nth set of keys from the KEYMAT.
-The order is specified in Section 2.17 of [[RFC7296]].
-
-With existing prf+ function the keymat length is rather limited.
-[[RFC7296]] limit the iteration to 256.
-However, with modern prf+, more specifically XOF, functions,
-such as KMAC specified in [[NIST800-185 ]], or HopMAC/TurboSHAKE
-specified [[I-D.irtf-cfrg-kangarootwelve]] the KEYMAT can be
-infinitely,(2^40 bytes), long.
-
-An XOF differs from a traditional PRF, hash, function in that it is
-designed to generate very long, and variable length output.
-Unlike the IKEv2 prf+ an XOF can generate longer outputs directly
-without iterative call.
-
-Typical length of of 256 bit encryption is 36 bytes,
-(32 + 4 salt for IV), in one direction. Using an AEAD for 64K Sub SAs
-maximum KEYMAT length would
-be:
-
-4718592 bytes = 2^16 * 2 * 36 bytes. i.e. 4.5 Mega Bytes
-
-When using non AEAD algorithms KEMAT size would roughly double of the
-above, about 9 Mega Bytes.
-
-The memory requirment fot generate could be reduced by changing prf+
-function interface to return portion of the KEYMAT when using
-iterative feedback mode.
-
 *** Hierarchical key derivation
-
 Hierarchical key derivation use Sub SA ID, which is carried in EESP
 Seesion ID or in EESP Flow ID(TLV), as an input to the key dervivation.
 
 Two KDF are propsed below and eventually choose one of them.
 
-KEYMAT = prf+(SK_child, Sub SA ID)
+KEYMAT = prf+(SK_d, Ni | Nr | Sub SA ID)
 
-Where SK_child is the key derived for the Child SA as specified in
-[[RFC7296]] section 2.17
+Where Ni and Nr are the nonces from the IKE_SA_INIT exchange if this
+request is the first Child SA created or the fresh Ni and Nr from the
+CREATE_CHILD_SA exchange if this is a subsequent creation.
+
+For CREATE_CHILD_SA exchanges including an optional Key Exchange
+, the keying material is defined as:
+
+KEYMAT = prf+(SK_d, g^ir (new) | Ni | Nr | Sub SA ID)
+
+where g^ir (new) is the shared secret from the ephemeral Key Exchange
+of this CREATE_CHILD_SA exchange (represented as an
+octet string in big endian order padded with zeros in the high-order
+bits if necessary to make it the length of the modulus).
+
+[Note an alternative design that would provide
+uniform distribution when oring with Sub SA ID.
+
+KEYMAT = prf+(prf(SK_d, Ni | Nr | Sub SA ID))
 
 One advantage of Hierarchical KDF is KEYMAT for the Sub SAs can be
 generated on the fly, for every packet, when available memory is
@@ -382,24 +351,19 @@ limited, for example [[PSP]]. This is usually the case when key
 derivation is implemented in hardware. When implimenting in hardware
 choose a hardware friendly prf+.
 
-An alternative key derivation :
-
-KEYMAT = prf+(SK_d, Ni | Nr | Flow ID)
-
-NOTE: does using using Ni|Nr|g^ir KDF input matters? Is there a
-perfernece? Any advise from the cryptographers?
-
 ** Rekey Key Derivation.
 During the EESP SA rekey, new keys are derived using the new Ni
 and Nr values. If a Key Exchange (KE) method was used in the rekying,
 CREATE_CHILD_SA exchange, the new key MAY also include g^ir as part of
 the derivation process.
 
-KEYMAT = prf+(SK_child, Sub SA ID)
+KEYMAT = prf+(SK_d, Ni | Nr | Sub SA ID)
 
-or depending on which one of the above KDF is chossen.
+or
 
 KEYMAT = prf+(SK_d, g^ir (new) | Ni | Nr | Sub SA ID)
+
+When there is an additionl Key Exchange in rekey.
 
 Even though each Sub SA can be independently rekeyed, for
 simplicity and security, all Sub SAs MUST be rekeyed together
