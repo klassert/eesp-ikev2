@@ -30,7 +30,7 @@ These are notes on EESP IKEv2 and other EESP related information. To keep it in 
 * KDF methods
 
 IKEv2 key derivation, [[RFC7296]], is likely ~KDF in Feedback Mode~
-specified in [[NIST800-108]] and RFC[[5869]]. This the iterative
+specified in [[NIST800-108]] and [[RFC5869]]. This the iterative
 method in Section 2.13 [[RFC7296]]
 
 In the following, | indicates concatenation.  prf+ is defined as:
@@ -118,12 +118,20 @@ e.g. TLS_AES_128_GCM_SHA256 TLS_AES_256_GCM_SHA384.
 
 ** KDF  References
 
+[[I-D.mattsson-cfrg-aes-gcm-sst]] seems to be deriving per packet keys
+for GCM. This is an interesting work in cfrg and it is also proposed
+to NIST. I think their work will keep the IKEv2 prf and prf+ as it is
+just another layer of HKDF using the AEAD interface specified to
+[[RFC5116]], which widely reffered API. So any existing implementation
+that support RFC5116 would be compaitable with GCM SST proposal.
+I only had qunck glance, so I am not 100% sure yet!
+
 TLS 1.3[[RFC8446]] use hkdf and their reference
 Krawczyk, H., "Cryptographic Extraction and Key Derivation: The HKDF
 Scheme", Proceedings of CRYPTO 2010, August 2010,
 <https://eprint.iacr.org/2010/264>.
 
-IETF CFRG is working requirements of AEAD [[I.D-irtf-cfrg-aead-properties]].
+IETF CFRG is working requirements of AEAD [[I-D.irtf-cfrg-aead-properties]]
 They decided not discuss AEAD as PRF? This is sad news not to
 specifiy use of same hardware primitive as a PRF for high performance
 IPsec implimenation.
@@ -134,7 +142,7 @@ crypto operation is used for XOF. Even when the tag 256 bit
 AES output is  128bits. While there is also a suggestion
 ChaCha20 is better that AES?
 
-Discussion of  [[I.D-irtf-cfrg-aead-properties]]
+Discussion of  [[I-D.irtf-cfrg-aead-properties]]
 https://mailarchive.ietf.org/arch/search/?q=draft-irtf-cfrg-aead-properties%20PRF
 
 Their argument is when using a 128bit primitive as PRF it's
@@ -149,7 +157,7 @@ I.D-dijkhuis-cfrg-hdkeys
 IPsecME discussion arguing AES based PRFs would have max 128bit entropy.
 https://mailarchive.ietf.org/arch/msg/ipsec/Tz4xsjmEHH57jvdMS9pqSFnGbwc/
 
-NIST is coming up with a modern AEAD. The winner is Ascon in 2024.
+NIST is coming up with a modern AEAD. The winner is [[ASCON]] in 2024.
 The inventors envsions that AEAD as a PRF. However, only ASCON 128.
 I found it odd this one only support 128 bit tags. Then we are back
 to the same argument as this is not good enough for IKEv2 PRF.
@@ -255,9 +263,13 @@ ESP SPI the bit 31 should be zero.
 ** RFC4434
 ** RFC9611
 ** RFC8446
+** RFC7539
+** RFC9681
+** RFC5116
 
 ** I-D.ietf-ipsecme-g-ikev2
-** I-D-irtf-cfrg-aead-properties
+** I-D.irtf-cfrg-aead-properties
+** I-D.mattsson-cfrg-aes-gcm-sst
 
 ** Azure-Network
 :PROPERTIES:
@@ -321,3 +333,14 @@ ESP SPI the bit 31 should be zero.
 :REF_TITLE: The Ascon Family: Lightweight Authenticated Encryption, Hashing, and More :REF_ORG: Ascon Team
 :END:
 
+** GCM-SST-Paper
+:PROPERTIES:
+:REF_TARGET: https://csrc.nist.gov/csrc/media/Presentations/2023/the-ascon-family/images-media/june-21-mendel-the-ascon-family.pdf
+:REF_TITLE: Galois Counter Mode with Secure Short Tags (GCM-SST)
+:END:
+
+** GCM-SST
+:PROPERTIES:
+:REF_TARGET: https://csrc.nist.gov/csrc/media/Presentations/2023/galois-counter-mode-with-secure-short-tags/images-media/sess-5-mattsson-bcm-workshop-2023.pdf
+:REF_TITLE: Galois Counter Mode with Secure Short Tags (GCM-SST) Slides
+:END:
