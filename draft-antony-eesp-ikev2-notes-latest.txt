@@ -5,7 +5,7 @@
 IPSECME Working Group                                        S. Klassert
 Internet-Draft                                                 A. Antony
 Intended status: Informational                                   secunet
-Expires: 19 July 2025                                    15 January 2025
+Expires: 20 July 2025                                    16 January 2025
 
 
                  Notes on IKEv2 Key Derivation Function
@@ -26,7 +26,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 19 July 2025.
+   This Internet-Draft will expire on 20 July 2025.
 
 Copyright Notice
 
@@ -48,22 +48,22 @@ Table of Contents
    2.  KDF methods . . . . . . . . . . . . . . . . . . . . . . . . .   2
      2.1.  Hardware friendly prf . . . . . . . . . . . . . . . . . .   3
      2.2.  KDF References  . . . . . . . . . . . . . . . . . . . . .   4
-   3.  UDP Encap . . . . . . . . . . . . . . . . . . . . . . . . . .   4
-     3.1.  Use cases for UDP Encapsulation without NAT . . . . . . .   4
+   3.  UDP Encap . . . . . . . . . . . . . . . . . . . . . . . . . .   5
+     3.1.  Use cases for UDP Encapsulation without NAT . . . . . . .   5
 
 
 
-Klassert & Antony         Expires 19 July 2025                  [Page 1]
+Klassert & Antony         Expires 20 July 2025                  [Page 1]
 
 Internet-Draft               KEv2 KDF Notes                 January 2025
 
 
-       3.1.1.  UDP Encapsulation in Cloud Provider . . . . . . . . .   4
-   4.  WESP UDP Encap  . . . . . . . . . . . . . . . . . . . . . . .   5
-   5.  UDP pot sharing on Linux  . . . . . . . . . . . . . . . . . .   5
-   6.  Normative References  . . . . . . . . . . . . . . . . . . . .   5
-   7.  Informative References  . . . . . . . . . . . . . . . . . . .   6
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .   8
+       3.1.1.  UDP Encapsulation in Cloud Provider . . . . . . . . .   5
+   4.  WESP UDP Encap  . . . . . . . . . . . . . . . . . . . . . . .   6
+   5.  UDP pot sharing on Linux  . . . . . . . . . . . . . . . . . .   6
+   6.  Normative References  . . . . . . . . . . . . . . . . . . . .   6
+   7.  Informative References  . . . . . . . . . . . . . . . . . . .   7
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  10
 
 1.  Introduction
 
@@ -73,8 +73,8 @@ Internet-Draft               KEv2 KDF Notes                 January 2025
 2.  KDF methods
 
    IKEv2 key derivation, [RFC7296], is likely 'KDF in Feedback Mode'
-   specified in [NIST800-108].  This in iterative method as I see it in
-   Section 2.13 [RFC7296]
+   specified in [NIST800-108] and [RFC5869].  This the iterative method
+   in Section 2.13 [RFC7296]
 
    In the following, | indicates concatenation.  prf+ is defined as:
    prf+ (K,S) = T1 | T2 | T3 | T4 | ...
@@ -89,9 +89,12 @@ Internet-Draft               KEv2 KDF Notes                 January 2025
 
    ...
 
-   Section 2.14 of [RFC7296]
+   Section 2.14 of [RFC7296] which defined HMAC expansion of SKEYSEED
 
    SKEYSEED = prf(Ni | Nr, g^ir)
+
+   IKEv2 key derivation has two setps.  Above is the first step and next
+   key expansion using prf+.
 
    {SK_d | SK_ai | SK_ar | SK_ei | SK_er | SK_pi | SK_pr} = prf+
    (SKEYSEED, Ni | Nr | SPIi | SPIr)
@@ -103,16 +106,15 @@ Internet-Draft               KEv2 KDF Notes                 January 2025
    order padded with zeros if necessary to make it the length of the
    modulus.  Ni and Nr are the nonces, stripped of any headers.
 
-   KEYMAT = prf+(SK_d, Ni | Nr)
 
 
 
-
-
-Klassert & Antony         Expires 19 July 2025                  [Page 2]
+Klassert & Antony         Expires 20 July 2025                  [Page 2]
 
 Internet-Draft               KEv2 KDF Notes                 January 2025
 
+
+   KEYMAT = prf+(SK_d, Ni | Nr)
 
    Where Ni and Nr are the nonces from the IKE_SA_INIT exchange if this
    request is the first Child SA created or the fresh Ni and Nr from the
@@ -156,29 +158,80 @@ Internet-Draft               KEv2 KDF Notes                 January 2025
    Section 2.14 of [RFC7296] "If the negotiated PRF is AES-XCBC-PRF-128
    [RFC4434] or AES-CMAC-PRF-128 [RFC4615], only the first 64 bits of Ni
    and the first 64 bits of Nr are used in calculating SKEYSEED, but all
-   the bits are used for input to the prf+ function."  And AES-GCM 256
-   is not yet an IKEv2 prf.
+   the bits are used for input to the prf+ function."  When using AES-
+   XCBC-PRF-128 AES-CMAC-PRF-128 the SKEYSEED will be 128bits long.  It
+   seems for that reason AES-CMAC-PRF-256 is not standardized?
+
+
+
+
+Klassert & Antony         Expires 20 July 2025                  [Page 3]
+
+Internet-Draft               KEv2 KDF Notes                 January 2025
+
 
    TLS 1.3, Appendix B of [RFC8446] lst HASH.  It need a minimum 256 bit
    output, currently supports SHA256 and SHA384, a.k.a.  HASH, HKDF.
    e.g.  TLS_AES_128_GCM_SHA256 TLS_AES_256_GCM_SHA384.
 
-
-
-Klassert & Antony         Expires 19 July 2025                  [Page 3]
-
-Internet-Draft               KEv2 KDF Notes                 January 2025
-
-
 2.2.  KDF References
+
+   [I-D.mattsson-cfrg-aes-gcm-sst] seems to be deriving per packet keys
+   for GCM.  This is an interesting work in cfrg and it is also proposed
+   to NIST.  I think their work will keep the IKEv2 prf and prf+ as it
+   is just another layer of HKDF using the AEAD interface specified to
+   [RFC5116], which widely reffered API.  So any existing implementation
+   that support RFC5116 would be compaitable with GCM SST proposal.  I
+   only had qunck glance, so I am not 100% sure yet!
 
    TLS 1.3[RFC8446] use hkdf and their reference Krawczyk, H.,
    "Cryptographic Extraction and Key Derivation: The HKDF Scheme",
    Proceedings of CRYPTO 2010, August 2010,
    https://eprint.iacr.org/2010/264.
 
-   Another possibly related reference, work in cfrg, but for hardware
-   wallets, I.D-dijkhuis-cfrg-hdkeys
+   IETF CFRG is working requirements of AEAD
+   [I-D.irtf-cfrg-aead-properties] They decided not discuss AEAD as PRF?
+   This is sad news not to specifiy use of same hardware primitive as a
+   PRF for high performance IPsec implimenation.
+
+   CFRG discusions point out ChaCha20oly1305 [RFC7539] is not a PRF!
+   This points to a reson when using AEAD the underlying crypto
+   operation is used for XOF.  Even when the tag 256 bit AES output is
+   128bits.  While there is also a suggestion ChaCha20 is better that
+   AES?
+
+   Discussion of [I-D.irtf-cfrg-aead-properties]
+   https://mailarchive.ietf.org/arch/search/?q=draft-irtf-cfrg-aead-
+   properties%20PRF
+
+   Their argument is when using a 128bit primitive as PRF it's estimated
+   Birthday Attack strength is 128bits.  Could this be fixed by using
+   two rounds like PSP did and concatinate it for prf, may be but this
+   need be part of IKEv2.  To propose as part of section 2.14
+
+   Another possibly related work in cfrg, but for hardware wallets, I.D-
+   dijkhuis-cfrg-hdkeys
+
+   IPsecME discussion arguing AES based PRFs would have max 128bit
+   entropy. https://mailarchive.ietf.org/arch/msg/ipsec/
+   Tz4xsjmEHH57jvdMS9pqSFnGbwc/
+
+
+
+
+
+
+Klassert & Antony         Expires 20 July 2025                  [Page 4]
+
+Internet-Draft               KEv2 KDF Notes                 January 2025
+
+
+   NIST is coming up with a modern AEAD.  The winner is [ASCON] in 2024.
+   The inventors envsions that AEAD as a PRF.  However, only ASCON 128.
+   I found it odd this one only support 128 bit tags.  Then we are back
+   to the same argument as this is not good enough for IKEv2 PRF.  May
+   be because NIST called it light weight crypto:) We need one for
+   400Gbps too.  A hardware NIC looks like an IoT.
 
 3.  UDP Encap
 
@@ -198,7 +251,8 @@ Internet-Draft               KEv2 KDF Notes                 January 2025
 3.1.1.  UDP Encapsulation in Cloud Provider
 
    A common question is why use UDP when there is no NAT, especially in
-   cloud environments or why vary UDP source ports for inner flows.
+   cloud environments or why vary UDP source ports for when using
+   multiple SA such as [RFC9681]].
 
    Cloud providers often enforce bandwidth limits per flow between nodes
    or to external endpoints.  A flow is defined by a 5-tuple: protocol,
@@ -218,15 +272,15 @@ Internet-Draft               KEv2 KDF Notes                 January 2025
 
    For further details, see: [Azure-Network]
 
+   [AWS-Network]
 
 
 
-Klassert & Antony         Expires 19 July 2025                  [Page 4]
+
+Klassert & Antony         Expires 20 July 2025                  [Page 5]
 
 Internet-Draft               KEv2 KDF Notes                 January 2025
 
-
-   [AWS-Network]
 
    [GCP-Network]
 
@@ -261,8 +315,10 @@ Internet-Draft               KEv2 KDF Notes                 January 2025
 
 5.  UDP pot sharing on Linux
 
-   On linux define EESPINUDP, a type socket encapsulation.  It is
-   similar to ESPINUDP.  When set this socket will accept IKE pac
+   On Linux define EESPINUDP, a type socket encapsulation.  It is
+   similar to ESPINUDP.  When set this socket will accept IKE packets,
+   ESP or EESP packets.  When sharing the same for port EESP and ESP ESP
+   SPI the bit 31 should be zero.
 
 6.  Normative References
 
@@ -277,7 +333,7 @@ Internet-Draft               KEv2 KDF Notes                 January 2025
 
 
 
-Klassert & Antony         Expires 19 July 2025                  [Page 5]
+Klassert & Antony         Expires 20 July 2025                  [Page 6]
 
 Internet-Draft               KEv2 KDF Notes                 January 2025
 
@@ -304,6 +360,11 @@ Internet-Draft               KEv2 KDF Notes                 January 2025
               Visibility", RFC 5840, DOI 10.17487/RFC5840, April 2010,
               <https://www.rfc-editor.org/info/rfc5840>.
 
+   [RFC5869]  Krawczyk, H. and P. Eronen, "HMAC-based Extract-and-Expand
+              Key Derivation Function (HKDF)", RFC 5869,
+              DOI 10.17487/RFC5869, May 2010,
+              <https://www.rfc-editor.org/info/rfc5869>.
+
    [RFC7296]  Kaufman, C., Hoffman, P., Nir, Y., Eronen, P., and T.
               Kivinen, "Internet Key Exchange Protocol Version 2
               (IKEv2)", STD 79, RFC 7296, DOI 10.17487/RFC7296, October
@@ -317,6 +378,22 @@ Internet-Draft               KEv2 KDF Notes                 January 2025
 
 7.  Informative References
 
+   [ASCON]    "The Ascon Family: Lightweight Authenticated Encryption,
+              Hashing, and More :REF_ORG: Ascon Team",
+              <https://csrc.nist.gov/csrc/media/Presentations/2023/the-
+              ascon-family/images-media/june-21-mendel-the-ascon-
+              family.pdf>.
+
+
+
+
+
+
+Klassert & Antony         Expires 20 July 2025                  [Page 7]
+
+Internet-Draft               KEv2 KDF Notes                 January 2025
+
+
    [AWS-IPsec-NetDev]
               Amazon AWS, "NetDev Talk : Multi-core IPsec tunnels",
               <https://learn.microsoft.com/en-us/azure/virtual-network/
@@ -327,21 +404,22 @@ Internet-Draft               KEv2 KDF Notes                 January 2025
               <https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-
               instance-network-bandwidth.html>.
 
-
-
-
-
-
-
-Klassert & Antony         Expires 19 July 2025                  [Page 6]
-
-Internet-Draft               KEv2 KDF Notes                 January 2025
-
-
    [Azure-Network]
               Microsoft Azure, "Azure Virtual machine network
               bandwidth", <https://learn.microsoft.com/en-us/azure/
               virtual-network/virtual-machine-network-throughput>.
+
+   [GCM-SST]  "Galois Counter Mode with Secure Short Tags (GCM-SST)
+              Slides",
+              <https://csrc.nist.gov/csrc/media/Presentations/2023/
+              galois-counter-mode-with-secure-short-tags/images-media/
+              sess-5-mattsson-bcm-workshop-2023.pdf>.
+
+   [GCM-SST-Paper]
+              "Galois Counter Mode with Secure Short Tags (GCM-SST)",
+              <https://csrc.nist.gov/csrc/media/Presentations/2023/the-
+              ascon-family/images-media/june-21-mendel-the-ascon-
+              family.pdf>.
 
    [GCP-Network]
               Google, "Google Compute Engine Network bandwidth",
@@ -350,9 +428,32 @@ Internet-Draft               KEv2 KDF Notes                 January 2025
    [I-D.ietf-ipsecme-g-ikev2]
               Smyslov, V. and B. Weis, "Group Key Management using
               IKEv2", Work in Progress, Internet-Draft, draft-ietf-
-              ipsecme-g-ikev2-19, 28 December 2024,
-              <https://datatracker.ietf.org/doc/html/draft-ietf-ipsecme-
-              g-ikev2-19>.
+              ipsecme-g-ikev2-20, 28 December 2024,
+              <https://datatracker.ietf.org/api/v1/doc/document/draft-
+              ietf-ipsecme-g-ikev2/>.
+
+   [I-D.irtf-cfrg-aead-properties]
+              Bozhko, A., "Properties of AEAD Algorithms", Work in
+              Progress, Internet-Draft, draft-irtf-cfrg-aead-properties-
+              09, 11 October 2024,
+              <https://datatracker.ietf.org/doc/html/draft-irtf-cfrg-
+              aead-properties-09>.
+
+   [I-D.mattsson-cfrg-aes-gcm-sst]
+              Campagna, M., Maximov, A., and J. P. Mattsson, "Galois
+              Counter Mode with Strong Secure Tags (GCM-SST)", Work in
+
+
+
+Klassert & Antony         Expires 20 July 2025                  [Page 8]
+
+Internet-Draft               KEv2 KDF Notes                 January 2025
+
+
+              Progress, Internet-Draft, draft-mattsson-cfrg-aes-gcm-sst-
+              16, 13 January 2025,
+              <https://datatracker.ietf.org/doc/html/draft-mattsson-
+              cfrg-aes-gcm-sst-16>.
 
    [IKEv2-prf]
               IANA, "IKEv2 Parameters: Extended Sequence Numbers
@@ -379,26 +480,36 @@ Internet-Draft               KEv2 KDF Notes                 January 2025
               DOI 10.17487/RFC4434, February 2006,
               <https://www.rfc-editor.org/info/rfc4434>.
 
+   [RFC5116]  McGrew, D., "An Interface and Algorithms for Authenticated
+              Encryption", RFC 5116, DOI 10.17487/RFC5116, January 2008,
+              <https://www.rfc-editor.org/info/rfc5116>.
+
+   [RFC7539]  Nir, Y. and A. Langley, "ChaCha20 and Poly1305 for IETF
+              Protocols", RFC 7539, DOI 10.17487/RFC7539, May 2015,
+              <https://www.rfc-editor.org/info/rfc7539>.
+
    [RFC8446]  Rescorla, E., "The Transport Layer Security (TLS) Protocol
               Version 1.3", RFC 8446, DOI 10.17487/RFC8446, August 2018,
               <https://www.rfc-editor.org/info/rfc8446>.
-
-
-
-
-
-
-
-Klassert & Antony         Expires 19 July 2025                  [Page 7]
-
-Internet-Draft               KEv2 KDF Notes                 January 2025
-
 
    [RFC9611]  Antony, A., Brunner, T., Klassert, S., and P. Wouters,
               "Internet Key Exchange Protocol Version 2 (IKEv2) Support
               for Per-Resource Child Security Associations (SAs)",
               RFC 9611, DOI 10.17487/RFC9611, July 2024,
               <https://www.rfc-editor.org/info/rfc9611>.
+
+
+
+
+Klassert & Antony         Expires 20 July 2025                  [Page 9]
+
+Internet-Draft               KEv2 KDF Notes                 January 2025
+
+
+   [RFC9681]  Decraene, B., Ginsberg, L., Li, T., Solignac, G., Karasek,
+              M., Van de Velde, G., and T. Przygienda, "IS-IS Fast
+              Flooding", RFC 9681, DOI 10.17487/RFC9681, November 2024,
+              <https://www.rfc-editor.org/info/rfc9681>.
 
 Authors' Addresses
 
@@ -445,4 +556,5 @@ Authors' Addresses
 
 
 
-Klassert & Antony         Expires 19 July 2025                  [Page 8]
+
+Klassert & Antony         Expires 20 July 2025                 [Page 10]
