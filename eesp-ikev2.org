@@ -180,10 +180,10 @@ the original EESP SA.
 
 ** Replay Protection Service
 EESP provides an optional Replay service using
-Full 64 bit Sequence Number(TBD10), carried in the packet.
+Full 64 bit Sequence Number(TBD9), carried in the packet.
 To enable Replay service the initiator SHOULD
 propose Sequence Numbers Properties Transforms,
-SNP = (Full 64 bit Sequence Number(TBD10)) in Substructure of the
+SNP = (Full 64 bit Sequence Number(TBD9)) in Substructure of the
 Proposal Substructure inside the Security Association (SA) payload
 in the IKEv2 Exchange. When the responder select 64 bit ESN a
 receiver MUST enable Reply Protection.
@@ -211,14 +211,14 @@ may be carried explicitly in every EESP packet.
 
 ** Implicit Initialization Vectors
 
-When using the Implicit Initialization Vector (IIV) encryption
-algorithm [[RFC8750]], the IV MUST be omitted. To negotiate this,
-IIV transforms specified in [[IKEv2-Enc]] MUST be used. Additionally,
-[[IKEv2-SNP]] MUST be negotiated to carry Full 64 bit Sequence Number
-in the EESP packet.
-
-[AA NOTE: should add error message when there no 64 bit SN
-and IIV is proposed and EESP is requested??]
+With the Implicit Initialization Vector (IIV) encryption algorithm,
+as specified in [[RFC8750]], the IV MUST be omitted in the EESP
+packet. To enable this functionality, IIV transforms defined in
+[[IKEv2-Enc]] MUST be used during negotiation. Furthermore,
+the [[IKEv2-SNP]] extension MUST be negotiated to support the use of
+a Full 64-bit Sequence Numbers in EESP packets. If the the proposal
+does not include Full 64-bit Sequence Numbers return error
+INVALID_SNP.
 
 ** EESP Version
 Each SA need an EESP Base Header version which is specified
@@ -482,19 +482,21 @@ Changes the "Used In" column for the existing allocations as follows;
 This document defines new Notify Message types in the
 "IKEv2 Notify Message Error Types" registry:
 
-| Value  | Notify Message Error Type |  Reference      |
+| Value  | Notify Message Error Type | Reference       |
 |-------------+----------------------+-----------------+
 | [TBD2] | INVALID_SESSION_ID        | [this document] |
 | [TBD3] | INVALID_SUB_SA            | [this document] |
+| [TBD10]| INVALID_SNP               | [this document] |
+
 
 *** Sequence Numbers Properties
 
 This document defines a new value in the IKEv2 "Transform Type 5 - Sequence
    Numbers Properties Transform IDs" registry:
 
-| Value  | Name                          |  Reference       |
-|-------------+--------------------------+------------------+
-| [TBD10]| Full 64-bit Sequence Numbers  |  [this document] |
+| Value  | Name                          | Reference       |
+|-------------+--------------------------+-----------------+
+| [TBD9] | Full 64-bit Sequence Numbers  | [this document] |
 
 ** New Registries
 
@@ -516,7 +518,7 @@ IANA is requested to create a new registry named
 |------------+------------- +-----------------+
 | 0          | Unspecified  | [this document] |
 | 1          | ENCRYPION_ID | [this document] |
-| 2          | SUB_SA_ID     | [this document] |
+| 2          | SUB_SA_ID    | [this document] |
 
 *** EESP Flow ID registry
 
@@ -532,7 +534,7 @@ IANA is requested to create a new registry named
 | Flow ID | Name         | Reference        |
 |---------+--------------+------------------+
 | 0       | Unspecified  | [this document]  |
-| 1       | VNI32        |  [this document] |
+| 1       | VNI32        | [this document]  |
 | 2       | VNI64        | [this document]  |
 | 3       | SUB_SA_16    | [this document]  |
 
