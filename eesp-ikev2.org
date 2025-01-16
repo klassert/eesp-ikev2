@@ -186,8 +186,9 @@ To enable Replay service the initiator SHOULD
 propose Sequence Numbers Transforms,
 SN = (Full 64 bit Sequence Number(TBD9)) in Substructure of the
 Proposal Substructure inside the Security Association (SA) payload
-in the IKEv2 Exchange. When the responder select 64 bit ESN a
+in the IKEv2 Exchange. When the responder select Full 64 bit SN a
 receiver MUST enable Reply Protection.
+
 # NOTE STK: I'd say MUST above as we want to negotiate Anti-Replayservice
 # and not just the presense of the seq nr field.
 
@@ -294,7 +295,7 @@ initiator MAY also use a distinct, ephemeral source port for
 Sub SA IDs greater than zero. Both peers MAY independently select
 different source ports for the same Sub SA ID.
 
-It is important to note that all IKE messages MUST NOT utilize these
+It is important to note that IKE messages MUST NOT utilize these
 ephemeral source ports. Instead, IKE traffic should be confined to
 the source and destination ports to ensure proper protocol operation
 and maintain compatibility with existing implementations.
@@ -316,18 +317,15 @@ different Sub SAs when a NAT is present.
 # [[RFC7296]] section 2.17 specifies Child SA key generation.
 
 When the EESP SA is negotiated with a Sub SA Keys (SUB_SA_ID), each
-Sub SA need to derive its own unique keys. This allows each Sub SA
+Sub SA derives its own unique keys. This allows each Sub SA
 its own independent Sequence Number space, and independent IV space.
-
-Initially we are proposing three Key Derivation Functions(KDF) for
-Sub SAs. Based on community feedback, further research and advise from
-cryptographers one method will be chosen.
 
 The requirements:
 - Independent keys for each Sub SA
 - Ability to derive Sub SA keys on the fly with least amount of memory usage
 - Minimal memory requirements
 - Keyderviation support multiple SAs, such as EESP, AH
+- Use the same Crypto primitive as used for encryption e.g. AES-*
 
 *** Hierarchical key derivation
 Hierarchical key derivation use Sub SA ID, which is carried in EESP
@@ -350,9 +348,6 @@ where g^ir (new) is the shared secret from the ephemeral Key Exchange
 of this CREATE_CHILD_SA exchange (represented as an
 octet string in big endian order padded with zeros in the high-order
 bits if necessary to make it the length of the modulus).
-
-[Note an alternative design that would provide
-uniform distribution when oring with Sub SA ID.
 
 KEYMAT = prf+(prf(SK_d, Ni | Nr | Sub SA ID))
 
