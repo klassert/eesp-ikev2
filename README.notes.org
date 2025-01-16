@@ -29,12 +29,9 @@ These are notes on EESP IKEv2 and other EESP related information. To keep it in 
 
 * KDF methods
 
-Using the SKEYSEED further keys are derived using iterative call to prf, which is
-denoted as prf+.
-
 IKEv2 key derivation, [[RFC7296]], is likely ~KDF in Feedback Mode~
-specified in [[NIST800-108]] and RFC[[5869]]. This in iterative
-method as I see it in Section 2.13 [[RFC7296]]
+specified in [[NIST800-108]] and RFC[[5869]]. This the iterative
+method in Section 2.13 [[RFC7296]]
 
 In the following, | indicates concatenation.  prf+ is defined as:
 prf+ (K,S) = T1 | T2 | T3 | T4 | ...
@@ -50,7 +47,7 @@ where:
 
    ...
 
-Section 2.14 of [[RFC7296]] which defined HMAC  expansion of SKEYSEED
+Section 2.14 of [[RFC7296]] which defined HMAC expansion of SKEYSEED
 
 SKEYSEED = prf(Ni | Nr, g^ir)
 
@@ -111,7 +108,9 @@ Section 2.14 of [[RFC7296]] "If the negotiated PRF is
 AES-XCBC-PRF-128 [[RFC4434]] or AES-CMAC-PRF-128 [[RFC4615]],
 only the first 64 bits of Ni and the first 64 bits of Nr are used in
 calculating SKEYSEED, but all the bits are used for input to the prf+
-function." And AES-GCM 256 is not yet an IKEv2 prf.
+function." When using AES-XCBC-PRF-128 AES-CMAC-PRF-128 the SKEYSEED
+will be 128bits long. It seems for that reason AES-CMAC-PRF-256 is not
+standardized?
 
 TLS 1.3, Appendix B of [[RFC8446]] lst HASH. It need a minimum 256
 bit output, currently supports SHA256 and SHA384, a.k.a. HASH, HKDF.
@@ -124,8 +123,38 @@ Krawczyk, H., "Cryptographic Extraction and Key Derivation: The HKDF
 Scheme", Proceedings of CRYPTO 2010, August 2010,
 <https://eprint.iacr.org/2010/264>.
 
-Another possibly related reference, work in cfrg, but for hardware
-wallets, I.D-dijkhuis-cfrg-hdkeys
+IETF CFRG is working requirements of AEAD [[I.D-irtf-cfrg-aead-properties]].
+They decided not discuss AEAD as PRF? This is sad news not to
+specifiy use of same hardware primitive as a PRF for high performance
+IPsec implimenation.
+
+CFRG discusions point out ChaCha20oly1305 [[RFC7539]] is not a
+PRF! This points to a reson when using  AEAD the underlying
+crypto operation is used for XOF. Even when the tag 256 bit
+AES output is  128bits. While there is also a suggestion
+ChaCha20 is better that AES?
+
+Discussion of  [[I.D-irtf-cfrg-aead-properties]]
+https://mailarchive.ietf.org/arch/search/?q=draft-irtf-cfrg-aead-properties%20PRF
+
+Their argument is when using a 128bit primitive as PRF it's
+estimated Birthday Attack strength is
+128bits. Could this be fixed by using two rounds like PSP did and
+concatinate it for prf, may be but this need be part of IKEv2. To propose
+as part of section 2.14
+
+Another possibly related work in cfrg, but for hardware wallets,
+I.D-dijkhuis-cfrg-hdkeys
+
+IPsecME discussion arguing AES based PRFs would have max 128bit entropy.
+https://mailarchive.ietf.org/arch/msg/ipsec/Tz4xsjmEHH57jvdMS9pqSFnGbwc/
+
+NIST is coming up with a modern AEAD. The winner is Ascon in 2024.
+The inventors envsions that AEAD as a PRF. However, only ASCON 128.
+I found it odd this one only support 128 bit tags. Then we are back
+to the same argument as this is not good enough for IKEv2 PRF.
+May be because NIST called it light weight crypto:) We need one for
+400Gbps too. A hardware NIC looks like an IoT.
 
 * UDP Encap
 
@@ -139,7 +168,8 @@ Why UDP?
 *** UDP Encapsulation in Cloud Provider
 
 A common question is why use UDP when there is no NAT, especially in
-cloud environments or why vary UDP source ports for inner flows.
+cloud environments or why vary UDP source ports for when using  multiple
+SA such as [[RFC9681]]].
 
 Cloud providers often enforce bandwidth limits per flow between nodes
 or to external endpoints. A flow is defined by a 5-tuple: protocol,
@@ -198,8 +228,10 @@ However, this 4 bytes would lead to waste of 4 bytes every EESP packet.
 
 * UDP pot sharing on Linux
 
-On linux define EESPINUDP, a type socket encapsulation. It is
-similar to ESPINUDP. When set this socket will accept IKE pac
+On Linux define EESPINUDP, a type socket encapsulation. It is
+similar to ESPINUDP. When set this socket will accept IKE packets,
+ESP or EESP packets. When sharing the same for port EESP and ESP
+ESP SPI the bit 31 should be zero.
 
 * Normative References
 
@@ -225,6 +257,7 @@ similar to ESPINUDP. When set this socket will accept IKE pac
 ** RFC8446
 
 ** I-D.ietf-ipsecme-g-ikev2
+** I-D-irtf-cfrg-aead-properties
 
 ** Azure-Network
 :PROPERTIES:
@@ -281,3 +314,10 @@ similar to ESPINUDP. When set this socket will accept IKE pac
 :REF_TITLE: PSP Architecture Specification
 :REF_ORG: Google
 :END:
+
+** ASCON
+:PROPERTIES:
+:REF_TARGET: https://csrc.nist.gov/csrc/media/Presentations/2023/the-ascon-family/images-media/june-21-mendel-the-ascon-family.pdf
+:REF_TITLE: The Ascon Family: Lightweight Authenticated Encryption, Hashing, and More :REF_ORG: Ascon Team
+:END:
+
