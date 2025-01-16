@@ -235,8 +235,8 @@ The Flow Identifier SHOULD be negotiated when creating EESP SA.
 
 * Sub SAs
 
-A Sub SA is a unidirectional Security Association derived from an
-existing EESP Child SA pair. It inherits all properties except
+An EESP Sub SA is a unidirectional Security Association derived from
+an existing EESP Child SA pair. It inherits all properties except
 keys, sequence number space, and IV space. These three are unique for
 each Sub SA. This allows finer granularity for managing
 uni-directional traffic flows. Sub SAs avoid the overhead associated
@@ -271,6 +271,17 @@ lifecycle management is simpler compared to traditional Child SAs.
 
 To negotiate Sub SA SUB_SA_ID in Session ID Transform. Or in a Flow
 IDs Transform. TBD: expand Sub SA with Flow ID  negotiation
+
+AEAD transforms, such as AES-GCM or those specified in [[RFC8750]],
+require that the IV does not repeat within a single Sub SA. Each Sub
+SA uses a distinct key, ensuring proper cryptographic separation.
+While the IV may repeat across different Sub SAs, this complies with
+the requirement that each key must be paired with a unique IV.
+
+Each Sub SA MUST maintain an independent sequence number space
+when using full 64-bit sequence numbers. For a specific key within
+a Sub SA, sequence numbers MUST BE unique and follow a
+monotonically increasing order to meet cryptographic requirements.
 
 ** UDP Encapsulation of Sub SA
 
@@ -330,7 +341,7 @@ request is the first Child SA created or the fresh Ni and Nr from the
 CREATE_CHILD_SA exchange if this is a subsequent creation.
 
 For CREATE_CHILD_SA exchanges including an optional Key Exchange
-, the keying material is defined as:
+the keying material is defined as:
 
 KEYMAT = prf+(SK_d, g^ir (new) | Ni | Nr | Sub SA ID)
 
