@@ -1653,7 +1653,7 @@ To enable Replay service the initiator SHOULD
 propose Sequence Numbers Transforms,
 SN = (Full 64 bit Sequence Number(TBD9)) in Substructure of the
 Proposal Substructure inside the Security Association (SA) payload
-in the IKEv2 Exchange. When the responder select 64 bit ESN a
+in the IKEv2 Exchange. When the responder select Full 64 bit SN a
 receiver MUST enable Reply Protection.<a href="#section-3.1-1" class="pilcrow">¶</a></p>
 <p id="section-3.1-2">When the Transform Type <span>[<a href="#IKEv2-SN" class="cite xref">IKEv2-SN</a>]</span> is not present in initiator's
 Child SA proposal during negotiation of an EESP Child SA, the
@@ -1773,7 +1773,7 @@ RSS (Receive Side Scaling) mechanisms. In such scenarios, the
 initiator MAY also use a distinct, ephemeral source port for
 Sub SA IDs greater than zero. Both peers MAY independently select
 different source ports for the same Sub SA ID.<a href="#section-4.1-1" class="pilcrow">¶</a></p>
-<p id="section-4.1-2">It is important to note that all IKE messages MUST NOT utilize these
+<p id="section-4.1-2">It is important to note that IKE messages MUST NOT utilize these
 ephemeral source ports. Instead, IKE traffic should be confined to
 the source and destination ports to ensure proper protocol operation
 and maintain compatibility with existing implementations.<a href="#section-4.1-2" class="pilcrow">¶</a></p>
@@ -1793,24 +1793,24 @@ different Sub SAs when a NAT is present.<a href="#section-4.1-4" class="pilcrow"
 <a href="#section-4.2" class="section-number selfRef">4.2. </a><a href="#name-key-derivation-for-sub-sa" class="section-name selfRef">Key derivation for Sub SA</a>
         </h3>
 <p id="section-4.2-1">When the EESP SA is negotiated with a Sub SA Keys (SUB_SA_ID), each
-Sub SA need to derive its own unique keys. This allows each Sub SA
+Sub SA derives its own unique keys. This allows each Sub SA
 its own independent Sequence Number space, and independent IV space.<a href="#section-4.2-1" class="pilcrow">¶</a></p>
-<p id="section-4.2-2">Initially we are proposing three Key Derivation Functions(KDF) for
-Sub SAs. Based on community feedback, further research and advise from
-cryptographers one method will be chosen.<a href="#section-4.2-2" class="pilcrow">¶</a></p>
-<p id="section-4.2-3">The requirements:<a href="#section-4.2-3" class="pilcrow">¶</a></p>
+<p id="section-4.2-2">The requirements:<a href="#section-4.2-2" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-4.2-4.1">
-            <p id="section-4.2-4.1.1">Independent keys for each Sub SA<a href="#section-4.2-4.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-4.2-3.1">
+            <p id="section-4.2-3.1.1">Independent keys for each Sub SA<a href="#section-4.2-3.1.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-4.2-4.2">
-            <p id="section-4.2-4.2.1">Ability to derive Sub SA keys on the fly with least amount of memory usage<a href="#section-4.2-4.2.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-4.2-3.2">
+            <p id="section-4.2-3.2.1">Ability to derive Sub SA keys on the fly with least amount of memory usage<a href="#section-4.2-3.2.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-4.2-4.3">
-            <p id="section-4.2-4.3.1">Minimal memory requirements<a href="#section-4.2-4.3.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-4.2-3.3">
+            <p id="section-4.2-3.3.1">Minimal memory requirements<a href="#section-4.2-3.3.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-4.2-4.4">
-            <p id="section-4.2-4.4.1">Keyderviation support multiple SAs, such as EESP, AH<a href="#section-4.2-4.4.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-4.2-3.4">
+            <p id="section-4.2-3.4.1">Keyderviation support multiple SAs, such as EESP, AH<a href="#section-4.2-3.4.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-4.2-3.5">
+            <p id="section-4.2-3.5.1">Use the same Crypto primitive as used for encryption e.g. AES-*<a href="#section-4.2-3.5.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 <section id="section-4.2.1">
@@ -1831,14 +1831,12 @@ the keying material is defined as:<a href="#section-4.2.1-5" class="pilcrow">¶<
 of this CREATE_CHILD_SA exchange (represented as an
 octet string in big endian order padded with zeros in the high-order
 bits if necessary to make it the length of the modulus).<a href="#section-4.2.1-7" class="pilcrow">¶</a></p>
-<p id="section-4.2.1-8">[Note an alternative design that would provide
-uniform distribution when oring with Sub SA ID.<a href="#section-4.2.1-8" class="pilcrow">¶</a></p>
-<p id="section-4.2.1-9">KEYMAT = prf+(prf(SK_d, Ni | Nr | Sub SA ID))<a href="#section-4.2.1-9" class="pilcrow">¶</a></p>
-<p id="section-4.2.1-10">One advantage of Hierarchical KDF is KEYMAT for the Sub SAs can be
+<p id="section-4.2.1-8">KEYMAT = prf+(prf(SK_d, Ni | Nr | Sub SA ID))<a href="#section-4.2.1-8" class="pilcrow">¶</a></p>
+<p id="section-4.2.1-9">One advantage of Hierarchical KDF is KEYMAT for the Sub SAs can be
 generated on the fly, for every packet, when available memory is
 limited, for example <span>[<a href="#PSP" class="cite xref">PSP</a>]</span>. This is usually the case when key
 derivation is implemented in hardware. When implimenting in hardware
-choose a hardware friendly prf+.<a href="#section-4.2.1-10" class="pilcrow">¶</a></p>
+choose a hardware friendly prf+.<a href="#section-4.2.1-9" class="pilcrow">¶</a></p>
 </section>
 </section>
 <section id="section-4.3">
