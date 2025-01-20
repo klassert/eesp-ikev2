@@ -335,7 +335,7 @@ ESP SPI the bit 31 should be zero.
 
 ** GCM-SST-Paper
 :PROPERTIES:
-:REF_TARGET: https://csrc.nist.gov/csrc/media/Presentations/2023/the-ascon-family/images-media/june-21-mendel-the-ascon-family.pdf
+:REF_TARGET: https://csrc.nist.gov/csrc/media/Events/2023/third-workshop-on-block-cipher-modes-of-operation/documents/accepted-papers/Galois%20Counter%20Mode%20with%20Secure%20Short%20Tags.pdf
 :REF_TITLE: Galois Counter Mode with Secure Short Tags (GCM-SST)
 :END:
 
