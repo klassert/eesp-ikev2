@@ -28,8 +28,13 @@ These are notes on EESP IKEv2 and other EESP related information. To keep it in 
 
 * KDF methods
 
-IKEv2 key derivation, [[RFC7296]], is likely ~KDF in Feedback Mode~
-specified in [[NIST800-108]] and [[RFC5869]]. This the iterative
+IKEv2 key derivation specified in [[RFC7296]] as prf+, is likely ~KDF in Feedback Mode~
+specified in [[NIST800-108]]. A prior step to the actual KDF, prf+,
+is a ~Randomness Extractor~ step, which is prf in RFC7296. The
+[[RFC5869]] This is a paper from the same auther [[HKDF-paper]] and talk from by Krawczyk
+[[KDF-Lecture]]
+
+IKEv2 prf+ the iterative
 method in Section 2.13 [[RFC7296]]
 
 In the following, | indicates concatenation.  prf+ is defined as:
@@ -85,6 +90,33 @@ NIST800-108 defines ~Key Hierarchy~
 In Section 5.4 of Key Management for Multicast [[RFC2627]] a
 Logical Key Hierarchy (LKH). I din't follow that completly.
 It is refered in G-IKEv2.
+
+** KDF generic problem statement
+
+Fast KDF using AEAD, initial fcous on AES, primitives that
+can claim 256 strength.
+
+Here is a longer problem statement. The last part is out of my curiosity!
+
+Key Derivation Function (KDF) for Per-Packet Keys:
+Define a PSP-like KDF that can derive keys per packet at a
+rate of 200 million or more derivations per second? This should
+support PSP-like, NIC master key, or IKEv2 SK_d as input.
+
+Sub-SA KDF for IKEv2
+We need a KDF that fits the IKEv2 Child SA (using prf and prf+)
+model and can provide 256-bit strength, ideally on a per-packet
+basis. We're also open to slower KDF options depending on the
+encryption algorithm.
+
+Additional Questions: PSP chose AES-CMAC-256 as their KDF, but
+IETF doesn't define or mention it in RFC 8247. Can we add
+AES-CMAC-256 to RFC 8247?
+
+Out of my curiosity:
+Are there any KDFs using AEAD that can claim 256-bit strength?
+I noticed even new ASCON limits itself to ASCON-128 when used
+as KDF/XOF/MAC.
 
 ** Hardware friendly prf
 Current IKEv2 IANA registry,[[IKEv2-prf]], specifies very few
@@ -173,6 +205,62 @@ to the same argument as this is not good enough for IKEv2 PRF.
 May be because NIST called it light weight crypto:) We need one for
 400Gbps too. A hardware NIC looks like an IoT.
 
+** Steffen's findings.
+Assume we use some KDF-AES-256 with AES blocksize of 128 bits.
+Let K_in be the 256 bits input key of KDF-AES-256, n be some
+128 bits plaintext and K_out the 128 bits derived session key
+such that
+
+KDF-AES-256(K_in, n) = K_out.
+
+Because the key space is 256 bits and plaintext/cipertext space
+is just 128 bits, the function KDF-AES-256 can't be bijective.
+This means that there must be multiple keys K_in_i such that
+
+KDF-AES-256(K_in_i, n) = K_out.
+
+This means that you don't need to find K_in to break the session key
+K_out. It is sufficiant to find one of the 'identical'keys K_in_i.
+
+Given keyspace of 256 bits and plaintext/cipertext of 128 bits,
+we have 2^256/2^128 = 2^128 'different' keys.
+
+So to find K_out, we just need to try 2^128 different keys, even though
+the keyspace is size is 2^256.
+
+This is why 256 bit keys have the same security level as 128 bit keys
+in this particular case.
+
+Unfortunately I had to figure that out myself, none of the documents
+that were written with that knowledge mentioned the problem.
+
+---
+Actually, this is not quite right:
+
+Given keyspace of 256 bits and plaintext/cipertext of 128 bits,
+we have 2^256/2^128 = 2^128 'different' keys.
+
+It is so that:
+
+Given keyspace of 256 bits and plaintext/cipertext of 128 bits,
+we have 2^256/2^128 = 2^128 'identical' keys.
+
+But in this case 2^128 'identical' keys is the same as having 2^128 'different' keys.
+---
+
+I think this can be generalized. If we have two pairs (n_j,K_out_j) such that:
+
+KDF-AES-256(K_in, n_1) = K_out_1
+KDF-AES-256(K_in, n_2) = K_out_2
+
+then we are back at a security level of 2^256. I.e. We have 2^256/(2^128*2^128) =1 'identical' keys.
+This would be the case if we want to generate a 256 bits key
+with counter mode.
+
+AA : for the cases where a Salt is required there would be a thrid
+call. That third call would genearte the salt necessary.
+
+---
 * UDP Encap
 
 Why UDP?
@@ -262,10 +350,11 @@ ESP SPI the bit 31 should be zero.
 
 ** NIST800-108
 :PROPERTIES:
-:REF_TARGET: https://www.nist.gov/publications/recommendation-key-derivation-using-pseudorandom-functions-1
+:REF_TARGET: https://csrc.nist.gov/pubs/sp/800/108/r1/upd1/final
 :REF_TITLE: Recommendation for Key Derivation Using Pseudorandom Functions
 :REF_ORG: NIST
 :END:
+
 
 * Informative References
 
@@ -353,4 +442,52 @@ ESP SPI the bit 31 should be zero.
 :PROPERTIES:
 :REF_TARGET: https://csrc.nist.gov/csrc/media/Presentations/2023/galois-counter-mode-with-secure-short-tags/images-media/sess-5-mattsson-bcm-workshop-2023.pdf
 :REF_TITLE: Galois Counter Mode with Secure Short Tags (GCM-SST) Slides
+:END:
+
+** NIST800-185
+:PROPERTIES:
+:REF_TARGET: https://csrc.nist.gov/pubs/sp/800/185/final
+:REF_TITLE: SHA-3 Derived Functions: cSHAKE, KMAC, TupleHash and ParallelHash
+:REF_ORG: NIST
+:END:
+
+** Keccak-vs-AES
+:PROPERTIES:
+:REF_TARGET: https://cryptography.gmu.edu/athena/papers/GMU_DATE_2015.pdf
+:REF_TITLE: Comparison of Multi-Purpose Cores of Keccak and AES
+:END:
+
+** NetDev-2024-psp-video
+:PROPERTIES:
+:REF_TARGET: https://www.youtube.com/watch?v=RlsxPMsWdxo
+:REF_TITLE: PSP Crypto Protocol and HW Offload
+:REF_ORG: Keccak
+:END:
+
+** NetDev-2024-psp-talk
+:PROPERTIES:
+:REF_TARGET: https://netdevconf.info/0x18/sessions/talk/psp-crypto-protocol-and-hw-offload.html
+:REF_TITLE: PSP Crypto Protocol and HW Offload
+:REF_ORG: PSP
+:END:
+
+** KDF-Lecture
+:PROPERTIES:
+:REF_TARGET: https://www.youtube.com/watch?v=796TPmaMYY4
+:REF_TITLE: The 8th BIU Winter School: More on Implicit Authentication; Key Derivation - Hugo Krawczyk
+:END:
+
+** HKDF-paper
+:PROPERTIES:
+:REF_TARGET: http://eprint.iacr.org/2010/264
+:REF_TITLE: Cryptographic Extraction and Key Derivation: The HKDF Scheme
+:REF_DATE: 2010
+:REF_ORG: Hugo Krawczyk
+:END:
+
+** Keccak-Lecture
+:PROPERTIES:
+:REF_TARGET: https://www.youtube.com/watch?v=JWskjzgiIa4
+:REF_TITLE: SHA-3 Hash Function
+:REF_ORG: Christof Paar
 :END:
