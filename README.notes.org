@@ -1,6 +1,5 @@
 # -*- fill-column: 69; -*-
-# vim: set textwidth=69
-# Do: title, toc:table-of-contents ::fixed-width-sections |tables
+# vim: set textwidth=69 # Do: title, toc:table-of-contents ::fixed-width-sections |tables
 # Do: ^:sup/sub with curly -:special-strings *:emphasis
 # Don't: prop:no-prop-drawers \n:preserve-linebreaks ':use-smart-quotes
 #+OPTIONS: prop:nil title:t toc:t \n:nil ::t |:t ^:{} -:t *:t ':nil
@@ -117,6 +116,16 @@ bit output, currently supports SHA256 and SHA384, a.k.a. HASH, HKDF.
 e.g. TLS_AES_128_GCM_SHA256 TLS_AES_256_GCM_SHA384.
 
 ** KDF  References
+
+Secure RTP KDF in [[RFC6188]] seems to be similar to our Sub SA.
+
+Sub SA KEYMAT  = crypto(Sk_d, Sub SA Salt  | Sub SA ID);
+
+e.g with AES-GCM:
+Sub SA KEYMAT  = AES-CTR(Sk_d, Sub SA Salt | Sub SA ID);
+
+Where th Sub SA Salt is derived along with Sk_d to generate extra secret bytes?
+Sub SA salt together with Sub SA ID would be  128 bits.
 
 [[I-D.mattsson-cfrg-aes-gcm-sst]] seems to be deriving per packet keys
 for GCM. This is an interesting work in cfrg and it is also proposed
@@ -266,6 +275,7 @@ ESP SPI the bit 31 should be zero.
 ** RFC7539
 ** RFC9681
 ** RFC5116
+** RFC6188
 
 ** I-D.ietf-ipsecme-g-ikev2
 ** I-D.irtf-cfrg-aead-properties
