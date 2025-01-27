@@ -192,17 +192,15 @@ receiver MUST enable Reply Protection.
 # NOTE STK: I'd say MUST above as we want to negotiate Anti-Replayservice
 # and not just the presense of the seq nr field.
 
-When the Transform Type [[IKEv2-SN]] is not present in initiator's
-Child SA proposal during negotiation of an EESP Child SA, the
-Sequence Number field MUST NOT be transmitted in the EESP packet.
+To disable sequence numbering, and thus replay protection based on
+sequence numbers, the initiator MUST propose SN=None (TBD10). When the
+sequence numbers are disabled, there won't be any SN in the
+EESP packet, the receiver SHOULD NOT dynamically modify ports or
+addresses without using IKEv2 Mobility [RFC4555].
 
-When the Replay Prtection is not negotiated, i.e., when the 64 bit
-sequence number is not carried in the EESP packet, an EESP receiver
-should not act on address or port changes. It should not initiate a
-dynamic address update without the use of IKEv2 Mobility [[RFC4555]].
-Since the Replay Protection service is disabled, an attacker could
-replay packets with a different source address. An attacker could disrupt
-the connection by capturing and replaying a single packet with different
+Because the Replay Protection service is disabled, an attacker can re
+play packets with a different source address. Such an attacker could
+disrupt the connection by replaying a single packet with a different
 source address or port number.
 
 ** Explicit Initialization Vector
@@ -220,7 +218,7 @@ packet. To enable this functionality, IIV transforms defined in
 the [[IKEv2-SN]] extension MUST be negotiated to support the use of
 a Full 64-bit Sequence Numbers in EESP packets. If the the proposal
 does not include Full 64-bit Sequence Numbers return error
-INVALID_SN.
+NO_PROPOSAL_CHOSEN.
 
 ** EESP Version
 Each SA need an EESP Base Header version which is specified
@@ -482,7 +480,6 @@ This document defines new Notify Message types in the
 |-------------+----------------------+-----------------+
 | [TBD2] | INVALID_SESSION_ID        | [this document] |
 | [TBD3] | INVALID_SUB_SA            | [this document] |
-| [TBD10]| INVALID_SN                | [this document] |
 
 
 *** Sequence Number
@@ -490,9 +487,10 @@ This document defines new Notify Message types in the
 This document defines a new value in the IKEv2 "Transform Type 5 - Sequence
    Numbers Properties Transform IDs" registry:
 
-| Value  | Name                          | Reference       |
-|-------------+--------------------------+-----------------+
-| [TBD9] | Full 64-bit Sequence Numbers  | [this document] |
+| Value   | Name                          | Reference       |
+|---------+-------------------------------+-----------------+
+| [TBD9]  | Full 64-bit Sequence Numbers  | [this document] |
+| [TBD10] | Full 64-bit Sequence Numbers  | [this document] |
 
 ** New Registries
 
@@ -661,6 +659,13 @@ TBD
 :PROPERTIES:
 :REF_TARGET: https://csrc.nist.gov/pubs/sp/800/185/final
 :REF_TITLE: SHA-3 Derived Functions: cSHAKE, KMAC, TupleHash and ParallelHash
+:REF_ORG: NIST
+:END:
+
+** Keccak-vs-AES
+:PROPERTIES:
+:REF_TARGET: https://cryptography.gmu.edu/athena/papers/GMU_DATE_2015.pdf
+:REF_TITLE: Comparison of Multi-Purpose Cores of Keccak and AES
 :REF_ORG: NIST
 :END:
 
