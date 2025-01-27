@@ -1211,7 +1211,7 @@ li > p:last-of-type:only-child {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Klassert &amp; Antony</td>
-<td class="center">Expires 24 July 2025</td>
+<td class="center">Expires 31 July 2025</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1222,12 +1222,12 @@ li > p:last-of-type:only-child {
 <dd class="workgroup">IPSECME Working Group</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-01-20" class="published">20 January 2025</time>
+<time datetime="2025-01-27" class="published">27 January 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Informational</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2025-07-24">24 July 2025</time></dd>
+<dd class="expires"><time datetime="2025-07-31">31 July 2025</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1261,7 +1261,7 @@ li > p:last-of-type:only-child {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 24 July 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 31 July 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1297,10 +1297,16 @@ li > p:last-of-type:only-child {
             <p id="section-toc.1-1.2.1"><a href="#section-2" class="auto internal xref">2</a>.  <a href="#name-kdf-methods" class="internal xref">KDF methods</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2.2.1">
-                <p id="section-toc.1-1.2.2.1.1" class="keepWithNext"><a href="#section-2.1" class="auto internal xref">2.1</a>.  <a href="#name-hardware-friendly-prf" class="internal xref">Hardware friendly prf</a></p>
+                <p id="section-toc.1-1.2.2.1.1" class="keepWithNext"><a href="#section-2.1" class="auto internal xref">2.1</a>.  <a href="#name-kdf-generic-problem-stateme" class="internal xref">KDF generic problem statement</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2.2.2">
-                <p id="section-toc.1-1.2.2.2.1" class="keepWithNext"><a href="#section-2.2" class="auto internal xref">2.2</a>.  <a href="#name-kdf-references" class="internal xref">KDF  References</a></p>
+                <p id="section-toc.1-1.2.2.2.1" class="keepWithNext"><a href="#section-2.2" class="auto internal xref">2.2</a>.  <a href="#name-hardware-friendly-prf" class="internal xref">Hardware friendly prf</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2.2.3">
+                <p id="section-toc.1-1.2.2.3.1"><a href="#section-2.3" class="auto internal xref">2.3</a>.  <a href="#name-kdf-references" class="internal xref">KDF  References</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2.2.4">
+                <p id="section-toc.1-1.2.2.4.1"><a href="#section-2.4" class="auto internal xref">2.4</a>.  <a href="#name-steffens-findings" class="internal xref">Steffen's findings.</a></p>
 </li>
             </ul>
 </li>
@@ -1346,114 +1352,190 @@ li > p:last-of-type:only-child {
       <h2 id="name-kdf-methods">
 <a href="#section-2" class="section-number selfRef">2. </a><a href="#name-kdf-methods" class="section-name selfRef">KDF methods</a>
       </h2>
-<p id="section-2-1">IKEv2 key derivation, <span>[<a href="#RFC7296" class="cite xref">RFC7296</a>]</span>, is likely '<code>KDF in Feedback Mode</code>'
-specified in <span>[<a href="#NIST800-108" class="cite xref">NIST800-108</a>]</span> and <span>[<a href="#RFC5869" class="cite xref">RFC5869</a>]</span>. This the iterative
-method in Section 2.13 <span>[<a href="#RFC7296" class="cite xref">RFC7296</a>]</span><a href="#section-2-1" class="pilcrow">¶</a></p>
-<p id="section-2-2">In the following, | indicates concatenation.  prf+ is defined as:
-prf+ (K,S) = T1 | T2 | T3 | T4 | ...<a href="#section-2-2" class="pilcrow">¶</a></p>
-<p id="section-2-3">where:
-   T1 = prf (K, S | 0x01)<a href="#section-2-3" class="pilcrow">¶</a></p>
-<p id="section-2-4">T2 = prf (K, T1 | S | 0x02)<a href="#section-2-4" class="pilcrow">¶</a></p>
-<p id="section-2-5">T3 = prf (K, T2 | S | 0x03)<a href="#section-2-5" class="pilcrow">¶</a></p>
-<p id="section-2-6">T4 = prf (K, T3 | S | 0x04)<a href="#section-2-6" class="pilcrow">¶</a></p>
-<p id="section-2-7">...<a href="#section-2-7" class="pilcrow">¶</a></p>
-<p id="section-2-8">Section 2.14 of <span>[<a href="#RFC7296" class="cite xref">RFC7296</a>]</span> which defined HMAC expansion of SKEYSEED<a href="#section-2-8" class="pilcrow">¶</a></p>
-<p id="section-2-9">SKEYSEED = prf(Ni | Nr, g^ir)<a href="#section-2-9" class="pilcrow">¶</a></p>
-<p id="section-2-10">IKEv2 key derivation has two setps. Above is the first step and next
-key expansion using prf+.<a href="#section-2-10" class="pilcrow">¶</a></p>
-<p id="section-2-11">{SK_d | SK_ai | SK_ar | SK_ei | SK_er | SK_pi | SK_pr}
-                   = prf+ (SKEYSEED, Ni | Nr | SPIi | SPIr)<a href="#section-2-11" class="pilcrow">¶</a></p>
-<p id="section-2-12">(indicating that the quantities SK_d, SK_ai, SK_ar, SK_ei, SK_er,
+<p id="section-2-1">IKEv2 key derivation specified in <span>[<a href="#RFC7296" class="cite xref">RFC7296</a>]</span> as prf+, is likely '<code>KDF in Feedback Mode</code>'
+specified in <span>[<a href="#NIST800-108" class="cite xref">NIST800-108</a>]</span>. A prior step to the actual KDF, prf+,
+is a '<code>Randomness Extractor</code>' step, which is prf in RFC7296. The
+<span>[<a href="#RFC5869" class="cite xref">RFC5869</a>]</span> This is a paper from the same auther <span>[<a href="#HKDF-paper" class="cite xref">HKDF-paper</a>]</span> and talk from by Krawczyk
+<span>[<a href="#KDF-Lecture" class="cite xref">KDF-Lecture</a>]</span><a href="#section-2-1" class="pilcrow">¶</a></p>
+<p id="section-2-2">IKEv2 prf+ the iterative
+method in Section 2.13 <span>[<a href="#RFC7296" class="cite xref">RFC7296</a>]</span><a href="#section-2-2" class="pilcrow">¶</a></p>
+<p id="section-2-3">In the following, | indicates concatenation.  prf+ is defined as:
+prf+ (K,S) = T1 | T2 | T3 | T4 | ...<a href="#section-2-3" class="pilcrow">¶</a></p>
+<p id="section-2-4">where:
+   T1 = prf (K, S | 0x01)<a href="#section-2-4" class="pilcrow">¶</a></p>
+<p id="section-2-5">T2 = prf (K, T1 | S | 0x02)<a href="#section-2-5" class="pilcrow">¶</a></p>
+<p id="section-2-6">T3 = prf (K, T2 | S | 0x03)<a href="#section-2-6" class="pilcrow">¶</a></p>
+<p id="section-2-7">T4 = prf (K, T3 | S | 0x04)<a href="#section-2-7" class="pilcrow">¶</a></p>
+<p id="section-2-8">...<a href="#section-2-8" class="pilcrow">¶</a></p>
+<p id="section-2-9">Section 2.14 of <span>[<a href="#RFC7296" class="cite xref">RFC7296</a>]</span> which defined HMAC expansion of SKEYSEED<a href="#section-2-9" class="pilcrow">¶</a></p>
+<p id="section-2-10">SKEYSEED = prf(Ni | Nr, g^ir)<a href="#section-2-10" class="pilcrow">¶</a></p>
+<p id="section-2-11">IKEv2 key derivation has two setps. Above is the first step and next
+key expansion using prf+.<a href="#section-2-11" class="pilcrow">¶</a></p>
+<p id="section-2-12">{SK_d | SK_ai | SK_ar | SK_ei | SK_er | SK_pi | SK_pr}
+                   = prf+ (SKEYSEED, Ni | Nr | SPIi | SPIr)<a href="#section-2-12" class="pilcrow">¶</a></p>
+<p id="section-2-13">(indicating that the quantities SK_d, SK_ai, SK_ar, SK_ei, SK_er,
 SK_pi, and SK_pr are taken in order from the generated bits of the
 prf+).  g^ir is the shared secret from the ephemeral Diffie-Hellman
 exchange.  g^ir is represented as a string of octets in big endian
 order padded with zeros if necessary to make it the length of the
-modulus.  Ni and Nr are the nonces, stripped of any headers.<a href="#section-2-12" class="pilcrow">¶</a></p>
-<p id="section-2-13">KEYMAT = prf+(SK_d, Ni | Nr)<a href="#section-2-13" class="pilcrow">¶</a></p>
-<p id="section-2-14">Where Ni and Nr are the nonces from the IKE_SA_INIT exchange if this
+modulus.  Ni and Nr are the nonces, stripped of any headers.<a href="#section-2-13" class="pilcrow">¶</a></p>
+<p id="section-2-14">KEYMAT = prf+(SK_d, Ni | Nr)<a href="#section-2-14" class="pilcrow">¶</a></p>
+<p id="section-2-15">Where Ni and Nr are the nonces from the IKE_SA_INIT exchange if this
 request is the first Child SA created or the fresh Ni and Nr from the
-CREATE_CHILD_SA exchange if this is a subsequent creation.<a href="#section-2-14" class="pilcrow">¶</a></p>
-<p id="section-2-15">For CREATE_CHILD_SA exchanges including an optional Diffie-Hellman
-exchange, the keying material is defined as:<a href="#section-2-15" class="pilcrow">¶</a></p>
-<p id="section-2-16">KEYMAT = prf+(SK_d, g^ir (new) | Ni | Nr)<a href="#section-2-16" class="pilcrow">¶</a></p>
-<p id="section-2-17">where g^ir (new) is the shared secret from the ephemeral Diffie-
+CREATE_CHILD_SA exchange if this is a subsequent creation.<a href="#section-2-15" class="pilcrow">¶</a></p>
+<p id="section-2-16">For CREATE_CHILD_SA exchanges including an optional Diffie-Hellman
+exchange, the keying material is defined as:<a href="#section-2-16" class="pilcrow">¶</a></p>
+<p id="section-2-17">KEYMAT = prf+(SK_d, g^ir (new) | Ni | Nr)<a href="#section-2-17" class="pilcrow">¶</a></p>
+<p id="section-2-18">where g^ir (new) is the shared secret from the ephemeral Diffie-
 Hellman exchange of this CREATE_CHILD_SA exchange (represented as an
 octet string in big endian order padded with zeros in the high-order
-bits if necessary to make it the length of the modulus).<a href="#section-2-17" class="pilcrow">¶</a></p>
-<p id="section-2-18">What EESP IKEv2 proposing as '<code>Heirarchial key derivation</code>'
-NIST800-108 defines '<code>Key Hierarchy</code>'<a href="#section-2-18" class="pilcrow">¶</a></p>
-<p id="section-2-19">In Section 5.4 of Key Management for Multicast <span>[<a href="#RFC2627" class="cite xref">RFC2627</a>]</span> a
+bits if necessary to make it the length of the modulus).<a href="#section-2-18" class="pilcrow">¶</a></p>
+<p id="section-2-19">What EESP IKEv2 proposing as '<code>Heirarchial key derivation</code>'
+NIST800-108 defines '<code>Key Hierarchy</code>'<a href="#section-2-19" class="pilcrow">¶</a></p>
+<p id="section-2-20">In Section 5.4 of Key Management for Multicast <span>[<a href="#RFC2627" class="cite xref">RFC2627</a>]</span> a
 Logical Key Hierarchy (LKH). I din't follow that completly.
-It is refered in G-IKEv2.<a href="#section-2-19" class="pilcrow">¶</a></p>
+It is refered in G-IKEv2.<a href="#section-2-20" class="pilcrow">¶</a></p>
 <section id="section-2.1">
-        <h3 id="name-hardware-friendly-prf">
-<a href="#section-2.1" class="section-number selfRef">2.1. </a><a href="#name-hardware-friendly-prf" class="section-name selfRef">Hardware friendly prf</a>
+        <h3 id="name-kdf-generic-problem-stateme">
+<a href="#section-2.1" class="section-number selfRef">2.1. </a><a href="#name-kdf-generic-problem-stateme" class="section-name selfRef">KDF generic problem statement</a>
         </h3>
-<p id="section-2.1-1">Current IKEv2 IANA registry,<span>[<a href="#IKEv2-prf" class="cite xref">IKEv2-prf</a>]</span>, specifies very few
+<p id="section-2.1-1">Fast KDF using AEAD, initial fcous on AES, primitives that
+can claim 256 strength.<a href="#section-2.1-1" class="pilcrow">¶</a></p>
+<p id="section-2.1-2">Here is a longer problem statement. The last part is out of my curiosity!<a href="#section-2.1-2" class="pilcrow">¶</a></p>
+<p id="section-2.1-3">Key Derivation Function (KDF) for Per-Packet Keys:
+Define a PSP-like KDF that can derive keys per packet at a
+rate of 200 million or more derivations per second? This should
+support PSP-like, NIC master key, or IKEv2 SK_d as input.<a href="#section-2.1-3" class="pilcrow">¶</a></p>
+<p id="section-2.1-4">Sub-SA KDF for IKEv2
+We need a KDF that fits the IKEv2 Child SA (using prf and prf+)
+model and can provide 256-bit strength, ideally on a per-packet
+basis. We're also open to slower KDF options depending on the
+encryption algorithm.<a href="#section-2.1-4" class="pilcrow">¶</a></p>
+<p id="section-2.1-5">Additional Questions: PSP chose AES-CMAC-256 as their KDF, but
+IETF doesn't define or mention it in RFC 8247. Can we add
+AES-CMAC-256 to RFC 8247?<a href="#section-2.1-5" class="pilcrow">¶</a></p>
+<p id="section-2.1-6">Out of my curiosity:
+Are there any KDFs using AEAD that can claim 256-bit strength?
+I noticed even new ASCON limits itself to ASCON-128 when used
+as KDF/XOF/MAC.<a href="#section-2.1-6" class="pilcrow">¶</a></p>
+</section>
+<section id="section-2.2">
+        <h3 id="name-hardware-friendly-prf">
+<a href="#section-2.2" class="section-number selfRef">2.2. </a><a href="#name-hardware-friendly-prf" class="section-name selfRef">Hardware friendly prf</a>
+        </h3>
+<p id="section-2.2-1">Current IKEv2 IANA registry,<span>[<a href="#IKEv2-prf" class="cite xref">IKEv2-prf</a>]</span>, specifies very few
 hardware friendly Pseudorandom Function Transforms. And IETF
-recmendations <span>[<a href="#RFC8247" class="cite xref">RFC8247</a>]</span> has only PRF_AES128_XCBC.<a href="#section-2.1-1" class="pilcrow">¶</a></p>
-<p id="section-2.1-2">Hardware friendly prf and prf+ are limited to maximum strength of
+recmendations <span>[<a href="#RFC8247" class="cite xref">RFC8247</a>]</span> has only PRF_AES128_XCBC.<a href="#section-2.2-1" class="pilcrow">¶</a></p>
+<p id="section-2.2-2">Hardware friendly prf and prf+ are limited to maximum strength of
 128 bits! While the SHA2 does not have this limit. This comes
 from the limit of input and output block of AES underlying
 structure. Input is 128 bit and output are 128bits,
 even when using a 256 bit key. Hence the overall strength
-when using AES as prf would reduce to 128bit.<a href="#section-2.1-2" class="pilcrow">¶</a></p>
-<p id="section-2.1-3">In practice many cloud providers appears to be using more
+when using AES as prf would reduce to 128bit.<a href="#section-2.2-2" class="pilcrow">¶</a></p>
+<p id="section-2.2-3">In practice many cloud providers appears to be using more
 hardware friendly PRF, such as AES-CMAC-128 by <span>[<a href="#PSP" class="cite xref">PSP</a>]</span>
 and very likely AES-CTR by Amazon AWS. Any public citations of AWS
-PRF? I deduced AES-CTR from their comment to <span>[<a href="#NIST-800-108-comments" class="cite xref">NIST-800-108-comments</a>]</span>.<a href="#section-2.1-3" class="pilcrow">¶</a></p>
-<p id="section-2.1-4">Section 2.14 of <span>[<a href="#RFC7296" class="cite xref">RFC7296</a>]</span> "If the negotiated PRF is
+PRF? I deduced AES-CTR from their comment to <span>[<a href="#NIST-800-108-comments" class="cite xref">NIST-800-108-comments</a>]</span>.<a href="#section-2.2-3" class="pilcrow">¶</a></p>
+<p id="section-2.2-4">Section 2.14 of <span>[<a href="#RFC7296" class="cite xref">RFC7296</a>]</span> "If the negotiated PRF is
 AES-XCBC-PRF-128 <span>[<a href="#RFC4434" class="cite xref">RFC4434</a>]</span> or AES-CMAC-PRF-128 <span>[<a href="#RFC4615" class="cite xref">RFC4615</a>]</span>,
 only the first 64 bits of Ni and the first 64 bits of Nr are used in
 calculating SKEYSEED, but all the bits are used for input to the prf+
 function." When using AES-XCBC-PRF-128 AES-CMAC-PRF-128 the SKEYSEED
 will be 128bits long. It seems for that reason AES-CMAC-PRF-256 is not
-standardized?<a href="#section-2.1-4" class="pilcrow">¶</a></p>
-<p id="section-2.1-5">TLS 1.3, Appendix B of <span>[<a href="#RFC8446" class="cite xref">RFC8446</a>]</span> lst HASH. It need a minimum 256
+standardized?<a href="#section-2.2-4" class="pilcrow">¶</a></p>
+<p id="section-2.2-5">TLS 1.3, Appendix B of <span>[<a href="#RFC8446" class="cite xref">RFC8446</a>]</span> lst HASH. It need a minimum 256
 bit output, currently supports SHA256 and SHA384, a.k.a. HASH, HKDF.
-e.g. TLS_AES_128_GCM_SHA256 TLS_AES_256_GCM_SHA384.<a href="#section-2.1-5" class="pilcrow">¶</a></p>
+e.g. TLS_AES_128_GCM_SHA256 TLS_AES_256_GCM_SHA384.<a href="#section-2.2-5" class="pilcrow">¶</a></p>
 </section>
-<section id="section-2.2">
+<section id="section-2.3">
         <h3 id="name-kdf-references">
-<a href="#section-2.2" class="section-number selfRef">2.2. </a><a href="#name-kdf-references" class="section-name selfRef">KDF  References</a>
+<a href="#section-2.3" class="section-number selfRef">2.3. </a><a href="#name-kdf-references" class="section-name selfRef">KDF  References</a>
         </h3>
-<p id="section-2.2-1"><span>[<a href="#I-D.mattsson-cfrg-aes-gcm-sst" class="cite xref">I-D.mattsson-cfrg-aes-gcm-sst</a>]</span> seems to be deriving per packet keys
+<p id="section-2.3-1">Secure RTP KDF in <span>[<a href="#RFC6188" class="cite xref">RFC6188</a>]</span> seems to be similar to our Sub SA.<a href="#section-2.3-1" class="pilcrow">¶</a></p>
+<p id="section-2.3-2">Sub SA KEYMAT  = crypto(Sk_d, Sub SA Salt  | Sub SA ID);<a href="#section-2.3-2" class="pilcrow">¶</a></p>
+<p id="section-2.3-3">e.g with AES-GCM:
+Sub SA KEYMAT  = AES-CTR(Sk_d, Sub SA Salt | Sub SA ID);<a href="#section-2.3-3" class="pilcrow">¶</a></p>
+<p id="section-2.3-4">Where th Sub SA Salt is derived along with Sk_d to generate extra secret bytes?
+Sub SA salt together with Sub SA ID would be  128 bits.<a href="#section-2.3-4" class="pilcrow">¶</a></p>
+<p id="section-2.3-5"><span>[<a href="#I-D.mattsson-cfrg-aes-gcm-sst" class="cite xref">I-D.mattsson-cfrg-aes-gcm-sst</a>]</span> seems to be deriving per packet keys
 for GCM. This is an interesting work in cfrg and it is also proposed
 to NIST. I think their work will keep the IKEv2 prf and prf+ as it is
 just another layer of HKDF using the AEAD interface specified to
 <span>[<a href="#RFC5116" class="cite xref">RFC5116</a>]</span>, which widely reffered API. So any existing implementation
 that support RFC5116 would be compaitable with GCM SST proposal.
-I only had qunck glance, so I am not 100% sure yet!<a href="#section-2.2-1" class="pilcrow">¶</a></p>
-<p id="section-2.2-2">TLS 1.3<span>[<a href="#RFC8446" class="cite xref">RFC8446</a>]</span> use hkdf and their reference
+I only had qunck glance, so I am not 100% sure yet!<a href="#section-2.3-5" class="pilcrow">¶</a></p>
+<p id="section-2.3-6">TLS 1.3<span>[<a href="#RFC8446" class="cite xref">RFC8446</a>]</span> use hkdf and their reference
 Krawczyk, H., "Cryptographic Extraction and Key Derivation: The HKDF
 Scheme", Proceedings of CRYPTO 2010, August 2010,
-<span><a href="https://eprint.iacr.org/2010/264">https://eprint.iacr.org/2010/264</a></span>.<a href="#section-2.2-2" class="pilcrow">¶</a></p>
-<p id="section-2.2-3">IETF CFRG is working requirements of AEAD <span>[<a href="#I-D.irtf-cfrg-aead-properties" class="cite xref">I-D.irtf-cfrg-aead-properties</a>]</span>
+<span><a href="https://eprint.iacr.org/2010/264">https://eprint.iacr.org/2010/264</a></span>.<a href="#section-2.3-6" class="pilcrow">¶</a></p>
+<p id="section-2.3-7">IETF CFRG is working requirements of AEAD <span>[<a href="#I-D.irtf-cfrg-aead-properties" class="cite xref">I-D.irtf-cfrg-aead-properties</a>]</span>
 They decided not discuss AEAD as PRF? This is sad news not to
 specifiy use of same hardware primitive as a PRF for high performance
-IPsec implimenation.<a href="#section-2.2-3" class="pilcrow">¶</a></p>
-<p id="section-2.2-4">CFRG discusions point out ChaCha20oly1305 <span>[<a href="#RFC7539" class="cite xref">RFC7539</a>]</span> is not a
+IPsec implimenation.<a href="#section-2.3-7" class="pilcrow">¶</a></p>
+<p id="section-2.3-8">CFRG discusions point out ChaCha20oly1305 <span>[<a href="#RFC7539" class="cite xref">RFC7539</a>]</span> is not a
 PRF! This points to a reson when using  AEAD the underlying
 crypto operation is used for XOF. Even when the tag 256 bit
 AES output is  128bits. While there is also a suggestion
-ChaCha20 is better that AES?<a href="#section-2.2-4" class="pilcrow">¶</a></p>
-<p id="section-2.2-5">Discussion of  <span>[<a href="#I-D.irtf-cfrg-aead-properties" class="cite xref">I-D.irtf-cfrg-aead-properties</a>]</span>
-          <span><a href="https://mailarchive.ietf.org/arch/search/?q=draft-irtf-cfrg-aead-properties%20PRF">https://mailarchive.ietf.org/arch/search/?q=draft-irtf-cfrg-aead-properties%20PRF</a></span><a href="#section-2.2-5" class="pilcrow">¶</a></p>
-<p id="section-2.2-6">Their argument is when using a 128bit primitive as PRF it's
+ChaCha20 is better that AES?<a href="#section-2.3-8" class="pilcrow">¶</a></p>
+<p id="section-2.3-9">Discussion of  <span>[<a href="#I-D.irtf-cfrg-aead-properties" class="cite xref">I-D.irtf-cfrg-aead-properties</a>]</span>
+          <span><a href="https://mailarchive.ietf.org/arch/search/?q=draft-irtf-cfrg-aead-properties%20PRF">https://mailarchive.ietf.org/arch/search/?q=draft-irtf-cfrg-aead-properties%20PRF</a></span><a href="#section-2.3-9" class="pilcrow">¶</a></p>
+<p id="section-2.3-10">Their argument is when using a 128bit primitive as PRF it's
 estimated Birthday Attack strength is
 128bits. Could this be fixed by using two rounds like PSP did and
 concatinate it for prf, may be but this need be part of IKEv2. To propose
-as part of section 2.14<a href="#section-2.2-6" class="pilcrow">¶</a></p>
-<p id="section-2.2-7">Another possibly related work in cfrg, but for hardware wallets,
-I.D-dijkhuis-cfrg-hdkeys<a href="#section-2.2-7" class="pilcrow">¶</a></p>
-<p id="section-2.2-8">IPsecME discussion arguing AES based PRFs would have max 128bit entropy.
-<span><a href="https://mailarchive.ietf.org/arch/msg/ipsec/Tz4xsjmEHH57jvdMS9pqSFnGbwc/">https://mailarchive.ietf.org/arch/msg/ipsec/Tz4xsjmEHH57jvdMS9pqSFnGbwc/</a></span><a href="#section-2.2-8" class="pilcrow">¶</a></p>
-<p id="section-2.2-9">NIST is coming up with a modern AEAD. The winner is <span>[<a href="#ASCON" class="cite xref">ASCON</a>]</span> in 2024.
+as part of section 2.14<a href="#section-2.3-10" class="pilcrow">¶</a></p>
+<p id="section-2.3-11">Another possibly related work in cfrg, but for hardware wallets,
+I.D-dijkhuis-cfrg-hdkeys<a href="#section-2.3-11" class="pilcrow">¶</a></p>
+<p id="section-2.3-12">IPsecME discussion arguing AES based PRFs would have max 128bit entropy.
+<span><a href="https://mailarchive.ietf.org/arch/msg/ipsec/Tz4xsjmEHH57jvdMS9pqSFnGbwc/">https://mailarchive.ietf.org/arch/msg/ipsec/Tz4xsjmEHH57jvdMS9pqSFnGbwc/</a></span><a href="#section-2.3-12" class="pilcrow">¶</a></p>
+<p id="section-2.3-13">NIST is coming up with a modern AEAD. The winner is <span>[<a href="#ASCON" class="cite xref">ASCON</a>]</span> in 2024.
 The inventors envsions that AEAD as a PRF. However, only ASCON 128.
 I found it odd this one only support 128 bit tags. Then we are back
 to the same argument as this is not good enough for IKEv2 PRF.
 May be because NIST called it light weight crypto:) We need one for
-400Gbps too. A hardware NIC looks like an IoT.<a href="#section-2.2-9" class="pilcrow">¶</a></p>
+400Gbps too. A hardware NIC looks like an IoT.<a href="#section-2.3-13" class="pilcrow">¶</a></p>
+</section>
+<section id="section-2.4">
+        <h3 id="name-steffens-findings">
+<a href="#section-2.4" class="section-number selfRef">2.4. </a><a href="#name-steffens-findings" class="section-name selfRef">Steffen's findings.</a>
+        </h3>
+<p id="section-2.4-1">Assume we use some KDF-AES-256 with AES blocksize of 128 bits.
+Let K_in be the 256 bits input key of KDF-AES-256, n be some
+128 bits plaintext and K_out the 128 bits derived session key
+such that<a href="#section-2.4-1" class="pilcrow">¶</a></p>
+<p id="section-2.4-2">KDF-AES-256(K_in, n) = K_out.<a href="#section-2.4-2" class="pilcrow">¶</a></p>
+<p id="section-2.4-3">Because the key space is 256 bits and plaintext/cipertext space
+is just 128 bits, the function KDF-AES-256 can't be bijective.
+This means that there must be multiple keys K_in_i such that<a href="#section-2.4-3" class="pilcrow">¶</a></p>
+<p id="section-2.4-4">KDF-AES-256(K_in_i, n) = K_out.<a href="#section-2.4-4" class="pilcrow">¶</a></p>
+<p id="section-2.4-5">This means that you don't need to find K_in to break the session key
+K_out. It is sufficiant to find one of the 'identical'keys K_in_i.<a href="#section-2.4-5" class="pilcrow">¶</a></p>
+<p id="section-2.4-6">Given keyspace of 256 bits and plaintext/cipertext of 128 bits,
+we have 2^256/2^128 = 2^128 'different' keys.<a href="#section-2.4-6" class="pilcrow">¶</a></p>
+<p id="section-2.4-7">So to find K_out, we just need to try 2^128 different keys, even though
+the keyspace is size is 2^256.<a href="#section-2.4-7" class="pilcrow">¶</a></p>
+<p id="section-2.4-8">This is why 256 bit keys have the same security level as 128 bit keys
+in this particular case.<a href="#section-2.4-8" class="pilcrow">¶</a></p>
+<p id="section-2.4-9">Unfortunately I had to figure that out myself, none of the documents
+that were written with that knowledge mentioned the problem.<a href="#section-2.4-9" class="pilcrow">¶</a></p>
+<p id="section-2.4-10">---
+Actually, this is not quite right:<a href="#section-2.4-10" class="pilcrow">¶</a></p>
+<p id="section-2.4-11">Given keyspace of 256 bits and plaintext/cipertext of 128 bits,
+we have 2^256/2^128 = 2^128 'different' keys.<a href="#section-2.4-11" class="pilcrow">¶</a></p>
+<p id="section-2.4-12">It is so that:<a href="#section-2.4-12" class="pilcrow">¶</a></p>
+<p id="section-2.4-13">Given keyspace of 256 bits and plaintext/cipertext of 128 bits,
+we have 2^256/2^128 = 2^128 'identical' keys.<a href="#section-2.4-13" class="pilcrow">¶</a></p>
+<p id="section-2.4-14">But in this case 2^128 'identical' keys is the same as having 2^128 'different' keys.
+---<a href="#section-2.4-14" class="pilcrow">¶</a></p>
+<p id="section-2.4-15">I think this can be generalized. If we have two pairs (n_j,K_out_j) such that:<a href="#section-2.4-15" class="pilcrow">¶</a></p>
+<p id="section-2.4-16">KDF-AES-256(K_in, n_1) = K_out_1
+KDF-AES-256(K_in, n_2) = K_out_2<a href="#section-2.4-16" class="pilcrow">¶</a></p>
+<p id="section-2.4-17">then we are back at a security level of 2^256. I.e. We have 2^256/(2^128*2^128) =1 'identical' keys.
+This would be the case if we want to generate a 256 bits key
+with counter mode.<a href="#section-2.4-17" class="pilcrow">¶</a></p>
+<p id="section-2.4-18">AA : for the cases where a Salt is required there would be a thrid
+call. That third call would genearte the salt necessary.<a href="#section-2.4-18" class="pilcrow">¶</a></p>
+<p id="section-2.4-19">---<a href="#section-2.4-19" class="pilcrow">¶</a></p>
 </section>
 </section>
 <section id="section-3">
@@ -1560,7 +1642,7 @@ ESP SPI the bit 31 should be zero.<a href="#section-5-1" class="pilcrow">¶</a><
 <dl class="references">
 <dt id="NIST800-108">[NIST800-108]</dt>
       <dd>
-<span class="refAuthor">NIST</span>, <span class="refTitle">"Recommendation for Key Derivation Using Pseudorandom Functions"</span>, <span>&lt;<a href="https://www.nist.gov/publications/recommendation-key-derivation-using-pseudorandom-functions-1">https://www.nist.gov/publications/recommendation-key-derivation-using-pseudorandom-functions-1</a>&gt;</span>. </dd>
+<span class="refAuthor">NIST</span>, <span class="refTitle">"Recommendation for Key Derivation Using Pseudorandom Functions"</span>, <span>&lt;<a href="https://csrc.nist.gov/pubs/sp/800/108/r1/upd1/final">https://csrc.nist.gov/pubs/sp/800/108/r1/upd1/final</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC2627">[RFC2627]</dt>
       <dd>
@@ -1625,6 +1707,10 @@ ESP SPI the bit 31 should be zero.<a href="#section-5-1" class="pilcrow">¶</a><
       <dd>
 <span class="refAuthor">Google</span>, <span class="refTitle">"Google Compute Engine Network bandwidth"</span>, <span>&lt;<a href="https://cloud.google.com/compute/docs/network-bandwidth">https://cloud.google.com/compute/docs/network-bandwidth</a>&gt;</span>. </dd>
 <dd class="break"></dd>
+<dt id="HKDF-paper">[HKDF-paper]</dt>
+      <dd>
+<span class="refAuthor">Hugo Krawczyk</span>, <span class="refTitle">"Cryptographic Extraction and Key Derivation: The HKDF Scheme"</span>, <time datetime="2010" class="refDate">2010</time>, <span>&lt;<a href="http://eprint.iacr.org/2010/264">http://eprint.iacr.org/2010/264</a>&gt;</span>. </dd>
+<dd class="break"></dd>
 <dt id="I-D.ietf-ipsecme-g-ikev2">[I-D.ietf-ipsecme-g-ikev2]</dt>
       <dd>
 <span class="refAuthor">Smyslov, V.</span> and <span class="refAuthor">B. Weis</span>, <span class="refTitle">"Group Key Management using IKEv2"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-ipsecme-g-ikev2-20</span>, <time datetime="2025-01-16" class="refDate">16 January 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-ipsecme-g-ikev2-20">https://datatracker.ietf.org/doc/html/draft-ietf-ipsecme-g-ikev2-20</a>&gt;</span>. </dd>
@@ -1641,9 +1727,33 @@ ESP SPI the bit 31 should be zero.<a href="#section-5-1" class="pilcrow">¶</a><
       <dd>
 <span class="refAuthor">IANA</span>, <span class="refTitle">"IKEv2 Parameters: Extended Sequence Numbers Transform IDs"</span>, <span>&lt;<a href="https://www.iana.org/assignments/ikev2-parameters/ikev2-parameters.xhtml#ikev2-%20%20%20%20%20%20%20%20%20%20parameters-6">https://www.iana.org/assignments/ikev2-parameters/ikev2-parameters.xhtml#ikev2-          parameters-6</a>&gt;</span>. </dd>
 <dd class="break"></dd>
+<dt id="KDF-Lecture">[KDF-Lecture]</dt>
+      <dd>
+<span class="refTitle">"The 8th BIU Winter School: More on Implicit Authentication; Key Derivation - Hugo Krawczyk"</span>, <span>&lt;<a href="https://www.youtube.com/watch?v=796TPmaMYY4">https://www.youtube.com/watch?v=796TPmaMYY4</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="Keccak-Lecture">[Keccak-Lecture]</dt>
+      <dd>
+<span class="refAuthor">Christof Paar</span>, <span class="refTitle">"SHA-3 Hash Function"</span>, <span>&lt;<a href="https://www.youtube.com/watch?v=JWskjzgiIa4">https://www.youtube.com/watch?v=JWskjzgiIa4</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="Keccak-vs-AES">[Keccak-vs-AES]</dt>
+      <dd>
+<span class="refTitle">"Comparison of Multi-Purpose Cores of Keccak and AES"</span>, <span>&lt;<a href="https://cryptography.gmu.edu/athena/papers/GMU_DATE_2015.pdf">https://cryptography.gmu.edu/athena/papers/GMU_DATE_2015.pdf</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="NetDev-2024-psp-talk">[NetDev-2024-psp-talk]</dt>
+      <dd>
+<span class="refAuthor">PSP</span>, <span class="refTitle">"PSP Crypto Protocol and HW Offload"</span>, <span>&lt;<a href="https://netdevconf.info/0x18/sessions/talk/psp-crypto-protocol-and-hw-offload.html">https://netdevconf.info/0x18/sessions/talk/psp-crypto-protocol-and-hw-offload.html</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="NetDev-2024-psp-video">[NetDev-2024-psp-video]</dt>
+      <dd>
+<span class="refAuthor">Keccak</span>, <span class="refTitle">"PSP Crypto Protocol and HW Offload"</span>, <span>&lt;<a href="https://www.youtube.com/watch?v=RlsxPMsWdxo">https://www.youtube.com/watch?v=RlsxPMsWdxo</a>&gt;</span>. </dd>
+<dd class="break"></dd>
 <dt id="NIST-800-108-comments">[NIST-800-108-comments]</dt>
       <dd>
 <span class="refAuthor">NIST</span>, <span class="refTitle">"Public Comments and Resolutions on Draft NIST SP 800-108 Revision 1, Recommendation for Key DerivationUsingPseudorandomFunctions, 2020"</span>, <span>&lt;<a href="https://csrc.nist.gov/files/pubs/sp/800/108/r1/final/docs/sp800-108r1-draft-comments-resolutions.pdf">https://csrc.nist.gov/files/pubs/sp/800/108/r1/final/docs/sp800-108r1-draft-comments-resolutions.pdf</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="NIST800-185">[NIST800-185]</dt>
+      <dd>
+<span class="refAuthor">NIST</span>, <span class="refTitle">"SHA-3 Derived Functions: cSHAKE, KMAC, TupleHash and ParallelHash"</span>, <span>&lt;<a href="https://csrc.nist.gov/pubs/sp/800/185/final">https://csrc.nist.gov/pubs/sp/800/185/final</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="PRGS20">[PRGS20]</dt>
       <dd>
@@ -1660,6 +1770,10 @@ ESP SPI the bit 31 should be zero.<a href="#section-5-1" class="pilcrow">¶</a><
 <dt id="RFC5116">[RFC5116]</dt>
       <dd>
 <span class="refAuthor">McGrew, D.</span>, <span class="refTitle">"An Interface and Algorithms for Authenticated Encryption"</span>, <span class="seriesInfo">RFC 5116</span>, <span class="seriesInfo">DOI 10.17487/RFC5116</span>, <time datetime="2008-01" class="refDate">January 2008</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc5116">https://www.rfc-editor.org/info/rfc5116</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC6188">[RFC6188]</dt>
+      <dd>
+<span class="refAuthor">McGrew, D.</span>, <span class="refTitle">"The Use of AES-192 and AES-256 in Secure RTP"</span>, <span class="seriesInfo">RFC 6188</span>, <span class="seriesInfo">DOI 10.17487/RFC6188</span>, <time datetime="2011-03" class="refDate">March 2011</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc6188">https://www.rfc-editor.org/info/rfc6188</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC7539">[RFC7539]</dt>
       <dd>

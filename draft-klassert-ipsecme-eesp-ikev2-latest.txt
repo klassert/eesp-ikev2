@@ -5,11 +5,11 @@
 IPSECME Working Group                                        S. Klassert
 Internet-Draft                                                 A. Antony
 Intended status: Standards Track                                 secunet
-Expires: 24 July 2025                                         T. Brunner
+Expires: 31 July 2025                                         T. Brunner
                                                            codelabs GmbH
                                                               V. Smyslov
                                                               ELVIS-PLUS
-                                                         20 January 2025
+                                                         27 January 2025
 
 
      IKEv2 negotiation for Enhanced Encapsulating Security Payload
@@ -40,7 +40,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 24 July 2025.
+   This Internet-Draft will expire on 31 July 2025.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Klassert, et al.          Expires 24 July 2025                  [Page 1]
+Klassert, et al.          Expires 31 July 2025                  [Page 1]
 
 Internet-Draft           EESP IKEv2 negotiation             January 2025
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Klassert, et al.          Expires 24 July 2025                  [Page 2]
+Klassert, et al.          Expires 31 July 2025                  [Page 2]
 
 Internet-Draft           EESP IKEv2 negotiation             January 2025
 
@@ -165,7 +165,7 @@ Internet-Draft           EESP IKEv2 negotiation             January 2025
 
 
 
-Klassert, et al.          Expires 24 July 2025                  [Page 3]
+Klassert, et al.          Expires 31 July 2025                  [Page 3]
 
 Internet-Draft           EESP IKEv2 negotiation             January 2025
 
@@ -221,7 +221,7 @@ Internet-Draft           EESP IKEv2 negotiation             January 2025
 
 
 
-Klassert, et al.          Expires 24 July 2025                  [Page 4]
+Klassert, et al.          Expires 31 July 2025                  [Page 4]
 
 Internet-Draft           EESP IKEv2 negotiation             January 2025
 
@@ -277,7 +277,7 @@ Internet-Draft           EESP IKEv2 negotiation             January 2025
 
 
 
-Klassert, et al.          Expires 24 July 2025                  [Page 5]
+Klassert, et al.          Expires 31 July 2025                  [Page 5]
 
 Internet-Draft           EESP IKEv2 negotiation             January 2025
 
@@ -309,18 +309,16 @@ Internet-Draft           EESP IKEv2 negotiation             January 2025
    IKEv2 Exchange.  When the responder select Full 64 bit SN a receiver
    MUST enable Reply Protection.
 
-   When the Transform Type [IKEv2-SN] is not present in initiator's
-   Child SA proposal during negotiation of an EESP Child SA, the
-   Sequence Number field MUST NOT be transmitted in the EESP packet.
+   To disable sequence numbering, and thus replay protection based on
+   sequence numbers, the initiator MUST propose SN=None (TBD10).  When
+   the sequence numbers are disabled, there won't be any SN in the EESP
+   packet, the receiver SHOULD NOT dynamically modify ports or addresses
+   without using IKEv2 Mobility [RFC4555].
 
-   When the Replay Prtection is not negotiated, i.e., when the 64 bit
-   sequence number is not carried in the EESP packet, an EESP receiver
-   should not act on address or port changes.  It should not initiate a
-   dynamic address update without the use of IKEv2 Mobility [RFC4555].
-   Since the Replay Protection service is disabled, an attacker could
-   replay packets with a different source address.  An attacker could
-   disrupt the connection by capturing and replaying a single packet
-   with different source address or port number.
+   Because the Replay Protection service is disabled, an attacker can re
+   play packets with a different source address.  Such an attacker could
+   disrupt the connection by replaying a single packet with a different
+   source address or port number.
 
 3.2.  Explicit Initialization Vector
 
@@ -333,7 +331,9 @@ Internet-Draft           EESP IKEv2 negotiation             January 2025
 
 
 
-Klassert, et al.          Expires 24 July 2025                  [Page 6]
+
+
+Klassert, et al.          Expires 31 July 2025                  [Page 6]
 
 Internet-Draft           EESP IKEv2 negotiation             January 2025
 
@@ -346,7 +346,7 @@ Internet-Draft           EESP IKEv2 negotiation             January 2025
    MUST be used during negotiation.  Furthermore, the [IKEv2-SN]
    extension MUST be negotiated to support the use of a Full 64-bit
    Sequence Numbers in EESP packets.  If the the proposal does not
-   include Full 64-bit Sequence Numbers return error INVALID_SN.
+   include Full 64-bit Sequence Numbers return error NO_PROPOSAL_CHOSEN.
 
 3.4.  EESP Version
 
@@ -389,7 +389,7 @@ Internet-Draft           EESP IKEv2 negotiation             January 2025
 
 
 
-Klassert, et al.          Expires 24 July 2025                  [Page 7]
+Klassert, et al.          Expires 31 July 2025                  [Page 7]
 
 Internet-Draft           EESP IKEv2 negotiation             January 2025
 
@@ -445,7 +445,7 @@ Internet-Draft           EESP IKEv2 negotiation             January 2025
 
 
 
-Klassert, et al.          Expires 24 July 2025                  [Page 8]
+Klassert, et al.          Expires 31 July 2025                  [Page 8]
 
 Internet-Draft           EESP IKEv2 negotiation             January 2025
 
@@ -501,7 +501,7 @@ Internet-Draft           EESP IKEv2 negotiation             January 2025
 
 
 
-Klassert, et al.          Expires 24 July 2025                  [Page 9]
+Klassert, et al.          Expires 31 July 2025                  [Page 9]
 
 Internet-Draft           EESP IKEv2 negotiation             January 2025
 
@@ -557,7 +557,7 @@ Internet-Draft           EESP IKEv2 negotiation             January 2025
 
 
 
-Klassert, et al.          Expires 24 July 2025                 [Page 10]
+Klassert, et al.          Expires 31 July 2025                 [Page 10]
 
 Internet-Draft           EESP IKEv2 negotiation             January 2025
 
@@ -582,8 +582,9 @@ Internet-Draft           EESP IKEv2 negotiation             January 2025
    UDP encapsulation for EESP is largely similar to the ESP UDP
    encapsulation specified in [RFC3948], with the primary difference
    being the UDP source port used by the EESP Sub SA may be different
-   from IKE_SA source port.for more flexible handling of EESP traffic,
-   particularly ECMP support along the path and in the NIC.
+   from IKE_SA source port, as specified in [RFC3947], for more flexible
+   handling of EESP traffic, particularly ECMP support along the path
+   and in the NIC.
 
    A receiver indenting to support both ESP and EESP encapsulated in UDP
    must start ESP SPI, most significant bit of the SPI, with zero.
@@ -612,8 +613,7 @@ Internet-Draft           EESP IKEv2 negotiation             January 2025
 
 
 
-
-Klassert, et al.          Expires 24 July 2025                 [Page 11]
+Klassert, et al.          Expires 31 July 2025                 [Page 11]
 
 Internet-Draft           EESP IKEv2 negotiation             January 2025
 
@@ -669,7 +669,7 @@ Internet-Draft           EESP IKEv2 negotiation             January 2025
 
 
 
-Klassert, et al.          Expires 24 July 2025                 [Page 12]
+Klassert, et al.          Expires 31 July 2025                 [Page 12]
 
 Internet-Draft           EESP IKEv2 negotiation             January 2025
 
@@ -679,30 +679,30 @@ Internet-Draft           EESP IKEv2 negotiation             January 2025
    This document defines new Notify Message types in the "IKEv2 Notify
    Message Error Types" registry:
 
-         +=========+===========================+=================+
-         | Value   | Notify Message Error Type | Reference       |
-         +=========+===========================+=================+
-         | [TBD2]  | INVALID_SESSION_ID        | [this document] |
-         +---------+---------------------------+-----------------+
-         | [TBD3]  | INVALID_SUB_SA            | [this document] |
-         +---------+---------------------------+-----------------+
-         | [TBD10] | INVALID_SN                | [this document] |
-         +---------+---------------------------+-----------------+
+         +========+===========================+=================+
+         | Value  | Notify Message Error Type | Reference       |
+         +========+===========================+=================+
+         | [TBD2] | INVALID_SESSION_ID        | [this document] |
+         +--------+---------------------------+-----------------+
+         | [TBD3] | INVALID_SUB_SA            | [this document] |
+         +--------+---------------------------+-----------------+
 
-                                  Table 5
+                                 Table 5
 
 8.1.6.  Sequence Number
 
    This document defines a new value in the IKEv2 "Transform Type 5 -
    Sequence Numbers Properties Transform IDs" registry:
 
-        +========+==============================+=================+
-        | Value  | Name                         | Reference       |
-        +========+==============================+=================+
-        | [TBD9] | Full 64-bit Sequence Numbers | [this document] |
-        +--------+------------------------------+-----------------+
+       +=========+==============================+=================+
+       | Value   | Name                         | Reference       |
+       +=========+==============================+=================+
+       | [TBD9]  | Full 64-bit Sequence Numbers | [this document] |
+       +---------+------------------------------+-----------------+
+       | [TBD10] | Full 64-bit Sequence Numbers | [this document] |
+       +---------+------------------------------+-----------------+
 
-                                  Table 6
+                                 Table 6
 
 8.2.  New Registries
 
@@ -725,7 +725,7 @@ Internet-Draft           EESP IKEv2 negotiation             January 2025
 
 
 
-Klassert, et al.          Expires 24 July 2025                 [Page 13]
+Klassert, et al.          Expires 31 July 2025                 [Page 13]
 
 Internet-Draft           EESP IKEv2 negotiation             January 2025
 
@@ -781,7 +781,7 @@ Internet-Draft           EESP IKEv2 negotiation             January 2025
 
 
 
-Klassert, et al.          Expires 24 July 2025                 [Page 14]
+Klassert, et al.          Expires 31 July 2025                 [Page 14]
 
 Internet-Draft           EESP IKEv2 negotiation             January 2025
 
@@ -837,7 +837,7 @@ Internet-Draft           EESP IKEv2 negotiation             January 2025
 
 
 
-Klassert, et al.          Expires 24 July 2025                 [Page 15]
+Klassert, et al.          Expires 31 July 2025                 [Page 15]
 
 Internet-Draft           EESP IKEv2 negotiation             January 2025
 
@@ -893,7 +893,7 @@ Internet-Draft           EESP IKEv2 negotiation             January 2025
 
 
 
-Klassert, et al.          Expires 24 July 2025                 [Page 16]
+Klassert, et al.          Expires 31 July 2025                 [Page 16]
 
 Internet-Draft           EESP IKEv2 negotiation             January 2025
 
@@ -904,13 +904,6 @@ Internet-Draft           EESP IKEv2 negotiation             January 2025
               ipsecme-g-ikev2-20, 16 January 2025,
               <https://datatracker.ietf.org/doc/html/draft-ietf-ipsecme-
               g-ikev2-20>.
-
-   [I-D.irtf-cfrg-kangarootwelve]
-              Viguier, B., Wong, D., Van Assche, G., Dang, Q., and J.
-              Daemen, "KangarooTwelve and TurboSHAKE", Work in Progress,
-              Internet-Draft, draft-irtf-cfrg-kangarootwelve-16, 21
-              December 2024, <https://datatracker.ietf.org/doc/html/
-              draft-irtf-cfrg-kangarootwelve-16>.
 
    [I-D.mrossberg-ipsecme-multiple-sequence-counters]
               Rossberg, M., Klassert, S., and M. Pfeiffer, "Broadening
@@ -947,22 +940,19 @@ Internet-Draft           EESP IKEv2 negotiation             January 2025
               <https://www.iana.org/assignments/ikev2-parameters/
               ikev2-parameters.xhtml#ikev2-parameters-18>.
 
-
-
-Klassert, et al.          Expires 24 July 2025                 [Page 17]
-
-Internet-Draft           EESP IKEv2 negotiation             January 2025
-
-
    [IKEv2-Transforms]
               IANA, "IKEv2 Parameters: Transform Type Values",
               <https://www.iana.org/assignments/ikev2-parameters/
               ikev2-parameters.xhtml#ikev2-parameters-3>.
 
-   [NIST800-185]
-              NIST, "SHA-3 Derived Functions: cSHAKE, KMAC, TupleHash
-              and ParallelHash",
-              <https://csrc.nist.gov/pubs/sp/800/185/final>.
+
+
+
+
+Klassert, et al.          Expires 31 July 2025                 [Page 17]
+
+Internet-Draft           EESP IKEv2 negotiation             January 2025
+
 
    [PSP]      Google, "PSP Architecture Specification",
               <https://github.com/google/psp/blob/main/doc/
@@ -1003,18 +993,22 @@ Internet-Draft           EESP IKEv2 negotiation             January 2025
               DOI 10.17487/RFC9347, January 2023,
               <https://www.rfc-editor.org/info/rfc9347>.
 
-
-
-Klassert, et al.          Expires 24 July 2025                 [Page 18]
-
-Internet-Draft           EESP IKEv2 negotiation             January 2025
-
-
    [RFC9611]  Antony, A., Brunner, T., Klassert, S., and P. Wouters,
               "Internet Key Exchange Protocol Version 2 (IKEv2) Support
               for Per-Resource Child Security Associations (SAs)",
               RFC 9611, DOI 10.17487/RFC9611, July 2024,
               <https://www.rfc-editor.org/info/rfc9611>.
+
+
+
+
+
+
+
+Klassert, et al.          Expires 31 July 2025                 [Page 18]
+
+Internet-Draft           EESP IKEv2 negotiation             January 2025
+
 
 Appendix A.  Additional Stuff
 
@@ -1061,4 +1055,10 @@ Authors' Addresses
 
 
 
-Klassert, et al.          Expires 24 July 2025                 [Page 19]
+
+
+
+
+
+
+Klassert, et al.          Expires 31 July 2025                 [Page 19]
