@@ -369,6 +369,7 @@ ESP SPI the bit 31 should be zero.
 ** I-D.ietf-ipsecme-g-ikev2
 ** I-D.irtf-cfrg-aead-properties
 ** I-D.mattsson-cfrg-aes-gcm-sst
+** I-D.irtf-cfrg-kangarootwelve
 
 ** Azure-Network
 :PROPERTIES:
