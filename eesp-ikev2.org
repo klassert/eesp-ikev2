@@ -196,7 +196,7 @@ To disable sequence numbering, and thus replay protection based on
 sequence numbers, the initiator MUST propose SN=None (TBD10). When the
 sequence numbers are disabled, there won't be any SN in the
 EESP packet, the receiver SHOULD NOT dynamically modify ports or
-addresses without using IKEv2 Mobility [RFC4555].
+addresses without using IKEv2 Mobility [[RFC4555]].
 
 Because the Replay Protection service is disabled, an attacker can re
 play packets with a different source address. Such an attacker could
@@ -417,8 +417,9 @@ INVALID_SESSION_ID error message, indicating a supported value.
 UDP encapsulation for EESP is largely similar to the ESP UDP
 encapsulation specified in [[RFC3948]], with the primary difference
 being the UDP source port used by the EESP Sub SA may be different
-from IKE_SA source port.for more flexible handling of EESP traffic,
-particularly ECMP support along the path and in the NIC.
+from IKE_SA source port, as specified in [[RFC3947]], for more
+flexible handling of EESP traffic, particularly ECMP support
+along the path and in the NIC.
 
 A receiver indenting to support both ESP and EESP encapsulated in UDP
 must start ESP  SPI, most significant bit of the SPI, with zero.
@@ -608,7 +609,6 @@ TBD
 ** RFC8750
 ** RFC4555
 
-** I-D.irtf-cfrg-kangarootwelve
 ** I-D.mrossberg-ipsecme-multiple-sequence-counters
 ** I-D.ponchon-ipsecme-anti-replay-subspaces
 ** I-D.ietf-ipsecme-g-ikev2
@@ -655,19 +655,6 @@ TBD
 :REF_ORG: IANA
 :END:
 
-** NIST800-185
-:PROPERTIES:
-:REF_TARGET: https://csrc.nist.gov/pubs/sp/800/185/final
-:REF_TITLE: SHA-3 Derived Functions: cSHAKE, KMAC, TupleHash and ParallelHash
-:REF_ORG: NIST
-:END:
-
-** Keccak-vs-AES
-:PROPERTIES:
-:REF_TARGET: https://cryptography.gmu.edu/athena/papers/GMU_DATE_2015.pdf
-:REF_TITLE: Comparison of Multi-Purpose Cores of Keccak and AES
-:REF_ORG: NIST
-:END:
 
 * Additional Stuff
 
