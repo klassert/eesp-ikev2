@@ -21,7 +21,7 @@
 #+RFC_SHORT_ORG: secunet
 #+RFC_ADD_AUTHOR: ("Antony Antony" "antony.antony@secunet.com" ("secunet" "secunet Security Networks AG"))
 #+RFC_ADD_AUTHOR: ("Tobias Brunner" "tobias@codelabs.ch" ("" "codelabs GmbH"))
-#+RFC_ADD_AUTHOR: ("Valery Smyslov" "" ("" "ELVIS-PLUS"))
+#+RFC_ADD_AUTHOR: ("Valery Smyslov" "svan@elvis.ru" ("" "ELVIS-PLUS"))
 #+RFC_AREA: SEC
 #+RFC_WORKGROUP: IPSECME Working Group
 
