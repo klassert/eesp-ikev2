@@ -291,7 +291,7 @@ Internet-Draft           EESP IKEv2 negotiation             January 2025
       |     |     +-- Attribute ( Key Length = 128 )
       |     +-- Transform INTEG ( Name = AUTH_HMAC_SHA1_96 )
       |     +-- Transform INTEG ( Name = AUTH_AES_XCBC_96 )
-      |     +-- Transform SN ( Name = Full 64 bit Sequence Number)
+      |     +-- Transform SN ( Name = 64-bit Sequential Numbers )
       |     +-- Transform EESPV ( Name = V1 )
       |     +-- Transform EESPSUBSA ( Name =  )
       |     +-- Transform EESPSSID ( Name =  )
@@ -301,13 +301,13 @@ Internet-Draft           EESP IKEv2 negotiation             January 2025
 
 3.1.  Replay Protection Service
 
-   EESP provides an optional Replay service using Full 64 bit Sequence
-   Numbers(TBD9), carried in the packet.  To enable Replay service the
-   initiator SHOULD propose Sequence Numbers Transforms, SN = (Full 64
-   bit Sequence Number(TBD9)) in Substructure of the Proposal
-   Substructure inside the Security Association (SA) payload in the
-   IKEv2 Exchange.  When the responder select Full 64 bit SN a receiver
-   MUST enable Reply Protection.
+   EESP provides an optional Replay service using 64-bit sequence
+   numbers carried in the packet.  To enable Replay service the
+   initiator SHOULD propose Sequence Numbers Transforms, SN = (64-bit
+   Sequential Numbers) in the Proposal Substructure inside the Security
+   Association (SA) payload in the IKEv2 Exchange.  When the responder
+   selects 64-bit Sequential Numbers, a both sides MUST enable Reply
+   Protection.
 
    To disable sequence numbering, and thus replay protection based on
    sequence numbers, the initiator MUST propose SN=None (TBD10).  When
@@ -344,9 +344,9 @@ Internet-Draft           EESP IKEv2 negotiation             January 2025
    as specified in [RFC8750], the IV MUST be omitted in the EESP packet.
    To enable this functionality, IIV transforms defined in [IKEv2-Enc]
    MUST be used during negotiation.  Furthermore, the [IKEv2-SN]
-   extension MUST be negotiated to support the use of a Full 64-bit
-   Sequence Numbers in EESP packets.  If the the proposal does not
-   include Full 64-bit Sequence Numbers return error NO_PROPOSAL_CHOSEN.
+   extension MUST be negotiated to support the use of 64-bit Sequential
+   Numbers in EESP packets.  If the the proposal does not include 64-bit
+   Sequential Numbers return error NO_PROPOSAL_CHOSEN.
 
 3.4.  EESP Version
 
@@ -694,15 +694,15 @@ Internet-Draft           EESP IKEv2 negotiation             January 2025
    This document defines a new value in the IKEv2 "Transform Type 5 -
    Sequence Numbers Properties Transform IDs" registry:
 
-       +=========+==============================+=================+
-       | Value   | Name                         | Reference       |
-       +=========+==============================+=================+
-       | [TBD9]  | Full 64-bit Sequence Numbers | [this document] |
-       +---------+------------------------------+-----------------+
-       | [TBD10] | Full 64-bit Sequence Numbers | [this document] |
-       +---------+------------------------------+-----------------+
+         +=========+===========================+=================+
+         | Value   | Name                      | Reference       |
+         +=========+===========================+=================+
+         | [TBD9]  | 64-bit Sequential Numbers | [this document] |
+         +---------+---------------------------+-----------------+
+         | [TBD10] | None                      | [this document] |
+         +---------+---------------------------+-----------------+
 
-                                 Table 6
+                                  Table 6
 
 8.2.  New Registries
 
