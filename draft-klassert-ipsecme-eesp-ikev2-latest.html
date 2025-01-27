@@ -1632,7 +1632,7 @@ SA Payload
    |     |     +-- Attribute ( Key Length = 128 )
    |     +-- Transform INTEG ( Name = AUTH_HMAC_SHA1_96 )
    |     +-- Transform INTEG ( Name = AUTH_AES_XCBC_96 )
-   |     +-- Transform SN ( Name = 64-bit Sequential Numbers )
+   |     +-- Transform SN ( Name = Full 64 bit Sequence Number)
    |     +-- Transform EESPV ( Name = V1 )
    |     +-- Transform EESPSUBSA ( Name =  )
    |     +-- Transform EESPSSID ( Name =  )
@@ -1648,13 +1648,13 @@ SA Payload
 <a href="#section-3.1" class="section-number selfRef">3.1. </a><a href="#name-replay-protection-service" class="section-name selfRef">Replay Protection Service</a>
         </h3>
 <p id="section-3.1-1">EESP provides an optional Replay service using
-64-bit sequence numbers carried in the packet.
+Full 64 bit Sequence Numbers(TBD9), carried in the packet.
 To enable Replay service the initiator SHOULD
 propose Sequence Numbers Transforms,
-SN = (64-bit Sequential Numbers) in the
+SN = (Full 64 bit Sequence Number(TBD9)) in Substructure of the
 Proposal Substructure inside the Security Association (SA) payload
-in the IKEv2 Exchange. When the responder selects 64-bit Sequential Numbers, a
-both sides MUST enable Reply Protection.<a href="#section-3.1-1" class="pilcrow">¶</a></p>
+in the IKEv2 Exchange. When the responder select Full 64 bit SN a
+receiver MUST enable Reply Protection.<a href="#section-3.1-1" class="pilcrow">¶</a></p>
 <p id="section-3.1-2">To disable sequence numbering, and thus replay protection based on
 sequence numbers, the initiator MUST propose SN=None (TBD10). When the
 sequence numbers are disabled, there won't be any SN in the
@@ -1682,8 +1682,8 @@ as specified in <span>[<a href="#RFC8750" class="cite xref">RFC8750</a>]</span>,
 packet. To enable this functionality, IIV transforms defined in
 <span>[<a href="#IKEv2-Enc" class="cite xref">IKEv2-Enc</a>]</span> MUST be used during negotiation. Furthermore,
 the <span>[<a href="#IKEv2-SN" class="cite xref">IKEv2-SN</a>]</span> extension MUST be negotiated to support the use of
-64-bit Sequential Numbers in EESP packets. If the the proposal
-does not include 64-bit Sequential Numbers return error
+a Full 64-bit Sequence Numbers in EESP packets. If the the proposal
+does not include Full 64-bit Sequence Numbers return error
 NO_PROPOSAL_CHOSEN.<a href="#section-3.3-1" class="pilcrow">¶</a></p>
 </section>
 <section id="section-3.4">
@@ -2070,12 +2070,12 @@ replace 'IKE and ESP' with 'IKE, ESP, and EESP'<a href="#section-8.1.4-1" class=
             <tbody>
               <tr>
                 <td class="text-left" rowspan="1" colspan="1">[TBD9]</td>
-                <td class="text-left" rowspan="1" colspan="1">64-bit Sequential Numbers</td>
+                <td class="text-left" rowspan="1" colspan="1">Full 64-bit Sequence Numbers</td>
                 <td class="text-left" rowspan="1" colspan="1">[this document]</td>
               </tr>
               <tr>
                 <td class="text-left" rowspan="1" colspan="1">[TBD10]</td>
-                <td class="text-left" rowspan="1" colspan="1">None</td>
+                <td class="text-left" rowspan="1" colspan="1">Full 64-bit Sequence Numbers</td>
                 <td class="text-left" rowspan="1" colspan="1">[this document]</td>
               </tr>
             </tbody>
@@ -2397,6 +2397,10 @@ discussed in the Security Architecture document <span>[<a href="#RFC4301" class=
 <address class="vcard">
         <div dir="auto" class="left"><span class="fn nameRole">Valery Smyslov</span></div>
 <div dir="auto" class="left"><span class="org">ELVIS-PLUS</span></div>
+<div class="email">
+<span>Email:</span>
+<a href="mailto:svan@elvis.ru" class="email">svan@elvis.ru</a>
+</div>
 </address>
 </section>
 </div>
