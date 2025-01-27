@@ -66,6 +66,14 @@ in stateful decryption configurations, sharing a common SPI namespace
 while introducing new capabilities to enhance IPsec’s performance
 and versatility in modern use cases.
 
+EESP Sub SA can seen as a single unidirectional SA, whereas
+conventional Child SAs only negotiate pair of un SAs.
+
+By deriving unique keys, sequence number spaces, and
+IV spaces from an existing Child SA, Sub SAs streamline traffic
+flow management, reduce overhead, and enable more efficient
+lifecycle operations.
+
 This document does not obsolete or update any existing RFCs. While
 stateless implementations of EESP are referenced, their negotiation,
 which is similar to [[PSP]], is outside the scope of this document.
@@ -232,56 +240,69 @@ characteristic information of the inner flow and SHOULD NOT change on
 per packet basis inside any inner flow to avoid packet reordering.
 The Flow Identifier SHOULD be negotiated when creating EESP SA.
 
+* Sub SA
+Existing mechanisms for establishing Child SAs, as described in
+[[RFC7296]], yield pair of SAs. High-speed IP traffic is often
+asymmetric. Creating multiple pairs of Child SAs, e.g. [[RFC9611]] or
+for DSCP to carry asymetric traffic is inefficient. A pair of Child SA
+combined with multiple unidirectional a set of  Sub SAs with Sub SA
+IDs greater than 0, provides a more flexible approach to carrying
+asymmetric traffic patterns, particularly in high-speed environments.
+Sub SAs reduces overhead, improves resource utilization, and enhances
+scalability for large-scale deployments. In many use cases, several
+uni directinal SAs utilized, while others are unused which can result
+in unnecessary overhead for management, rekeying, and resource
+consumption. Furthermore, using multiple bidirectional Child SAs for
+granular traffic flows often leads to additional setup delays and
+complex lifetime management. This inefficiency is particularly acute
+in high-throughput or low-latency environments, where rapid setup and
+teardown of SAs is essential to maintain performance.
 
-* Sub SAs
+An EESP Sub SA provides a unidirectional Security Association
+derived from an existing EESP Child SA pair.  It inherits all of
+the Child SA’s properties except for keys, sequence number space,
+and IV space, each of which MUST be unique to each Sub SA.  By
+defining these unidirectional flows, Sub SAs offer a more efficient
+alternative to large numbers of bidirectional Child SAs with the
+same traffic selectors [[RFC7296]], [[RFC9611]].
 
-An EESP Sub SA is a unidirectional Security Association derived from
-an existing EESP Child SA pair. It inherits all properties except
-keys, sequence number space, and IV space. These three are unique for
-each Sub SA. This allows finer granularity for managing
-uni-directional traffic flows. Sub SAs avoid the overhead associated
-with bidirectional Child SAs for identical traffic
-selections[[RFC7296]], [[RFC9611]]. They enable more efficient
-resource utilization and improved performance, particularly in
-scenarios requiring high flexibility. Each Sub SA is uniquely
-identified by a Sub SA ID, which is used to derive a unique key. The
-Sub SA ID is carried in each EESP packet, either in the Session ID
-field or in the Flow ID field, as negotiated during the establishment
-of the EESP Child SA.
+Each Sub SA is identified by a Sub SA ID, which MUST be carried in
+each EESP packet—either in the Session ID field or in the Flow ID
+field—consistent with the negotiation of the EESP Child SA.  This
+Sub SA ID is used to derive a unique key, yielding the following
+benefits:
 
-Advantages of Sub SAs compared to Child SAs with different keys:
+- Unidirectional Operation: In contrast to the per-resource
+  SAs of [[RFC9611]], which are bidirectional, Sub SAs MAY be
+  defined strictly in one direction when reverse traffic is
+  absent.  CREATE_CHILD_SA does not otherwise support
+  unidirectional SAs.
 
-- Possibility for unidirectional SAs. Compared to [[RFC9611]], when a
-  per-resource SA is established, it is bidirectional. However, both
-  directions of the SA MAY not always be in use. Using CREATE_CHILD_SA
-  does not allow unidirectional SAs.
+- Zero Additional Setup Time: Sub SAs require no extra IKE
+  message exchanges, unlike requesting more Child SAs or relying
+  on large IKE windows [[RFC7296]].  This allows rapid provisioning
+  of extra flows without introducing round-trip delays.
 
-- No extra setup time, i.e., zero round-trip time to set up
-  additional Sub SAs. This would be more efficient than using large
-  IKE window size specified in [[RFC7296]] to manage multiple SAs.
+- Simplified Lifecycle Management**: Sub SAs are more efficient
+  to create, rekey, and delete than traditional Child SAs.  Their
+  narrow scope streamlines both key management and policy
+  enforcement.
 
-- Sub SAs are more efficient to create, rekey, and delete. Their
-lifecycle management is simpler compared to traditional Child SAs.
+- On-the-Fly Key Derivation: Implementations using hierarchical
+  key derivation, particularly with hardware offload, MAY derive
+  Sub SA keys dynamically on a per-packet basis.  This mitigates
+  the risk of data-plane performance degradation caused by a large
+  number of keys [[I-D.ponchon-ipsecme-anti-replay-subspaces]].
 
-- When using hierarchical key derivation, especially when using
-  hardware key derivation, Sub SA keys can be derived on-the-fly
-  per packet. This reduces "Data-plane performance degradation due to
-  the use of a larger number of keys" as noted in
-  [[I-D.ponchon-ipsecme-anti-replay-subspaces]].
-
-To negotiate Sub SA SUB_SA_ID in Session ID Transform. Or in a Flow
-IDs Transform. TBD: expand Sub SA with Flow ID  negotiation
-
-AEAD transforms, such as AES-GCM or those specified in [[RFC8750]],
-require that the IV does not repeat within a single Sub SA. Each Sub
-SA uses a distinct key, ensuring proper cryptographic separation.
-While the IV may repeat across different Sub SAs, this complies with
-the requirement that each key must be paired with a unique IV.
-
-Each Sub SA MUST maintain an independent sequence number space
-when using full 64-bit sequence numbers. For a specific key within
-a Sub SA, sequence numbers MUST BE unique and follow a
-monotonically increasing order to meet cryptographic requirements.
+AEAD transforms such as AES-GCM [[RFC4106]], [[RFC8750]] require
+that the IV never repeat within a single Sub SA.  Because each
+Sub SA uses a distinct key, the IV MAY be reused across different
+Sub SAs, satisfying the requirement that each key be paired with a
+unique IV.  Implementations MUST also maintain an independent
+sequence number space for each Sub SA when full 64-bit sequence
+numbers are in use.  For a given Sub SA key, sequence numbers MUST
+remain unique and monotonically increasing to meet cryptographic
+requirements.
 
 ** UDP Encapsulation of Sub SA
 
@@ -607,6 +628,7 @@ TBD
 ** RFC7942
 ** RFC8750
 ** RFC4555
+** RFC4106
 
 ** I-D.mrossberg-ipsecme-multiple-sequence-counters
 ** I-D.ponchon-ipsecme-anti-replay-subspaces
