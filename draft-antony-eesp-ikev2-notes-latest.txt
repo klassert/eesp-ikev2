@@ -569,6 +569,13 @@ Internet-Draft               KEv2 KDF Notes                 January 2025
               <https://datatracker.ietf.org/doc/html/draft-irtf-cfrg-
               aead-properties-09>.
 
+   [I-D.irtf-cfrg-kangarootwelve]
+              Viguier, B., Wong, D., Van Assche, G., Dang, Q., and J.
+              Daemen, "KangarooTwelve and TurboSHAKE", Work in Progress,
+              Internet-Draft, draft-irtf-cfrg-kangarootwelve-16, 21
+              December 2024, <https://datatracker.ietf.org/doc/html/
+              draft-irtf-cfrg-kangarootwelve-16>.
+
    [I-D.mattsson-cfrg-aes-gcm-sst]
               Campagna, M., Maximov, A., and J. P. Mattsson, "Galois
               Counter Mode with Strong Secure Tags (GCM-SST)", Work in
@@ -601,13 +608,6 @@ Internet-Draft               KEv2 KDF Notes                 January 2025
               <https://netdevconf.info/0x18/sessions/talk/psp-crypto-
               protocol-and-hw-offload.html>.
 
-   [NetDev-2024-psp-video]
-              Keccak, "PSP Crypto Protocol and HW Offload",
-              <https://www.youtube.com/watch?v=RlsxPMsWdxo>.
-
-
-
-
 
 
 
@@ -617,6 +617,10 @@ Klassert & Antony         Expires 31 July 2025                 [Page 11]
 
 Internet-Draft               KEv2 KDF Notes                 January 2025
 
+
+   [NetDev-2024-psp-video]
+              Keccak, "PSP Crypto Protocol and HW Offload",
+              <https://www.youtube.com/watch?v=RlsxPMsWdxo>.
 
    [NIST-800-108-comments]
               NIST, "Public Comments and Resolutions on Draft NIST SP
@@ -659,11 +663,7 @@ Internet-Draft               KEv2 KDF Notes                 January 2025
               Version 1.3", RFC 8446, DOI 10.17487/RFC8446, August 2018,
               <https://www.rfc-editor.org/info/rfc8446>.
 
-   [RFC9611]  Antony, A., Brunner, T., Klassert, S., and P. Wouters,
-              "Internet Key Exchange Protocol Version 2 (IKEv2) Support
-              for Per-Resource Child Security Associations (SAs)",
-              RFC 9611, DOI 10.17487/RFC9611, July 2024,
-              <https://www.rfc-editor.org/info/rfc9611>.
+
 
 
 
@@ -673,6 +673,12 @@ Klassert & Antony         Expires 31 July 2025                 [Page 12]
 
 Internet-Draft               KEv2 KDF Notes                 January 2025
 
+
+   [RFC9611]  Antony, A., Brunner, T., Klassert, S., and P. Wouters,
+              "Internet Key Exchange Protocol Version 2 (IKEv2) Support
+              for Per-Resource Child Security Associations (SAs)",
+              RFC 9611, DOI 10.17487/RFC9611, July 2024,
+              <https://www.rfc-editor.org/info/rfc9611>.
 
    [RFC9681]  Decraene, B., Ginsberg, L., Li, T., Solignac, G., Karasek,
               M., Van de Velde, G., and T. Przygienda, "IS-IS Fast
@@ -689,12 +695,6 @@ Authors' Addresses
    Antony Antony
    secunet Security Networks AG
    Email: antony.antony@secunet.com
-
-
-
-
-
-
 
 
 
