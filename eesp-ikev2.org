@@ -386,23 +386,52 @@ Sub SAs must rekeyed.
 
 ** Multiple Sender Group SA Key Derivation
 
-When using EESP with a group SA, as specified in
-[[I-D.ietf-ipsecme-g-ikev2]], the Sender-ID MUST be used for
-deriving a unique key for each sender. This ensures that each
-sender maintains a distinct IV and/or sequence number space.
-When using independent keys, the Implicit IV (IIV) transforms
-may be used.
+When an EESP implementation uses a group SA with multiple senders,
+as specified in [[I-D.ietf-ipsecme-g-ikev2]], it MAY use the Sender-ID
+to derive a unique key for each sender.  Using the Sender-ID ensures
+that each sender maintains a distinct sequence number space and
+initialization vector (IV). Implementations MAY also use
+Implicit IV (IIV) transforms, [[RFC8750]] with independent sequence
+number space.
 
-The Sender-ID is carried in each packet within the Session ID
-field, allowing efficient and reliable key differentiation for
-data security and integrity.
+Replay protection for multiple senders is only feasible when the
+when sequence number space is independent for each senders.
+If an implementation requires replay protection in a multi-sender
+environment, it MUST use the Sender-ID Sub SA. The Sender-ID MUST
+be carried in each packet within the Session ID field, providing
+an efficient mechanism for key differentiation to protect data
+confidentiality and integrity.
 
-The maximum length of GWP_SENDER_ID_BITS in GCKS policy
-is 16 bits when using the Session ID to carry the Sender-ID.
+If the Session ID is used to carry the Sender-ID, the maximum length
+of GWP_SENDER_ID_BITS in the GCKS policy MUST NOT exceed 16 bits.
 
-[Note: we could allow 32 bit or any lenght field for
+
+** Multiple Sender Group SA Key Derivation
+
+When an EESP implementation uses a group Security Association (SA)
+with multiple senders, as specified in [[I-D.ietf-ipsecme-g-ikev2]],
+it MAY use the Sender-ID to derive a unique key for each sender.
+If the Sender-ID is used for unique key derivation, each sender
+would maintain a distinct Sequence Number space hence, distinct
+initialization vector (IV). Also the implementations MAY use
+Implicit IV (IIV) transforms for independent keys.
+
+Replay protection for multiple senders is only feasible when the
+Sender-ID is used and independent keys are derive. If an
+implementation requires replay protection in a multi-sender
+environment, it MUST use the Sender-ID.  The Sender-ID MUST be
+carried in each packet within the Session ID field, thereby
+providing an efficient and reliable mechanism for key
+differentiation to protect data confidentiality and integrity.
+
+If the Session ID is used to carry the Sender-ID, the maximum
+length of GWP_SENDER_ID_BITS in the GCKS policy MUST NOT exceed
+16 bits.
+
+[Note: we could allow 32 bit or any length field for
 GWP_SENDER_ID_BITS then it would have be carried in
-a EESP Options TLV and not in Session ID]
+a EESP Options TLV and not in Session ID. Should we
+define a seperate TLV for the Group Sender ID?]
 
 * Session ID
 
