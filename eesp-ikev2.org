@@ -512,7 +512,6 @@ IANA is requested to create a new registry named
 | Session ID | Name         | Reference       |
 |------------+------------- +-----------------+
 | 0          | Unspecified  | [this document] |
-| 1          | ENCRYPION_ID | [this document] |
 | 2          | SUB_SA_ID    | [this document] |
 
 *** EESP Flow ID registry
