@@ -269,7 +269,21 @@ Why UDP?
 - In the Cloud per flow limitation, without NAT
 - Wide spread RSS Support for UDP when using RFC9611
 
+** UDP Encap Source port
+
+Current IKEv2 and ESP encapsulation in UDP are specified in
+[[RFC3947]] and [[RFC3948]. ESP can use the same port opened by IKE.
+If look at Section 4 of [[RFC3947]] "The initiator MUST set
+both UDP source and destination ports to 4500." This means IKE at
+the source CAN only use source port 4500. HOwever, the RFC further
+allows inter mediate NAT gateways to change the source port from 4500
+to X. This causes split among IPsec adminstrators.
+
+IPsec adminstrators open only out going firewall on the  peer for 4500-4500.
+While the incoming firewall is open for X:4500.
+
 ** Use cases for UDP Encapsulation  without NAT
+
 *** UDP Encapsulation in Cloud Provider
 
 A common question is why use UDP when there is no NAT, especially in
@@ -293,11 +307,8 @@ improves throughput. Test results supporting this were presented in
 [[AWS-IPsec-NetDev]].
 
 For further details, see:
-[[Azure-Network]]
-
-[[AWS-Network]]
-
-[[GCP-Network]]
+[[Azure-Network]], [[AWS-Network]], [[GCP-Network]],
+[[I-D.bottorff-ipsecme-mtdcuc-ipsec-lb]]
 
 
 * WESP UDP Encap
@@ -369,6 +380,7 @@ ESP SPI the bit 31 should be zero.
 ** I-D.ietf-ipsecme-g-ikev2
 ** I-D.irtf-cfrg-aead-properties
 ** I-D.mattsson-cfrg-aes-gcm-sst
+** I-D.bottorff-ipsecme-mtdcuc-ipsec-lb
 
 ** Azure-Network
 :PROPERTIES:
