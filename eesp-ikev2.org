@@ -233,13 +233,6 @@ Each SA need an EESP Base Header version which is specified
 [[I-D.klassert-ipsecme-eesp]]. An Initiator may propose multipe
 EESPV and the responder MUST choose one proposal.
 
-** EESP Flow Identifier
-
-EESP Flow Identifier (EESPFID) Options are used to carry
-characteristic information of the inner flow and SHOULD NOT change on
-per packet basis inside any inner flow to avoid packet reordering.
-The Flow Identifier SHOULD be negotiated when creating EESP SA.
-
 * Sub SA
 Existing mechanisms for establishing Child SAs, as described in
 [[RFC7296]], yield pair of SAs. High-speed IP traffic is often
@@ -478,7 +471,6 @@ This document defines new transforms in
 | TBD4 | EESP Version(EESPV)       |  (EESP) | [this document] |
 | TBD5 | EESP Sub SA(EESPSUBSA)    |  (EESP) | [this document] |
 | TBD6 | EESP Session ID(EESPSID)  |  (EESP) | [this document] |
-| TBD7 | EESP Flow ID(EESPFID)     |  (EESP) | [this document] |
 
 *** IKEv2 Notify Message Status Types registry.
 
@@ -534,24 +526,6 @@ IANA is requested to create a new registry named
 |------------+------------- +-----------------+
 | 0          | Unspecified  | [this document] |
 | 2          | SUB_SA_ID    | [this document] |
-
-*** EESP Flow ID registry
-
-IANA is requested to create a new registry named
-'EESP Session Flow ID Transform' in the
-'Internet Key Exchange Version 2
-(IKEv2) Parameters', [[IKEv2-IANA]] page.
-
-- Name: EESP Flow ID Transform Registry
-- Description: EESP Flow Identifier
-- Reference: This document
-
-| Flow ID | Name         | Reference        |
-|---------+--------------+------------------+
-| 0       | Unspecified  | [this document]  |
-| 1       | VNI32        | [this document]  |
-| 2       | VNI64        | [this document]  |
-| 3       | SUB_SA_16    | [this document]  |
 
 * Implementation Status
 
