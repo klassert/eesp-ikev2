@@ -62,16 +62,14 @@ rekeying, and deletion of EESP SAs, as well as the negotiation of
 EESP specific transform properties and properties.
 
 The extensions defined here enable EESP SAs to coexist with ESP SAs
-in stateful decryption configurations, sharing a common SPI namespace
-while introducing new capabilities to enhance IPsec’s performance
-and versatility in modern use cases.
+in stateful decryption configurations, while introducing new capabilities
+to enhance IPsec’s performance and versatility in modern use cases.
 
-EESP Sub SA can seen as a single unidirectional SA, whereas
-conventional Child SAs only negotiate pair of un SAs.
-
-By deriving unique keys, sequence number spaces, and
-IV spaces from an existing Child SA, Sub SAs streamline traffic
-flow management, reduce overhead, and enable more efficient
+EESP Sub SA is a single unidirectional, outgoing, SA derived from
+a pair Child SAs negotiated using IKEv2. Each Sub SA derive
+its own unique encryption key and maintain independent sequence
+number spaces, and IV spaces from an existing Child SA, Sub SAs
+streamline traffic flow management, reduce overhead, and enable more efficient
 lifecycle operations.
 
 This document does not obsolete or update any existing RFCs. While
@@ -166,7 +164,6 @@ the original EESP SA.
 | TBD4 | EESP Version(EESPV)       |  (EESP) | [this document] |
 | TBD5 | EESP Sub SA(EESPSUBSA)    |  (EESP) | [this document] |
 | TBD6 | EESP Session ID(EESPSID)  |  (EESP) | [this document] |
-| TBD7 | EESP Flow ID(EESPFID)     |  (EESP) | [this document] |
 
 #+caption: EESP SA proposal
 #+name: eesp-sa-proposal
@@ -260,8 +257,7 @@ alternative to large numbers of bidirectional Child SAs with the
 same traffic selectors [[RFC7296]], [[RFC9611]].
 
 Each Sub SA is identified by a Sub SA ID, which MUST be carried in
-each EESP packet—either in the Session ID field or in the Flow ID
-field—consistent with the negotiation of the EESP Child SA.  This
+each EESP packet in the Session ID field—consistent with the negotiation of the EESP Child SA.  This
 Sub SA ID is used to derive a unique key, yielding the following
 benefits:
 
@@ -343,48 +339,32 @@ The requirements:
 Hierarchical key derivation use Sub SA ID, which is carried in EESP
 Seesion ID or in EESP Flow ID(TLV), as an input to the key dervivation.
 
-Two KDF are propsed below and eventually choose one of them.
+Section 2.17 [[RFC7296]] specifies a KEYMAT derivation. The KEYMAT is split into
 
-KEYMAT = prf+(SK_d, Ni | Nr | Sub SA ID)
+SK_ai, SK_ar, SK_ei, SK_er. Each of these keys MUST be used as master key to derive
+further Sub SA specific key.
 
-Where Ni and Nr are the nonces from the IKE_SA_INIT exchange if this
-request is the first Child SA created or the fresh Ni and Nr from the
-CREATE_CHILD_SA exchange if this is a subsequent creation.
+SK_S_xx = prf+(prf+(SK_xx,Sub SA ID))
 
-For CREATE_CHILD_SA exchanges including an optional Key Exchange
-the keying material is defined as:
+for e.g. SK_S_ei = prf+(prf+(SK_ei, Sub SA ID))
 
-KEYMAT = prf+(SK_d, g^ir (new) | Ni | Nr | Sub SA ID)
+The Sub SA keys can be derived in ESP sub system or in IKE sub system when pre installing
+all SAs and keys.
 
-where g^ir (new) is the shared secret from the ephemeral Key Exchange
-of this CREATE_CHILD_SA exchange (represented as an
-octet string in big endian order padded with zeros in the high-order
-bits if necessary to make it the length of the modulus).
-
-KEYMAT = prf+(prf(SK_d, Ni | Nr | Sub SA ID))
-
-One advantage of Hierarchical KDF is KEYMAT for the Sub SAs can be
-generated on the fly, for every packet, when available memory is
-limited, for example [[PSP]]. This is usually the case when key
+One advantage of Hierarchical KDF is the Sub SA keys MAY BE
+generated on the fly, for every packet, when available fast memory
+is limited, for example [[PSP]]. This is usually the case when key
 derivation is implemented in hardware. When implimenting in hardware
 choose a hardware friendly prf+.
 
 ** Rekey Key Derivation.
-During the EESP SA rekey, new keys are derived using the new Ni
+During the EESP SA rekey, a new KEYMAT is derived using the new Ni
 and Nr values. If a Key Exchange (KE) method was used in the rekying,
 CREATE_CHILD_SA exchange, the new key MAY also include g^ir as part of
 the derivation process.
 
-KEYMAT = prf+(SK_d, Ni | Nr | Sub SA ID)
-
-or
-
-KEYMAT = prf+(SK_d, g^ir (new) | Ni | Nr | Sub SA ID)
-
-When there is an additionl Key Exchange in rekey.
-
 Even though each Sub SA can be independently rekeyed, for
-simplicity and security, all Sub SAs MUST be rekeyed together
+simplicity, all Sub SAs MUST be rekeyed together
 when either a cryptographic limit or a time-based limit is
 reached.
 
