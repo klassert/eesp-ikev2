@@ -69,8 +69,8 @@ EESP Sub SA is a single unidirectional, outgoing, SA derived from
 a pair Child SAs negotiated using IKEv2. Each Sub SA derive
 its own unique encryption key and maintain independent sequence
 number spaces, and IV spaces from an existing Child SA, Sub SAs
-streamline traffic flow management, reduce overhead, and enable more efficient
-lifecycle operations.
+streamline traffic flow management, reduce overhead, and enable more
+efficient lifecycle operations.
 
 This document does not obsolete or update any existing RFCs. While
 stateless implementations of EESP are referenced, their negotiation,
@@ -170,7 +170,7 @@ the original EESP SA.
 #+begin_src
    SA Payload
       |
-      +--- Proposal #1 ( Proto ID = EESP(TBD1), SPI size = 4,
+      +--- Proposal #1 ( Proto ID = EESPv1(TBD1), SPI size = 4,
       |     |            8 transforms,      SPI = 0x052357bb )
       |     |
       |     +-- Transform ENCR ( Name = ENCR_AES_CBC )
@@ -178,7 +178,6 @@ the original EESP SA.
       |     +-- Transform INTEG ( Name = AUTH_HMAC_SHA1_96 )
       |     +-- Transform INTEG ( Name = AUTH_AES_XCBC_96 )
       |     +-- Transform SN ( Name = 64-bit Sequential Numbers )
-      |     +-- Transform EESPV ( Name = V1 )
       |     +-- Transform EESPSUBSA ( Name =  )
       |     +-- Transform EESPSSID ( Name =  )
       |     +-- Transform EESPFID ( Name =  )
@@ -438,7 +437,7 @@ This document defines new Protocol ID in the
 
 | Protocol ID | Protocol | Reference       |
 |-------------+----------+-----------------+
-| [TBD1]      | EESP     | [this document] |
+| [TBD1]      | EESPv1   | [this document] 0
 
 
 *** IKEv2 Transform Type Values registry
