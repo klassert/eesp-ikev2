@@ -292,6 +292,28 @@ numbers are in use.  For a given Sub SA key, sequence numbers MUST
 remain unique and monotonically increasing to meet cryptographic
 requirements.
 
+** Negotiation of Sub SA
+
+#+caption: Sub SA Notifier
+#+name: sub-sa-notifier
+#+begin_src
+                    1                   2                   3
+0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-----------------------------+-------------------------------+
+! Next Payload  !C!  RESERVED   !         Payload Length        !
++---------------+---------------+-------------------------------+
+!  Protocol ID  !   SPI Size    !      Notify Message Type      !
++---------------+---------------+-------------------------------+
+!  Minimum number of Sub SAs    |      RESERVED                 !
++-------------------------------+-------------------------------+
+#+end_src
+
+- Protocol ID (1 octet) - MUST be 0. MUST be ignored if not 0.
+- SPI Size (1 octet) - MUST be 0. MUST be ignored if not 0.
+- Notify Status Message Type (2 octets) - set to [TBD1]</t>
+- Minimum number of Sub SAs (2 octets). MUST be greater than 0.
+  If 0 is received, it MUST be interpreted as 1.
+
 ** UDP Encapsulation of Sub SA
 
 An EESP SA primarily uses UDP encapsulation to facilitate NAT
