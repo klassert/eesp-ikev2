@@ -161,8 +161,6 @@ the original EESP SA.
 
 | Type | Description               | Used In | Reference       |
 |------+---------------------------+---------+-----------------+
-| TBD4 | EESP Version(EESPV)       |  (EESP) | [this document] |
-| TBD5 | EESP Sub SA(EESPSUBSA)    |  (EESP) | [this document] |
 | TBD6 | EESP Session ID(EESPSID)  |  (EESP) | [this document] |
 
 #+caption: EESP SA proposal
@@ -170,7 +168,7 @@ the original EESP SA.
 #+begin_src
    SA Payload
       |
-      +--- Proposal #1 ( Proto ID = EESPv1(TBD1), SPI size = 4,
+      +--- Proposal #1 ( Proto ID = EESPv0(TBD1), SPI size = 4,
       |     |            8 transforms,      SPI = 0x052357bb )
       |     |
       |     +-- Transform ENCR ( Name = ENCR_AES_CBC )
@@ -178,9 +176,6 @@ the original EESP SA.
       |     +-- Transform INTEG ( Name = AUTH_HMAC_SHA1_96 )
       |     +-- Transform INTEG ( Name = AUTH_AES_XCBC_96 )
       |     +-- Transform SN ( Name = 64-bit Sequential Numbers )
-      |     +-- Transform EESPSUBSA ( Name =  )
-      |     +-- Transform EESPSSID ( Name =  )
-      |     +-- Transform EESPFID ( Name =  )
 #+end_src
 
 ** Replay Protection Service
@@ -225,9 +220,11 @@ does not include 64-bit Sequential Numbers return error
 NO_PROPOSAL_CHOSEN.
 
 ** EESP Version
-Each SA need an EESP Base Header version which is specified
-[[I-D.klassert-ipsecme-eesp]]. An Initiator may propose multipe
-EESPV and the responder MUST choose one proposal.
+Each EESP packets carry EESP Base Header version, which is specified
+[[I-D.klassert-ipsecme-eesp]]. This SHOULD BE negotiated using
+IKEv2. Each Base Header version, to be able to negotiate via IKEv2,
+SHOULD have a corresponding ~IKEv2 Security Protocol Identifiers~
+The initial version sepecified EESPv0(TBD1)
 
 * Sub SA
 Existing mechanisms for establishing Child SAs, as described in
@@ -459,19 +456,7 @@ This document defines new Protocol ID in the
 
 | Protocol ID | Protocol | Reference       |
 |-------------+----------+-----------------+
-| [TBD1]      | EESPv1   | [this document] 0
-
-
-*** IKEv2 Transform Type Values registry
-
-This document defines new transforms in
-"IKEv2 Transform Type Values" registry, [[IKEv2-Transforms]]
-
-| Type | Description               | Used In | Reference       |
-|------+---------------------------+---------+-----------------+
-| TBD4 | EESP Version(EESPV)       |  (EESP) | [this document] |
-| TBD5 | EESP Sub SA(EESPSUBSA)    |  (EESP) | [this document] |
-| TBD6 | EESP Session ID(EESPSID)  |  (EESP) | [this document] |
+| [TBD1]      | EESPv0   | [this document] |
 
 *** IKEv2 Notify Message Status Types registry.
 
@@ -487,16 +472,6 @@ replace 'IKE and ESP' with 'IKE, ESP, and EESP'
 
 Changes the "Used In" column for the existing allocations as follows;
 
-*** Notify Message Error Types
-This document defines new Notify Message types in the
-"IKEv2 Notify Message Error Types" registry:
-
-| Value  | Notify Message Error Type | Reference       |
-|-------------+----------------------+-----------------+
-| [TBD2] | INVALID_SESSION_ID        | [this document] |
-| [TBD3] | INVALID_SUB_SA            | [this document] |
-
-
 *** Sequence Number
 
 This document defines a new value in the IKEv2 "Transform Type 5 - Sequence
@@ -507,26 +482,6 @@ This document defines a new value in the IKEv2 "Transform Type 5 - Sequence
 | [TBD9]  | 64-bit Sequential Numbers     | [this document] |
 | [TBD10] | None                          | [this document] |
 
-** New Registries
-
-A new set of registries is created for EESP-IKEv2 on IKEv2 parameters
-page [[IKEv2-IANA]]. The terms Reserved, Expert Review and Private
-Use are to be applied as defined in [[RFC8126]]
-
-*** EESP Session ID registry
-
-IANA is requested to create a new registry named
-'EESP Session ID Transform' in the 'Internet Key Exchange Version 2
-(IKEv2) Parameters', [[IKEv2-IANA]] page.
-
-- Name: EESP Session ID Transform Registry
-- Description: EESP Base Header Session ID
-- Reference: This document
-
-| Session ID | Name         | Reference       |
-|------------+------------- +-----------------+
-| 0          | Unspecified  | [this document] |
-| 2          | SUB_SA_ID    | [this document] |
 
 * Implementation Status
 
