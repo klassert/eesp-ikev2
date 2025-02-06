@@ -5,7 +5,7 @@
 IPSECME Working Group                                        S. Klassert
 Internet-Draft                                                 A. Antony
 Intended status: Informational                                   secunet
-Expires: 3 August 2025                                   30 January 2025
+Expires: 10 August 2025                                  6 February 2025
 
 
                  Notes on IKEv2 Key Derivation Function
@@ -26,7 +26,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 3 August 2025.
+   This Internet-Draft will expire on 10 August 2025.
 
 Copyright Notice
 
@@ -53,18 +53,19 @@ Table of Contents
 
 
 
-Klassert & Antony         Expires 3 August 2025                 [Page 1]
+Klassert & Antony        Expires 10 August 2025                 [Page 1]
 
-Internet-Draft               KEv2 KDF Notes                 January 2025
+Internet-Draft               KEv2 KDF Notes                February 2025
 
 
    3.  UDP Encap . . . . . . . . . . . . . . . . . . . . . . . . . .   7
-     3.1.  Use cases for UDP Encapsulation without NAT . . . . . . .   7
-       3.1.1.  UDP Encapsulation in Cloud Provider . . . . . . . . .   7
+     3.1.  UDP Encap Source port . . . . . . . . . . . . . . . . . .   7
+     3.2.  Use cases for UDP Encapsulation without NAT . . . . . . .   7
+       3.2.1.  UDP Encapsulation in Cloud Provider . . . . . . . . .   7
    4.  WESP UDP Encap  . . . . . . . . . . . . . . . . . . . . . . .   8
-   5.  UDP pot sharing on Linux  . . . . . . . . . . . . . . . . . .   8
-   6.  Normative References  . . . . . . . . . . . . . . . . . . . .   8
-   7.  Informative References  . . . . . . . . . . . . . . . . . . .   9
+   5.  UDP pot sharing on Linux  . . . . . . . . . . . . . . . . . .   9
+   6.  Normative References  . . . . . . . . . . . . . . . . . . . .   9
+   7.  Informative References  . . . . . . . . . . . . . . . . . . .  10
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  13
 
 1.  Introduction
@@ -108,10 +109,9 @@ Internet-Draft               KEv2 KDF Notes                 January 2025
 
 
 
-
-Klassert & Antony         Expires 3 August 2025                 [Page 2]
+Klassert & Antony        Expires 10 August 2025                 [Page 2]
 
-Internet-Draft               KEv2 KDF Notes                 January 2025
+Internet-Draft               KEv2 KDF Notes                February 2025
 
 
    (indicating that the quantities SK_d, SK_ai, SK_ar, SK_ei, SK_er,
@@ -165,9 +165,9 @@ Internet-Draft               KEv2 KDF Notes                 January 2025
 
 
 
-Klassert & Antony         Expires 3 August 2025                 [Page 3]
+Klassert & Antony        Expires 10 August 2025                 [Page 3]
 
-Internet-Draft               KEv2 KDF Notes                 January 2025
+Internet-Draft               KEv2 KDF Notes                February 2025
 
 
    Additional Questions: PSP chose AES-CMAC-256 as their KDF, but IETF
@@ -221,9 +221,9 @@ Internet-Draft               KEv2 KDF Notes                 January 2025
 
 
 
-Klassert & Antony         Expires 3 August 2025                 [Page 4]
+Klassert & Antony        Expires 10 August 2025                 [Page 4]
 
-Internet-Draft               KEv2 KDF Notes                 January 2025
+Internet-Draft               KEv2 KDF Notes                February 2025
 
 
    [I-D.mattsson-cfrg-aes-gcm-sst] seems to be deriving per packet keys
@@ -277,9 +277,9 @@ Internet-Draft               KEv2 KDF Notes                 January 2025
 
 
 
-Klassert & Antony         Expires 3 August 2025                 [Page 5]
+Klassert & Antony        Expires 10 August 2025                 [Page 5]
 
-Internet-Draft               KEv2 KDF Notes                 January 2025
+Internet-Draft               KEv2 KDF Notes                February 2025
 
 
 2.4.  Steffen's findings.
@@ -333,9 +333,9 @@ Internet-Draft               KEv2 KDF Notes                 January 2025
 
 
 
-Klassert & Antony         Expires 3 August 2025                 [Page 6]
+Klassert & Antony        Expires 10 August 2025                 [Page 6]
 
-Internet-Draft               KEv2 KDF Notes                 January 2025
+Internet-Draft               KEv2 KDF Notes                February 2025
 
 
    then we are back at a security level of 2^256.  I.e.  We have
@@ -360,13 +360,39 @@ Internet-Draft               KEv2 KDF Notes                 January 2025
 
    *  Wide spread RSS Support for UDP when using RFC9611
 
-3.1.  Use cases for UDP Encapsulation without NAT
+3.1.  UDP Encap Source port
 
-3.1.1.  UDP Encapsulation in Cloud Provider
+   Current IKEv2 and ESP encapsulation in UDP are specified in [RFC3947]
+   and [[RFC3948].  ESP can use the same port opened by IKE.  If look at
+   Section 4 of [RFC3947] "The initiator MUST set both UDP source and
+   destination ports to 4500."  This means IKE at the source CAN only
+   use source port 4500.  HOwever, the RFC further allows inter mediate
+   NAT gateways to change the source port from 4500 to X.  This causes
+   split among IPsec adminstrators.
+
+   IPsec adminstrators open only out going firewall on the peer for
+   4500-4500.  While the incoming firewall is open for X:4500.
+
+3.2.  Use cases for UDP Encapsulation without NAT
+
+3.2.1.  UDP Encapsulation in Cloud Provider
 
    A common question is why use UDP when there is no NAT, especially in
    cloud environments or why vary UDP source ports for when using
    multiple SA such as [RFC9681]].
+
+
+
+
+
+
+
+
+
+Klassert & Antony        Expires 10 August 2025                 [Page 7]
+
+Internet-Draft               KEv2 KDF Notes                February 2025
+
 
    Cloud providers often enforce bandwidth limits per flow between nodes
    or to external endpoints.  A flow is defined by a 5-tuple: protocol,
@@ -384,19 +410,8 @@ Internet-Draft               KEv2 KDF Notes                 January 2025
    and improves throughput.  Test results supporting this were presented
    in [AWS-IPsec-NetDev].
 
-   For further details, see: [Azure-Network]
-
-
-
-
-Klassert & Antony         Expires 3 August 2025                 [Page 7]
-
-Internet-Draft               KEv2 KDF Notes                 January 2025
-
-
-   [AWS-Network]
-
-   [GCP-Network]
+   For further details, see: [Azure-Network], [AWS-Network],
+   [GCP-Network], [I-D.bottorff-ipsecme-mtdcuc-ipsec-lb]
 
 4.  WESP UDP Encap
 
@@ -427,6 +442,14 @@ Internet-Draft               KEv2 KDF Notes                 January 2025
    EESP could use another spi say 3 as an EESP marker.  However, this 4
    bytes would lead to waste of 4 bytes every EESP packet.
 
+
+
+
+Klassert & Antony        Expires 10 August 2025                 [Page 8]
+
+Internet-Draft               KEv2 KDF Notes                February 2025
+
+
 5.  UDP pot sharing on Linux
 
    On Linux define EESPINUDP, a type socket encapsulation.  It is
@@ -441,19 +464,15 @@ Internet-Draft               KEv2 KDF Notes                 January 2025
               Pseudorandom Functions",
               <https://csrc.nist.gov/pubs/sp/800/108/r1/upd1/final>.
 
-
-
-
-
-Klassert & Antony         Expires 3 August 2025                 [Page 8]
-
-Internet-Draft               KEv2 KDF Notes                 January 2025
-
-
    [RFC2627]  Wallner, D., Harder, E., and R. Agee, "Key Management for
               Multicast: Issues and Architectures", RFC 2627,
               DOI 10.17487/RFC2627, June 1999,
               <https://www.rfc-editor.org/info/rfc2627>.
+
+   [RFC3947]  Kivinen, T., Swander, B., Huttunen, A., and V. Volpe,
+              "Negotiation of NAT-Traversal in the IKE", RFC 3947,
+              DOI 10.17487/RFC3947, January 2005,
+              <https://www.rfc-editor.org/info/rfc3947>.
 
    [RFC3948]  Huttunen, A., Swander, B., Volpe, V., DiBurro, L., and M.
               Stenberg, "UDP Encapsulation of IPsec ESP Packets",
@@ -477,6 +496,16 @@ Internet-Draft               KEv2 KDF Notes                 January 2025
               DOI 10.17487/RFC5869, May 2010,
               <https://www.rfc-editor.org/info/rfc5869>.
 
+
+
+
+
+
+Klassert & Antony        Expires 10 August 2025                 [Page 9]
+
+Internet-Draft               KEv2 KDF Notes                February 2025
+
+
    [RFC7296]  Kaufman, C., Hoffman, P., Nir, Y., Eronen, P., and T.
               Kivinen, "Internet Key Exchange Protocol Version 2
               (IKEv2)", STD 79, RFC 7296, DOI 10.17487/RFC7296, October
@@ -495,16 +524,6 @@ Internet-Draft               KEv2 KDF Notes                 January 2025
               <https://csrc.nist.gov/csrc/media/Presentations/2023/the-
               ascon-family/images-media/june-21-mendel-the-ascon-
               family.pdf>.
-
-
-
-
-
-
-Klassert & Antony         Expires 3 August 2025                 [Page 9]
-
-Internet-Draft               KEv2 KDF Notes                 January 2025
-
 
    [AWS-IPsec-NetDev]
               Amazon AWS, "NetDev Talk : Multi-core IPsec tunnels",
@@ -534,6 +553,15 @@ Internet-Draft               KEv2 KDF Notes                 January 2025
               accepted-papers/Galois%20Counter%20Mode%20with%20Secure%20
               Short%20Tags.pdf>.
 
+
+
+
+
+Klassert & Antony        Expires 10 August 2025                [Page 10]
+
+Internet-Draft               KEv2 KDF Notes                February 2025
+
+
    [GCP-Network]
               Google, "Google Compute Engine Network bandwidth",
               <https://cloud.google.com/compute/docs/network-bandwidth>.
@@ -543,24 +571,19 @@ Internet-Draft               KEv2 KDF Notes                 January 2025
               Derivation: The HKDF Scheme", 2010,
               <http://eprint.iacr.org/2010/264>.
 
+   [I-D.bottorff-ipsecme-mtdcuc-ipsec-lb]
+              Bottorff, P., "Multi-tenant Data Center Use Case for IPsec
+              Load Balancing", Work in Progress, Internet-Draft, draft-
+              bottorff-ipsecme-mtdcuc-ipsec-lb-00, 12 July 2021,
+              <https://datatracker.ietf.org/doc/html/draft-bottorff-
+              ipsecme-mtdcuc-ipsec-lb-00>.
+
    [I-D.ietf-ipsecme-g-ikev2]
               Smyslov, V. and B. Weis, "Group Key Management using
               IKEv2", Work in Progress, Internet-Draft, draft-ietf-
               ipsecme-g-ikev2-20, 16 January 2025,
               <https://datatracker.ietf.org/doc/html/draft-ietf-ipsecme-
               g-ikev2-20>.
-
-
-
-
-
-
-
-
-Klassert & Antony         Expires 3 August 2025                [Page 10]
-
-Internet-Draft               KEv2 KDF Notes                 January 2025
-
 
    [I-D.irtf-cfrg-aead-properties]
               Bozhko, A., "Properties of AEAD Algorithms", Work in
@@ -587,6 +610,14 @@ Internet-Draft               KEv2 KDF Notes                 January 2025
               Authentication; Key Derivation - Hugo Krawczyk",
               <https://www.youtube.com/watch?v=796TPmaMYY4>.
 
+
+
+
+Klassert & Antony        Expires 10 August 2025                [Page 11]
+
+Internet-Draft               KEv2 KDF Notes                February 2025
+
+
    [Keccak-Lecture]
               Christof Paar, "SHA-3 Hash Function",
               <https://www.youtube.com/watch?v=JWskjzgiIa4>.
@@ -604,19 +635,6 @@ Internet-Draft               KEv2 KDF Notes                 January 2025
    [NetDev-2024-psp-video]
               Keccak, "PSP Crypto Protocol and HW Offload",
               <https://www.youtube.com/watch?v=RlsxPMsWdxo>.
-
-
-
-
-
-
-
-
-
-Klassert & Antony         Expires 3 August 2025                [Page 11]
-
-Internet-Draft               KEv2 KDF Notes                 January 2025
-
 
    [NIST-800-108-comments]
               NIST, "Public Comments and Resolutions on Draft NIST SP
@@ -647,6 +665,15 @@ Internet-Draft               KEv2 KDF Notes                 January 2025
               Encryption", RFC 5116, DOI 10.17487/RFC5116, January 2008,
               <https://www.rfc-editor.org/info/rfc5116>.
 
+
+
+
+
+Klassert & Antony        Expires 10 August 2025                [Page 12]
+
+Internet-Draft               KEv2 KDF Notes                February 2025
+
+
    [RFC6188]  McGrew, D., "The Use of AES-192 and AES-256 in Secure
               RTP", RFC 6188, DOI 10.17487/RFC6188, March 2011,
               <https://www.rfc-editor.org/info/rfc6188>.
@@ -664,15 +691,6 @@ Internet-Draft               KEv2 KDF Notes                 January 2025
               for Per-Resource Child Security Associations (SAs)",
               RFC 9611, DOI 10.17487/RFC9611, July 2024,
               <https://www.rfc-editor.org/info/rfc9611>.
-
-
-
-
-
-Klassert & Antony         Expires 3 August 2025                [Page 12]
-
-Internet-Draft               KEv2 KDF Notes                 January 2025
-
 
    [RFC9681]  Decraene, B., Ginsberg, L., Li, T., Solignac, G., Karasek,
               M., Van de Velde, G., and T. Przygienda, "IS-IS Fast
@@ -707,22 +725,4 @@ Authors' Addresses
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Klassert & Antony         Expires 3 August 2025                [Page 13]
+Klassert & Antony        Expires 10 August 2025                [Page 13]
