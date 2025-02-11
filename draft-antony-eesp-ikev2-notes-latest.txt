@@ -5,7 +5,7 @@
 IPSECME Working Group                                        S. Klassert
 Internet-Draft                                                 A. Antony
 Intended status: Informational                                   secunet
-Expires: 14 August 2025                                 10 February 2025
+Expires: 15 August 2025                                 11 February 2025
 
 
                  Notes on IKEv2 Key Derivation Function
@@ -26,7 +26,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 14 August 2025.
+   This Internet-Draft will expire on 15 August 2025.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Table of Contents
 
 
 
-Klassert & Antony        Expires 14 August 2025                 [Page 1]
+Klassert & Antony        Expires 15 August 2025                 [Page 1]
 
 Internet-Draft               KEv2 KDF Notes                February 2025
 
@@ -109,7 +109,7 @@ Internet-Draft               KEv2 KDF Notes                February 2025
 
 
 
-Klassert & Antony        Expires 14 August 2025                 [Page 2]
+Klassert & Antony        Expires 15 August 2025                 [Page 2]
 
 Internet-Draft               KEv2 KDF Notes                February 2025
 
@@ -165,7 +165,7 @@ Internet-Draft               KEv2 KDF Notes                February 2025
 
 
 
-Klassert & Antony        Expires 14 August 2025                 [Page 3]
+Klassert & Antony        Expires 15 August 2025                 [Page 3]
 
 Internet-Draft               KEv2 KDF Notes                February 2025
 
@@ -221,7 +221,7 @@ Internet-Draft               KEv2 KDF Notes                February 2025
 
 
 
-Klassert & Antony        Expires 14 August 2025                 [Page 4]
+Klassert & Antony        Expires 15 August 2025                 [Page 4]
 
 Internet-Draft               KEv2 KDF Notes                February 2025
 
@@ -277,7 +277,7 @@ Internet-Draft               KEv2 KDF Notes                February 2025
 
 
 
-Klassert & Antony        Expires 14 August 2025                 [Page 5]
+Klassert & Antony        Expires 15 August 2025                 [Page 5]
 
 Internet-Draft               KEv2 KDF Notes                February 2025
 
@@ -333,7 +333,7 @@ Internet-Draft               KEv2 KDF Notes                February 2025
 
 
 
-Klassert & Antony        Expires 14 August 2025                 [Page 6]
+Klassert & Antony        Expires 15 August 2025                 [Page 6]
 
 Internet-Draft               KEv2 KDF Notes                February 2025
 
@@ -389,7 +389,7 @@ Internet-Draft               KEv2 KDF Notes                February 2025
 
 
 
-Klassert & Antony        Expires 14 August 2025                 [Page 7]
+Klassert & Antony        Expires 15 August 2025                 [Page 7]
 
 Internet-Draft               KEv2 KDF Notes                February 2025
 
@@ -445,7 +445,7 @@ Internet-Draft               KEv2 KDF Notes                February 2025
 
 
 
-Klassert & Antony        Expires 14 August 2025                 [Page 8]
+Klassert & Antony        Expires 15 August 2025                 [Page 8]
 
 Internet-Draft               KEv2 KDF Notes                February 2025
 
@@ -501,7 +501,7 @@ Internet-Draft               KEv2 KDF Notes                February 2025
 
 
 
-Klassert & Antony        Expires 14 August 2025                 [Page 9]
+Klassert & Antony        Expires 15 August 2025                 [Page 9]
 
 Internet-Draft               KEv2 KDF Notes                February 2025
 
@@ -557,7 +557,7 @@ Internet-Draft               KEv2 KDF Notes                February 2025
 
 
 
-Klassert & Antony        Expires 14 August 2025                [Page 10]
+Klassert & Antony        Expires 15 August 2025                [Page 10]
 
 Internet-Draft               KEv2 KDF Notes                February 2025
 
@@ -581,9 +581,9 @@ Internet-Draft               KEv2 KDF Notes                February 2025
    [I-D.ietf-ipsecme-g-ikev2]
               Smyslov, V. and B. Weis, "Group Key Management using
               IKEv2", Work in Progress, Internet-Draft, draft-ietf-
-              ipsecme-g-ikev2-20, 16 January 2025,
-              <https://datatracker.ietf.org/doc/html/draft-ietf-ipsecme-
-              g-ikev2-20>.
+              ipsecme-g-ikev2-21, 28 December 2024,
+              <https://datatracker.ietf.org/api/v1/doc/document/draft-
+              ietf-ipsecme-g-ikev2/>.
 
    [I-D.irtf-cfrg-aead-properties]
               Bozhko, A., "Properties of AEAD Algorithms", Work in
@@ -613,7 +613,7 @@ Internet-Draft               KEv2 KDF Notes                February 2025
 
 
 
-Klassert & Antony        Expires 14 August 2025                [Page 11]
+Klassert & Antony        Expires 15 August 2025                [Page 11]
 
 Internet-Draft               KEv2 KDF Notes                February 2025
 
@@ -669,7 +669,7 @@ Internet-Draft               KEv2 KDF Notes                February 2025
 
 
 
-Klassert & Antony        Expires 14 August 2025                [Page 12]
+Klassert & Antony        Expires 15 August 2025                [Page 12]
 
 Internet-Draft               KEv2 KDF Notes                February 2025
 
@@ -725,4 +725,4 @@ Authors' Addresses
 
 
 
-Klassert & Antony        Expires 14 August 2025                [Page 13]
+Klassert & Antony        Expires 15 August 2025                [Page 13]
