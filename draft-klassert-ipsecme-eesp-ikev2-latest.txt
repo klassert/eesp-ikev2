@@ -22,9 +22,6 @@ Abstract
    which builds on the existing IP Encapsulating Security Payload (ESP)
    protocol.
 
-   This documents also updates RFC7296 by adding new Security Protocol
-   type EESP.
-
 Status of This Memo
 
    This Internet-Draft is submitted in full conformance with the
@@ -47,9 +44,12 @@ Copyright Notice
    Copyright (c) 2025 IETF Trust and the persons identified as the
    document authors.  All rights reserved.
 
-   This document is subject to BCP 78 and the IETF Trust's Legal
-   Provisions Relating to IETF Documents (https://trustee.ietf.org/
-   license-info) in effect on the date of publication of this document.
+
+
+
+
+
+
 
 
 
@@ -58,6 +58,9 @@ Klassert, et al.         Expires 16 August 2025                 [Page 1]
 Internet-Draft           EESP IKEv2 negotiation            February 2025
 
 
+   This document is subject to BCP 78 and the IETF Trust's Legal
+   Provisions Relating to IETF Documents (https://trustee.ietf.org/
+   license-info) in effect on the date of publication of this document.
    Please review these documents carefully, as they describe your rights
    and restrictions with respect to this document.  Code Components
    extracted from this document must include Revised BSD License text as
@@ -67,7 +70,7 @@ Internet-Draft           EESP IKEv2 negotiation            February 2025
 Table of Contents
 
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   3
-     1.1.  Requirements Language . . . . . . . . . . . . . . . . . .   3
+     1.1.  Requirements Language . . . . . . . . . . . . . . . . . .   4
      1.2.  Terminology . . . . . . . . . . . . . . . . . . . . . . .   4
    2.  EESP SA IKEv2 Negotiation . . . . . . . . . . . . . . . . . .   4
      2.1.  Negotiating an EESP SA using IKE_AUTH or
@@ -97,15 +100,12 @@ Table of Contents
        8.1.5.  Sequence Number . . . . . . . . . . . . . . . . . . .  13
      8.2.  New IKEv2 Registries  . . . . . . . . . . . . . . . . . .  14
        8.2.1.  Transform Type <TBD2> - Sub SA Key Derivation Function
-               IDs . . . . . . . . . . . . . . . . . . . . . . . . .  14
-   9.  Implementation Status . . . . . . . . . . . . . . . . . . . .  14
+               Transform IDs . . . . . . . . . . . . . . . . . . . .  14
+       8.2.2.  Guidance for Designated Experts . . . . . . . . . . .  15
+   9.  Implementation Status . . . . . . . . . . . . . . . . . . . .  15
    10. Security Considerations . . . . . . . . . . . . . . . . . . .  15
-   11. Acknowledgments . . . . . . . . . . . . . . . . . . . . . . .  15
-   12. Normative References  . . . . . . . . . . . . . . . . . . . .  15
-   13. Informative References  . . . . . . . . . . . . . . . . . . .  16
-   Appendix A.  Additional Stuff . . . . . . . . . . . . . . . . . .  19
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  19
-
+   11. Acknowledgments . . . . . . . . . . . . . . . . . . . . . . .  16
+   12. Normative References  . . . . . . . . . . . . . . . . . . . .  16
 
 
 
@@ -113,6 +113,10 @@ Klassert, et al.         Expires 16 August 2025                 [Page 2]
 
 Internet-Draft           EESP IKEv2 negotiation            February 2025
 
+
+   13. Informative References  . . . . . . . . . . . . . . . . . . .  17
+   Appendix A.  Additional Stuff . . . . . . . . . . . . . . . . . .  19
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  19
 
 1.  Introduction
 
@@ -152,13 +156,9 @@ Internet-Draft           EESP IKEv2 negotiation            February 2025
    stateless implementations of EESP are referenced, their negotiation,
    which is similar to [PSP], is outside the scope of this document.
 
-1.1.  Requirements Language
 
-   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
-   "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
-   "OPTIONAL" in this document are to be interpreted as described in BCP
-   14 [RFC2119] [RFC8174] when, and only when, they appear in all
-   capitals, as shown here.
+
+
 
 
 
@@ -169,6 +169,14 @@ Klassert, et al.         Expires 16 August 2025                 [Page 3]
 
 Internet-Draft           EESP IKEv2 negotiation            February 2025
 
+
+1.1.  Requirements Language
+
+   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+   "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
+   "OPTIONAL" in this document are to be interpreted as described in BCP
+   14 [RFC2119] [RFC8174] when, and only when, they appear in all
+   capitals, as shown here.
 
 1.2.  Terminology
 
@@ -211,20 +219,17 @@ Internet-Draft           EESP IKEv2 negotiation            February 2025
    attributes in the proposal, allowing the responder to evaluate and
    establish the SA if supported.
 
-   IKEv2 Notify Message Status Type USE_WESP_MODE, [RFC5840], is not
-   supported when negotiating EESP SA.  As the WESP functionality is
-   part of EESP protocol.  If this notification is received it MUST be
-   discarded.
-
-
-
-
 
 
 Klassert, et al.         Expires 16 August 2025                 [Page 4]
 
 Internet-Draft           EESP IKEv2 negotiation            February 2025
 
+
+   IKEv2 Notify Message Status Type USE_WESP_MODE, [RFC5840], is not
+   supported when negotiating EESP SA.  As the WESP functionality is
+   part of EESP protocol.  If this notification is received it MUST be
+   discarded.
 
    The ESP_TFC_PADDING_NOT_SUPPORTED, [RFC7296], notification is not
    supported in EESP, instead use IP-TFS, USE_AGGFRAG, [RFC9347].  If
@@ -272,11 +277,6 @@ Internet-Draft           EESP IKEv2 negotiation            February 2025
 
 
 
-
-
-
-
-
 Klassert, et al.         Expires 16 August 2025                 [Page 5]
 
 Internet-Draft           EESP IKEv2 negotiation            February 2025
@@ -284,7 +284,7 @@ Internet-Draft           EESP IKEv2 negotiation            February 2025
 
    SA Payload
       |
-      +--- Proposal #1 ( Proto ID = EESPv0(TBD1), SPI size = 4,
+      +--- Proposal #1 ( Proto ID = EESPv0(<TBD1>), SPI size = 4,
       |     |            8 transforms,      SPI = 0x052357bb )
       |     |
       |     +-- Transform ENCR ( Name = ENCR_AES_CBC )
@@ -306,7 +306,7 @@ Internet-Draft           EESP IKEv2 negotiation            February 2025
    Protection.
 
    To disable sequence numbering, and thus replay protection based on
-   sequence numbers, the initiator MUST propose SN=None (TBD10).  When
+   sequence numbers, the initiator MUST propose SN=None (<TBD5>).  When
    the sequence numbers are disabled, there won't be any SN in the EESP
    packet, the receiver SHOULD NOT dynamically modify ports or addresses
    without using IKEv2 Mobility [RFC4555].
@@ -381,9 +381,9 @@ Internet-Draft           EESP IKEv2 negotiation            February 2025
    unique key, yielding the following benefits:
 
    *  Unidirectional Operation: In contrast to the per-resource SAs of
-      [RFC9611], which are alwaya a pair of unidirectional SAs, Sub SAs
-      MAY be defined strictly in one direction when reverse traffic is
-      absent.
+      [RFC9611], which are bidirectional, Sub SAs MAY be defined
+      strictly in one direction when reverse traffic is absent.
+      CREATE_CHILD_SA does not otherwise support unidirectional SAs.
 
 
 
@@ -437,7 +437,7 @@ Internet-Draft           EESP IKEv2 negotiation            February 2025
 
    *  SPI Size (1 octet) - MUST be 0.  MUST be ignored if not 0.
 
-   *  Notify Status Message Type (2 octets) - set to [TBD1]</t>
+   *  Notify Status Message Type (2 octets) - set to <TBDXXX>.
 
    *  Minimum number of Sub SAs (2 octets).  MUST be greater than 0.  If
       0 is received, it MUST be interpreted as 1.
@@ -497,7 +497,7 @@ Internet-Draft           EESP IKEv2 negotiation            February 2025
 
    If an SSKDF is selected as part of the proposal, instead of directly
    taking keys for the Sub SAs from KEYMAT, as described in section 2.17
-   of [RFC7296], a "root" key or a set of "root" keys per direction is
+   of [RFC7296], only one "root" key is taken for each EESP SA of the
 
 
 
@@ -506,13 +506,10 @@ Klassert, et al.         Expires 16 August 2025                 [Page 9]
 Internet-Draft           EESP IKEv2 negotiation            February 2025
 
 
-   derived for each EESP SA per direction of the Child SA.  The number
-   of keys depends on the cryptographic suite: AEAD transforms derive a
-   single key per direction, while non-AEAD suites may derive separate
-   keys for encryption and authentication.  The input length of these
-   keys, SK_sub, is determined by the key size of the negotiated SSKDF.
-   The root key(s) for the initiator-to-responder direction are derivedi
-   before those for the responder-to-initiator direction.
+   Child SA.  Their length is determined by the key size of the
+   negotiated SSKDF.  The root key for the EESP SA carrying data from
+   the initiator to the responder is taken before that for the SA going
+   from the responder to the initiator.
 
    Using the EESP SA's root key, SK_sub, the KEYMAT for each Sub SA is
    derived as follows:
@@ -527,11 +524,11 @@ Internet-Draft           EESP IKEv2 negotiation            February 2025
    be taken from the first bits of KEYMAT_sub, the integrity key MUST be
    taken from the remaining bits.
 
-   Keys for Sub SAs may be derived immediately after IKE negoation of
-   the Child SA or on demand when the first packet is processed.  Memory
-   constrained implementations may even decide to derive the Sub SA keys
-   on the fly for each packet as only SK_sub has to be stored to derive
-   the keys of all Sub SAs.
+   Keys for Sub SAs may be derived immediately or on demand when the
+   first packet is processed.  Memory constrained implementations may
+   even decide to derive the Sub SA keys on the fly for each received
+   packet as only SK_sub has to be stored to derive the keys of all Sub
+   SAs.
 
    Because individual Sub SAs can't be rekeyed, the complete EESP Child
    SA MUST be rekeyed when either a cryptographic limit or a time-based
@@ -546,6 +543,9 @@ Internet-Draft           EESP IKEv2 negotiation            February 2025
    This document creates a new IKEv2 IANA registry for key derivation
    functions that can be negotiated with this transform type.  The
    initially defined Transform IDs are listed in the table below.
+
+
+
 
 
 
@@ -677,7 +677,7 @@ Internet-Draft           EESP IKEv2 negotiation            February 2025
                +=============+==========+=================+
                | Protocol ID | Protocol | Reference       |
                +=============+==========+=================+
-               | [TBD1]      | EESPv0   | [this document] |
+               | <TBD1>      | EESPv0   | [this document] |
                +-------------+----------+-----------------+
 
                                  Table 3
@@ -698,13 +698,13 @@ Internet-Draft           EESP IKEv2 negotiation            February 2025
 
 8.1.3.  IKEv2 Notify Message Status Types registry.
 
-         +=======+============================+=================+
-         | Value | Notify Message Status Type | Reference       |
-         +=======+============================+=================+
-         | TBD3  | USE_EESP_CRYPTOFFSET       | [this document] |
-         +-------+----------------------------+-----------------+
+         +========+============================+=================+
+         | Value  | Notify Message Status Type | Reference       |
+         +========+============================+=================+
+         | <TBD3> | USE_EESP_CRYPTOFFSET       | [this document] |
+         +--------+----------------------------+-----------------+
 
-                                 Table 5
+                                  Table 5
 
 8.1.4.  Extending ESP with EESP
 
@@ -730,23 +730,28 @@ Klassert, et al.         Expires 16 August 2025                [Page 13]
 Internet-Draft           EESP IKEv2 negotiation            February 2025
 
 
-         +=========+===========================+=================+
-         | Value   | Name                      | Reference       |
-         +=========+===========================+=================+
-         | [TBD9]  | 64-bit Sequential Numbers | [this document] |
-         +---------+---------------------------+-----------------+
-         | [TBD10] | None                      | [this document] |
-         +---------+---------------------------+-----------------+
+         +========+===========================+=================+
+         | Value  | Name                      | Reference       |
+         +========+===========================+=================+
+         | <TBD4> | 64-bit Sequential Numbers | [this document] |
+         +--------+---------------------------+-----------------+
+         | <TBD5> | None                      | [this document] |
+         +--------+---------------------------+-----------------+
 
-                                  Table 6
+                                 Table 6
 
 8.2.  New IKEv2 Registries
 
-8.2.1.  Transform Type <TBD2> - Sub SA Key Derivation Function IDs
+   A new set of registries is created for EESP on IKEv2 parameters page
+   [IKEv2-IANA].  The terms Reserved, Expert Review and Private Use are
+   to be applied as defined in [RFC8126].
+
+8.2.1.  Transform Type <TBD2> - Sub SA Key Derivation Function Transform
+        IDs
 
    This documents creates the new IKEv2 registry "Transform Type <TBD2>
-   - Sub SA Key Derivation Function IDs".  The initial values of this
-   registry are:
+   - Sub SA Key Derivation Function Transform IDs".  The initial values
+   of this registry are:
 
           +============+=====================+=================+
           |     Number | Name                | Reference       |
@@ -771,11 +776,6 @@ Internet-Draft           EESP IKEv2 negotiation            February 2025
    Changes and additions to the unassigned range of this registry are by
    the Expert Review Policy [RFC8126].
 
-9.  Implementation Status
-
-   [Note to RFC Editor: Please remove this section and the reference to
-   [RFC7942] before publication.]
-
 
 
 
@@ -785,6 +785,22 @@ Klassert, et al.         Expires 16 August 2025                [Page 14]
 
 Internet-Draft           EESP IKEv2 negotiation            February 2025
 
+
+8.2.2.  Guidance for Designated Experts
+
+   In all cases of Expert Review Policy described here, the Designated
+   Expert (DE) is expected to ascertain the existence of suitable
+   documentation (a specification) as described in [RFC8126] and to
+   verify that the document is permanently and publicly available.  The
+   DE is also expected to check the clarity of purpose and use of the
+   requested code points.  Last, the DE must verify that any
+   specification produced outside the IETF does not conflict with work
+   that is active or already published within the IETF.
+
+9.  Implementation Status
+
+   [Note to RFC Editor: Please remove this section and the reference to
+   [RFC7942] before publication.]
 
    This section records the status of known implementations of the
    protocol defined by this specification at the time of posting of this
@@ -816,23 +832,7 @@ Internet-Draft           EESP IKEv2 negotiation            February 2025
    allows exposing transport headers for telemetry.  It is indented use
    of within data center.
 
-   When an EESP receiver implementation uses Stateless Decryption, it
-   may not rely on single Security Policy Database (SPD) as specified in
-   the IPsec Architecture document [RFC4301], section 4.4.1.  However,
-   the receiver MUST validate the negotiated Security Policy through
-   other means to ensure compliance with the intended security
-   requirements.  For by adding Security Policy to the socket or route
-   entry.  Also comply with ICMP processing specified in section 6 of
-   RFC4301.
 
-   Additional security relevant aspects of using the IPsec protocol are
-   discussed in the Security Architecture document [RFC4301]
-
-11.  Acknowledgments
-
-   TBD
-
-12.  Normative References
 
 
 
@@ -841,6 +841,24 @@ Klassert, et al.         Expires 16 August 2025                [Page 15]
 
 Internet-Draft           EESP IKEv2 negotiation            February 2025
 
+
+   When an EESP receiver implementation uses Stateless Decryption, it
+   may not rely on single Security Policy Database (SPD) as specified in
+   the IPsec Architecture document [RFC4301], section 4.4.1.  However,
+   the receiver MUST validate the negotiated Security Policy through
+   other means to ensure compliance with the intended security
+   requirements.  For by adding Security Policy to the socket or route
+   entry.  Also comply with ICMP processing specified in section 6 of
+   [RFC4301].
+
+   Additional security relevant aspects of using the IPsec protocol are
+   discussed in the Security Architecture document [RFC4301].
+
+11.  Acknowledgments
+
+   TBD
+
+12.  Normative References
 
    [I-D.ietf-ipsecme-ikev2-rename-esn]
               Smyslov, V., "Renaming Extended Sequence Number (ESN)
@@ -870,6 +888,16 @@ Internet-Draft           EESP IKEv2 negotiation            February 2025
               RFC 4303, DOI 10.17487/RFC4303, December 2005,
               <https://www.rfc-editor.org/info/rfc4303>.
 
+
+
+
+
+
+Klassert, et al.         Expires 16 August 2025                [Page 16]
+
+Internet-Draft           EESP IKEv2 negotiation            February 2025
+
+
    [RFC5840]  Grewal, K., Montenegro, G., and M. Bhatia, "Wrapped
               Encapsulating Security Payload (ESP) for Traffic
               Visibility", RFC 5840, DOI 10.17487/RFC5840, April 2010,
@@ -890,13 +918,6 @@ Internet-Draft           EESP IKEv2 negotiation            February 2025
               May 2017, <https://www.rfc-editor.org/info/rfc8174>.
 
 13.  Informative References
-
-
-
-Klassert, et al.         Expires 16 August 2025                [Page 16]
-
-Internet-Draft           EESP IKEv2 negotiation            February 2025
-
 
    [I-D.ietf-ipsecme-g-ikev2]
               Smyslov, V. and B. Weis, "Group Key Management using
@@ -922,6 +943,17 @@ Internet-Draft           EESP IKEv2 negotiation            February 2025
               <https://datatracker.ietf.org/doc/html/draft-ponchon-
               ipsecme-anti-replay-subspaces-03>.
 
+
+
+
+
+
+
+Klassert, et al.         Expires 16 August 2025                [Page 17]
+
+Internet-Draft           EESP IKEv2 negotiation            February 2025
+
+
    [IKEv2-Enc]
               IANA, "IKEv2 Parameters: Extended Sequence Numbers
               Transform IDs", <https://www.iana.org/assignments/ikev2-
@@ -945,15 +977,6 @@ Internet-Draft           EESP IKEv2 negotiation            February 2025
               <https://www.iana.org/assignments/ikev2-parameters/
               ikev2-parameters.xhtml#ikev2-parameters-3>.
 
-
-
-
-
-Klassert, et al.         Expires 16 August 2025                [Page 17]
-
-Internet-Draft           EESP IKEv2 negotiation            February 2025
-
-
    [PSP]      Google, "PSP Architecture Specification",
               <https://github.com/google/psp/blob/main/doc/
               PSP_Arch_Spec.pdf>.
@@ -976,6 +999,16 @@ Internet-Draft           EESP IKEv2 negotiation            February 2025
               (GCM) in IPsec Encapsulating Security Payload (ESP)",
               RFC 4106, DOI 10.17487/RFC4106, June 2005,
               <https://www.rfc-editor.org/info/rfc4106>.
+
+
+
+
+
+
+Klassert, et al.         Expires 16 August 2025                [Page 18]
+
+Internet-Draft           EESP IKEv2 negotiation            February 2025
+
 
    [RFC4555]  Eronen, P., "IKEv2 Mobility and Multihoming Protocol
               (MOBIKE)", RFC 4555, DOI 10.17487/RFC4555, June 2006,
@@ -1003,13 +1036,6 @@ Internet-Draft           EESP IKEv2 negotiation            February 2025
               DOI 10.17487/RFC9347, January 2023,
               <https://www.rfc-editor.org/info/rfc9347>.
 
-
-
-Klassert, et al.         Expires 16 August 2025                [Page 18]
-
-Internet-Draft           EESP IKEv2 negotiation            February 2025
-
-
    [RFC9611]  Antony, A., Brunner, T., Klassert, S., and P. Wouters,
               "Internet Key Exchange Protocol Version 2 (IKEv2) Support
               for Per-Resource Child Security Associations (SAs)",
@@ -1030,6 +1056,14 @@ Authors' Addresses
    Antony Antony
    secunet Security Networks AG
    Email: antony.antony@secunet.com
+
+
+
+
+
+Klassert, et al.         Expires 16 August 2025                [Page 19]
+
+Internet-Draft           EESP IKEv2 negotiation            February 2025
 
 
    Tobias Brunner
@@ -1061,4 +1095,26 @@ Authors' Addresses
 
 
 
-Klassert, et al.         Expires 16 August 2025                [Page 19]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Klassert, et al.         Expires 16 August 2025                [Page 20]
