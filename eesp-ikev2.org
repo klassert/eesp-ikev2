@@ -31,9 +31,6 @@ Security Payload (EESP) Security Associations using IKEv2. EESP
 which builds on the existing IP Encapsulating Security Payload (ESP)
 protocol.
 
-This documents also updates RFC7296 by adding new Security Protocol
-type EESP.
-
 #+end_abstract
 
 #+RFC_KEYWORDS: ("EESP" "IKEv2")
@@ -168,7 +165,7 @@ the original EESP SA.
 #+begin_src
    SA Payload
       |
-      +--- Proposal #1 ( Proto ID = EESPv0(TBD1), SPI size = 4,
+      +--- Proposal #1 ( Proto ID = EESPv0(<TBD1>), SPI size = 4,
       |     |            8 transforms,      SPI = 0x052357bb )
       |     |
       |     +-- Transform ENCR ( Name = ENCR_AES_CBC )
@@ -192,7 +189,7 @@ both sides MUST enable Reply Protection.
 # and not just the presense of the seq nr field.
 
 To disable sequence numbering, and thus replay protection based on
-sequence numbers, the initiator MUST propose SN=None (TBD10). When the
+sequence numbers, the initiator MUST propose SN=None (<TBD5>). When the
 sequence numbers are disabled, there won't be any SN in the
 EESP packet, the receiver SHOULD NOT dynamically modify ports or
 addresses without using IKEv2 Mobility [[RFC4555]].
@@ -307,7 +304,7 @@ requirements.
 
 - Protocol ID (1 octet) - MUST be 0. MUST be ignored if not 0.
 - SPI Size (1 octet) - MUST be 0. MUST be ignored if not 0.
-- Notify Status Message Type (2 octets) - set to [TBD1]</t>
+- Notify Status Message Type (2 octets) - set to <TBDXXX>.
 - Minimum number of Sub SAs (2 octets). MUST be greater than 0.
   If 0 is received, it MUST be interpreted as 1.
 
@@ -484,7 +481,7 @@ This document defines new Protocol ID in the
 
 | Protocol ID | Protocol | Reference       |
 |-------------+----------+-----------------+
-| [TBD1]      | EESPv0   | [this document] |
+| <TBD1>      | EESPv0   | [this document] |
 
 *** IKEv2 Transform Type Values
 
@@ -498,9 +495,9 @@ are defined in a new registry listed in [[tbl-sskdfids]].
 
 *** IKEv2 Notify Message Status Types registry.
 
-| Value | Notify Message Status Type |  Reference      |
-|-------+----------------------------+-----------------+
-| TBD3  | USE_EESP_CRYPTOFFSET       | [this document] |
+| Value  | Notify Message Status Type |  Reference      |
+|--------+----------------------------+-----------------+
+| <TBD3> | USE_EESP_CRYPTOFFSET       | [this document] |
 
 *** Extending ESP with EESP
 Several tables in [[IKEv2-IANA]] that specify ESP as protocol
@@ -517,18 +514,23 @@ This document defines a new value in the IKEv2 "Transform Type 5 - Sequence
 
 | Value   | Name                          | Reference       |
 |---------+-------------------------------+-----------------+
-| [TBD9]  | 64-bit Sequential Numbers     | [this document] |
-| [TBD10] | None                          | [this document] |
+| <TBD4>  | 64-bit Sequential Numbers     | [this document] |
+| <TBD5>  | None                          | [this document] |
 
 ** New IKEv2 Registries
 
-*** Transform Type <TBD2> - Sub SA Key Derivation Function IDs
+A new set of registries is created for G-IKEv2 on IKEv2
+parameters page [[IKEv2-IANA]]. The terms
+Reserved, Expert Review and Private Use are to be applied as defined
+in [[RFC8126]].
+
+*** Transform Type <TBD2> - Sub SA Key Derivation Function Transform IDs
 
 # what KDFs should we actually define here? more/less?
 # SSKDF_AES256_CMAC is currently unspecified
 
 This documents creates the new IKEv2 registry "Transform Type <TBD2> -
-Sub SA Key Derivation Function IDs".  The initial values of this
+Sub SA Key Derivation Function Transform IDs".  The initial values of this
 registry are:
 
 #+caption: "Transform Type <TBD2>" Registry
@@ -545,6 +547,16 @@ registry are:
 
 Changes and additions to the unassigned range of this registry are
 by the Expert Review Policy [[RFC8126]].
+
+*** Guidance for Designated Experts
+
+In all cases of Expert Review Policy described here,
+the Designated Expert (DE) is expected to ascertain the existence of suitable
+documentation (a specification) as described in [[RFC8126]] and to
+verify that the document is permanently and publicly available.  The
+DE is also expected to check the clarity of purpose and use of the
+requested code points. Last, the DE must verify that any specification produced outside the IETF does not
+conflict with work that is active or already published within the IETF.
 
 * Implementation Status
 
@@ -589,10 +601,10 @@ the receiver MUST validate the negotiated Security Policy through
 other means to ensure compliance with the intended security
 requirements. For by adding Security Policy to the socket or route
 entry. Also comply with ICMP  processing specified  in section 6 of
-RFC4301.
+[[RFC4301]].
 
 Additional security relevant aspects of using the IPsec protocol are
-discussed in the Security Architecture document [[RFC4301]]
+discussed in the Security Architecture document [[RFC4301]].
 
 * Acknowledgments
 
