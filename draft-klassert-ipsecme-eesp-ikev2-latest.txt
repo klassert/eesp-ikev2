@@ -465,11 +465,12 @@ Internet-Draft           EESP IKEv2 negotiation            February 2025
    the source and destination ports to ensure proper protocol operation
    and maintain compatibility with existing implementations.
 
-   When using ephemeral source ports, the receiver can only set the
-   source port upon arrival of an EESP packet with that Sub SA ID.  If
-   the receiver is pre-populating a Sub SA, it may have to install it
-   with a source port set to zero and, upon arrival of a packet, update
-   the source port using a mapping change.
+   When using ephemeral source ports, for a Sub SA, the receiver can
+   only set the source port upon arrival of an EESP packet with that Sub
+   SA ID.  If the receiver is pre-populating a Sub SA, it may have to
+   install it with a source port set to zero and, upon arrival of a
+   packet, update the source port using a mapping change for for this,
+   uni-directional Sub SA
 
    Additionally, when multiple Sub SAs exist, the receiver SHOULD
    maintain a mapping table to track the source port associated with
@@ -495,9 +496,8 @@ Internet-Draft           EESP IKEv2 negotiation            February 2025
    outbound EESP SAs of the Child SA are done as described in section
    2.17 of [RFC7296].
 
-   If an SSKDF is selected as part of the proposal, instead of directly
-   taking keys for the Sub SAs from KEYMAT, as described in section 2.17
-   of [RFC7296], only one "root" key is taken for each EESP SA of the
+
+
 
 
 
@@ -506,6 +506,9 @@ Klassert, et al.         Expires 16 August 2025                 [Page 9]
 Internet-Draft           EESP IKEv2 negotiation            February 2025
 
 
+   If an SSKDF is selected as part of the proposal, instead of directly
+   taking keys for the Sub SAs from KEYMAT, as described in section 2.17
+   of [RFC7296], only one "root" key is taken for each EESP SA of the
    Child SA.  Their length is determined by the key size of the
    negotiated SSKDF.  The root key for the EESP SA carrying data from
    the initiator to the responder is taken before that for the SA going
@@ -543,9 +546,6 @@ Internet-Draft           EESP IKEv2 negotiation            February 2025
    This document creates a new IKEv2 IANA registry for key derivation
    functions that can be negotiated with this transform type.  The
    initially defined Transform IDs are listed in the table below.
-
-
-
 
 
 

@@ -1794,11 +1794,12 @@ different source ports for the same Sub SA ID.<a href="#section-4.2-1" class="pi
 ephemeral source ports. Instead, IKE traffic should be confined to
 the source and destination ports to ensure proper protocol operation
 and maintain compatibility with existing implementations.<a href="#section-4.2-2" class="pilcrow">¶</a></p>
-<p id="section-4.2-3">When using ephemeral source ports, the receiver can only set the
-source port upon arrival of an EESP packet with that Sub SA ID. If
-the receiver is pre-populating a Sub SA, it may have to install it
-with a source port set to zero and, upon arrival of a packet,
-update the source port using a mapping change.<a href="#section-4.2-3" class="pilcrow">¶</a></p>
+<p id="section-4.2-3">When using ephemeral source ports, for a Sub SA, the receiver can
+only set the source port upon arrival of an EESP packet with that
+Sub SA ID. If the receiver is pre-populating a Sub SA, it may have
+to install it with a source port set to zero and, upon arrival of a
+packet, update the source port using a mapping change for for this,
+uni-directional Sub SA<a href="#section-4.2-3" class="pilcrow">¶</a></p>
 <p id="section-4.2-4">Additionally, when multiple Sub SAs exist, the receiver SHOULD
 maintain a mapping table to track the source port associated with
 each Sub SA independently. This ensures that traffic is correctly
