@@ -1700,16 +1700,15 @@ defining these unidirectional flows, Sub SAs offer a more efficient
 alternative to large numbers of bidirectional Child SAs with the
 same traffic selectors <span>[<a href="#RFC7296" class="cite xref">RFC7296</a>]</span>, <span>[<a href="#RFC9611" class="cite xref">RFC9611</a>]</span>.<a href="#section-4-2" class="pilcrow">¶</a></p>
 <p id="section-4-3">Each Sub SA is identified by a Sub SA ID, which MUST be carried in
-each EESP packet in the Session ID field—consistent with the negotiation of the EESP Child SA.  This
-Sub SA ID is used to derive a unique key, yielding the following
-benefits:<a href="#section-4-3" class="pilcrow">¶</a></p>
+each EESP packet in the Session ID field—consistent with the
+negotiation of the EESP Child SA.  This Sub SA ID is used to derive
+a unique key, yielding the following benefits:<a href="#section-4-3" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-4-4.1">
           <p id="section-4-4.1.1">Unidirectional Operation: In contrast to the per-resource
-SAs of <span>[<a href="#RFC9611" class="cite xref">RFC9611</a>]</span>, which are bidirectional, Sub SAs MAY be
-defined strictly in one direction when reverse traffic is
-absent.  CREATE_CHILD_SA does not otherwise support
-unidirectional SAs.<a href="#section-4-4.1.1" class="pilcrow">¶</a></p>
+SAs of <span>[<a href="#RFC9611" class="cite xref">RFC9611</a>]</span>, which are alwaya a pair of unidirectional SAs,
+Sub SAs MAY be defined strictly in one direction when reverse traffic is
+absent.<a href="#section-4-4.1.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-4-4.2">
           <p id="section-4-4.2.1">Zero Additional Setup Time: Sub SAs require no extra IKE
@@ -1794,12 +1793,11 @@ different source ports for the same Sub SA ID.<a href="#section-4.2-1" class="pi
 ephemeral source ports. Instead, IKE traffic should be confined to
 the source and destination ports to ensure proper protocol operation
 and maintain compatibility with existing implementations.<a href="#section-4.2-2" class="pilcrow">¶</a></p>
-<p id="section-4.2-3">When using ephemeral source ports, for a Sub SA, the receiver can
-only set the source port upon arrival of an EESP packet with that
-Sub SA ID. If the receiver is pre-populating a Sub SA, it may have
-to install it with a source port set to zero and, upon arrival of a
-packet, update the source port using a mapping change for for this,
-uni-directional Sub SA<a href="#section-4.2-3" class="pilcrow">¶</a></p>
+<p id="section-4.2-3">When using ephemeral source ports, the receiver can only set the
+source port upon arrival of an EESP packet with that Sub SA ID. If
+the receiver is pre-populating a Sub SA, it may have to install it
+with a source port set to zero and, upon arrival of a packet,
+update the source port using a mapping change.<a href="#section-4.2-3" class="pilcrow">¶</a></p>
 <p id="section-4.2-4">Additionally, when multiple Sub SAs exist, the receiver SHOULD
 maintain a mapping table to track the source port associated with
 each Sub SA independently. This ensures that traffic is correctly
@@ -1825,11 +1823,14 @@ outbound EESP SAs of the Child SA are done as described in section
 2.17 of <span>[<a href="#RFC7296" class="cite xref">RFC7296</a>]</span>.<a href="#section-4.3-3" class="pilcrow">¶</a></p>
 <p id="section-4.3-4">If an SSKDF is selected as part of the proposal, instead of directly
 taking keys for the Sub SAs from KEYMAT, as described in section 2.17
-of <span>[<a href="#RFC7296" class="cite xref">RFC7296</a>]</span>, only one "root" key is taken for each EESP SA of the
-Child SA. Their length is determined by the key size of the
-negotiated SSKDF.  The root key for the EESP SA carrying data from
-the initiator to the responder is taken before that for the SA going
-from the responder to the initiator.<a href="#section-4.3-4" class="pilcrow">¶</a></p>
+of <span>[<a href="#RFC7296" class="cite xref">RFC7296</a>]</span>, a "root" key or a set of "root" keys per direction
+is derived for each EESP SA per direction of the Child SA. The number
+of keys depends on the cryptographic suite: AEAD transforms derive a
+single key per direction, while non-AEAD suites may derive separate
+keys for encryption and authentication. The input length of these
+keys, SK_sub, is determined by the key size of the negotiated SSKDF.
+The root key(s) for the initiator-to-responder direction are derivedi
+before those for the responder-to-initiator direction.<a href="#section-4.3-4" class="pilcrow">¶</a></p>
 <p id="section-4.3-5">Using the EESP SA's root key, SK_sub, the KEYMAT for each Sub SA is
 derived as follows:<a href="#section-4.3-5" class="pilcrow">¶</a></p>
 <p id="section-4.3-6">KEYMAT_sub = SSKDF(SK_sub, SPI | Session_ID, L)<a href="#section-4.3-6" class="pilcrow">¶</a></p>
@@ -1839,11 +1840,11 @@ the Sub SA.<a href="#section-4.3-7" class="pilcrow">¶</a></p>
 <p id="section-4.3-8">If multiple keys are required for a Sub SA, the encryption key MUST
 be taken from the first bits of KEYMAT_sub, the integrity key MUST be
 taken from the remaining bits.<a href="#section-4.3-8" class="pilcrow">¶</a></p>
-<p id="section-4.3-9">Keys for Sub SAs may be derived immediately or on demand when the
-first packet is processed. Memory constrained implementations may
-even decide to derive the Sub SA keys on the fly for each received
-packet as only SK_sub has to be stored to derive the keys of all
-Sub SAs.<a href="#section-4.3-9" class="pilcrow">¶</a></p>
+<p id="section-4.3-9">Keys for Sub SAs may be derived immediately after IKE negoation of
+the Child SA or on demand when the first packet is processed. Memory
+constrained implementations may even decide to derive the
+Sub SA keys on the fly for each packet as only SK_sub has
+to be stored to derive the keys of all Sub SAs.<a href="#section-4.3-9" class="pilcrow">¶</a></p>
 <p id="section-4.3-10">Because individual Sub SAs can't be rekeyed, the complete EESP Child
 SA MUST be rekeyed when either a cryptographic limit or a time-based
 limit is reached for any individual Sub SA.<a href="#section-4.3-10" class="pilcrow">¶</a></p>

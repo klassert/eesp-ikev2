@@ -381,9 +381,9 @@ Internet-Draft           EESP IKEv2 negotiation            February 2025
    unique key, yielding the following benefits:
 
    *  Unidirectional Operation: In contrast to the per-resource SAs of
-      [RFC9611], which are bidirectional, Sub SAs MAY be defined
-      strictly in one direction when reverse traffic is absent.
-      CREATE_CHILD_SA does not otherwise support unidirectional SAs.
+      [RFC9611], which are alwaya a pair of unidirectional SAs, Sub SAs
+      MAY be defined strictly in one direction when reverse traffic is
+      absent.
 
 
 
@@ -465,12 +465,11 @@ Internet-Draft           EESP IKEv2 negotiation            February 2025
    the source and destination ports to ensure proper protocol operation
    and maintain compatibility with existing implementations.
 
-   When using ephemeral source ports, for a Sub SA, the receiver can
-   only set the source port upon arrival of an EESP packet with that Sub
-   SA ID.  If the receiver is pre-populating a Sub SA, it may have to
-   install it with a source port set to zero and, upon arrival of a
-   packet, update the source port using a mapping change for for this,
-   uni-directional Sub SA
+   When using ephemeral source ports, the receiver can only set the
+   source port upon arrival of an EESP packet with that Sub SA ID.  If
+   the receiver is pre-populating a Sub SA, it may have to install it
+   with a source port set to zero and, upon arrival of a packet, update
+   the source port using a mapping change.
 
    Additionally, when multiple Sub SAs exist, the receiver SHOULD
    maintain a mapping table to track the source port associated with
@@ -496,8 +495,9 @@ Internet-Draft           EESP IKEv2 negotiation            February 2025
    outbound EESP SAs of the Child SA are done as described in section
    2.17 of [RFC7296].
 
-
-
+   If an SSKDF is selected as part of the proposal, instead of directly
+   taking keys for the Sub SAs from KEYMAT, as described in section 2.17
+   of [RFC7296], a "root" key or a set of "root" keys per direction is
 
 
 
@@ -506,13 +506,13 @@ Klassert, et al.         Expires 16 August 2025                 [Page 9]
 Internet-Draft           EESP IKEv2 negotiation            February 2025
 
 
-   If an SSKDF is selected as part of the proposal, instead of directly
-   taking keys for the Sub SAs from KEYMAT, as described in section 2.17
-   of [RFC7296], only one "root" key is taken for each EESP SA of the
-   Child SA.  Their length is determined by the key size of the
-   negotiated SSKDF.  The root key for the EESP SA carrying data from
-   the initiator to the responder is taken before that for the SA going
-   from the responder to the initiator.
+   derived for each EESP SA per direction of the Child SA.  The number
+   of keys depends on the cryptographic suite: AEAD transforms derive a
+   single key per direction, while non-AEAD suites may derive separate
+   keys for encryption and authentication.  The input length of these
+   keys, SK_sub, is determined by the key size of the negotiated SSKDF.
+   The root key(s) for the initiator-to-responder direction are derivedi
+   before those for the responder-to-initiator direction.
 
    Using the EESP SA's root key, SK_sub, the KEYMAT for each Sub SA is
    derived as follows:
@@ -527,11 +527,11 @@ Internet-Draft           EESP IKEv2 negotiation            February 2025
    be taken from the first bits of KEYMAT_sub, the integrity key MUST be
    taken from the remaining bits.
 
-   Keys for Sub SAs may be derived immediately or on demand when the
-   first packet is processed.  Memory constrained implementations may
-   even decide to derive the Sub SA keys on the fly for each received
-   packet as only SK_sub has to be stored to derive the keys of all Sub
-   SAs.
+   Keys for Sub SAs may be derived immediately after IKE negoation of
+   the Child SA or on demand when the first packet is processed.  Memory
+   constrained implementations may even decide to derive the Sub SA keys
+   on the fly for each packet as only SK_sub has to be stored to derive
+   the keys of all Sub SAs.
 
    Because individual Sub SAs can't be rekeyed, the complete EESP Child
    SA MUST be rekeyed when either a cryptographic limit or a time-based
