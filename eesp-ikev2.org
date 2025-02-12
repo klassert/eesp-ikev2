@@ -519,7 +519,7 @@ This document defines a new value in the IKEv2 "Transform Type 5 - Sequence
 
 ** New IKEv2 Registries
 
-A new set of registries is created for G-IKEv2 on IKEv2
+A new set of registries is created for EESP on IKEv2
 parameters page [[IKEv2-IANA]]. The terms
 Reserved, Expert Review and Private Use are to be applied as defined
 in [[RFC8126]].
