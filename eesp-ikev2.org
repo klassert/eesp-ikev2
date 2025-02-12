@@ -253,15 +253,14 @@ alternative to large numbers of bidirectional Child SAs with the
 same traffic selectors [[RFC7296]], [[RFC9611]].
 
 Each Sub SA is identified by a Sub SA ID, which MUST be carried in
-each EESP packet in the Session ID field—consistent with the negotiation of the EESP Child SA.  This
-Sub SA ID is used to derive a unique key, yielding the following
-benefits:
+each EESP packet in the Session ID field—consistent with the
+negotiation of the EESP Child SA.  This Sub SA ID is used to derive
+a unique key, yielding the following benefits:
 
 - Unidirectional Operation: In contrast to the per-resource
-  SAs of [[RFC9611]], which are bidirectional, Sub SAs MAY be
-  defined strictly in one direction when reverse traffic is
-  absent.  CREATE_CHILD_SA does not otherwise support
-  unidirectional SAs.
+  SAs of [[RFC9611]], which are alwaya a pair of unidirectional SAs,
+  Sub SAs MAY be defined strictly in one direction when reverse traffic is
+  absent.
 
 - Zero Additional Setup Time: Sub SAs require no extra IKE
   message exchanges, unlike requesting more Child SAs or relying
@@ -356,13 +355,17 @@ created by either peer and the key derivation for the in- and
 outbound EESP SAs of the Child SA are done as described in section
 2.17 of [[RFC7296]].
 
+
 If an SSKDF is selected as part of the proposal, instead of directly
 taking keys for the Sub SAs from KEYMAT, as described in section 2.17
-of [[RFC7296]], only one "root" key is taken for each EESP SA of the
-Child SA. Their length is determined by the key size of the
-negotiated SSKDF.  The root key for the EESP SA carrying data from
-the initiator to the responder is taken before that for the SA going
-from the responder to the initiator.
+of [[RFC7296]], a "root" key or a set of "root" keys per direction
+is derived for each EESP SA per direction of the Child SA. The number
+of keys depends on the cryptographic suite: AEAD transforms derive a
+single key per direction, while non-AEAD suites may derive separate
+keys for encryption and authentication. The input length of these
+keys, SK_sub, is determined by the key size of the negotiated SSKDF.
+The root key(s) for the initiator-to-responder direction are derivedi
+before those for the responder-to-initiator direction.
 
 Using the EESP SA's root key, SK_sub, the KEYMAT for each Sub SA is
 derived as follows:
@@ -377,11 +380,11 @@ If multiple keys are required for a Sub SA, the encryption key MUST
 be taken from the first bits of KEYMAT_sub, the integrity key MUST be
 taken from the remaining bits.
 
-Keys for Sub SAs may be derived immediately or on demand when the
-first packet is processed. Memory constrained implementations may
-even decide to derive the Sub SA keys on the fly for each received
-packet as only SK_sub has to be stored to derive the keys of all
-Sub SAs.
+Keys for Sub SAs may be derived immediately after IKE negoation of
+the Child SA or on demand when the first packet is processed. Memory
+constrained implementations may even decide to derive the
+Sub SA keys on the fly for each packet as only SK_sub has
+to be stored to derive the keys of all Sub SAs.
 
 Because individual Sub SAs can't be rekeyed, the complete EESP Child
 SA MUST be rekeyed when either a cryptographic limit or a time-based
