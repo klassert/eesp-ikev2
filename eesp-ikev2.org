@@ -414,11 +414,11 @@ context of EESPv0.
 
 
 Note, that 64-bit Sequential Numbers and None transform IDs are
-meaningless for ESP and MUST NOT be used in ESP proposals.
+unspecfied for ESP and MUST NOT be used in ESP proposals.
 On the other hand, currently defined transform IDs for the
 Sequence Numbers transform type (32-bit Sequential Numbers and
 Partially Transmitted 64-bit Sequential Numbers)
-are meaningless for EESPv0 and MUST NOT be used in EESPv0 proposals.
+are unspecfied for EESPv0 and MUST NOT be used in EESPv0 proposals.
 
 Implemenattions MUST ignore transforms containing invalid
 values for the current proposal (as if they are unrecognized,
