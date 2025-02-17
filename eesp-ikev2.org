@@ -32,7 +32,8 @@ Exchange protocol version 2 (IKEv2). The EESP protocol, which is
 defined in draft-klassert-ipsecme-eesp, provides the same security
 services as Encapsulating Security Payload (ESP), but has richer
 functionality and performance in specific circumstances. This
-document specifies negotiation of version 0 of EESP. #+end_abstract
+document specifies negotiation of version 0 of EESP.
+#+end_abstract
 
 #+RFC_KEYWORDS: ("EESP" "IKEv2")
 
