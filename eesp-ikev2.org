@@ -26,12 +26,13 @@
 #+RFC_WORKGROUP: IPSECME Working Group
 
 #+begin_abstract
-This document specfies how to negotiate the use of the Enhanced Encapsulating
-Security Payload (EESP) protocol using the Internet Key Exchange protocol version 2 (IKEv2).
-The EESP protocol, which is defined in draft-klassert-ipsecme-eesp, provides the same security 
-services as Encapsulating Security Payload (ESP), but has richer functionality and performance
-in specific circumstances. This document specifies negotiation of version 0 of EESP.
-#+end_abstract
+This document specfies how to negotiate the use of the Enhanced 
+Encapsulating Security Payload (EESP) protocol using the Internet Key 
+Exchange protocol version 2 (IKEv2). The EESP protocol, which is 
+defined in draft-klassert-ipsecme-eesp, provides the same security
+services as Encapsulating Security Payload (ESP), but has richer 
+functionality and performance in specific circumstances. This 
+document specifies negotiation of version 0 of EESP. #+end_abstract
 
 #+RFC_KEYWORDS: ("EESP" "IKEv2")
 
@@ -46,10 +47,10 @@ offloads at the packet level. It supports carrying inner packet flow
 identifiers for the use with ECMP, RSS hardware, and IPsec peers
 prior to decryption. EESP also enables the establishment of Sub SAs 
 with independent keys and sequence number spaces. Additionally, it
-supports the use of 64-bit sequence numbers transmitted in each packet or the
-omission of sequence numbers when the Replay Protection service is
-not needed. EESP packets carry a version number, enabling easier
-support for future extensions.
+supports the use of 64-bit sequence numbers transmitted in each
+packet or the omission of sequence numbers when the Replay Protection 
+service is not needed. EESP packets carry a version number, enabling 
+easier support for future extensions.
 
 This document specifies the negotiation of EESP Security
 Associations (SAs) within the Internet Key Exchange Protocol
@@ -58,15 +59,16 @@ rekeying, and deletion of EESP SAs, as well as the negotiation of
 EESP specific transforms and properties.
 
 The extensions defined here enables EESP SAs to coexist with ESP SAs, 
-while introducing new capabilities to enhance IPsec's performance and versatility in modern use cases.
+while introducing new capabilities to enhance IPsec's performance 
+and versatility in modern use cases.
 
 EESP Sub SA is an unidirectional SA derived from
-the same-direction Child SA from a pair of Child SAs negotiated using IKEv2. 
-Each Sub SA derives its own unique encryption key and maintains independent sequence
-number spaces and IV spaces from the parent Child SA. Sub SAs can be created
-"on the fly" within kernel IPsec subsystem. Sub SAs
-streamline traffic flow management, reduce overhead, and enable more
-efficient lifecycle operations.
+the same-direction Child SA from a pair of Child SAs negotiated using
+IKEv2. Each Sub SA derives its own unique encryption key and 
+maintains independent sequence number spaces and IV spaces from the 
+parent Child SA. Sub SAs can be created "on the fly" within kernel 
+IPsec subsystem. Sub SAs streamline traffic flow management, reduce 
+overhead, and enable more efficient lifecycle operations.
 
 This document does not obsolete or update any existing RFCs. While
 stateless implementations of EESP are referenced, their negotiation,
@@ -86,16 +88,18 @@ It is assumed that readers are familiar with IKEv2
 This document uses a notation and conventions from IKEv2 [RFC7296].
 
 # [VS] Well, this list is for sure not complete
-# [VS] We also use "a lot" from RFC 7296, perhaps no need to emphasize these particular terms
-# [VS] I'd rather to delete this, above we assume that readers are familiar with IKEv2
-# This document uses the following terms defined in IKEv2 [[RFC7296]]:
+# [VS] We also use "a lot" from RFC 7296, perhaps no need to 
+# [VS] emphasize these particular terms
+# [VS] I'd rather to delete this, above we assume that readers are 
+# [VS] familiar with IKEv2 # This document uses the following terms 
+# [VS] defined in IKEv2 [[RFC7296]]:
 # Child SA, CREATE_CHILD_SA exchange, IKE_AUTH exchange,
 # USE_TRANSPORT_MODE
 
 # [VS] I wonder whether we need to reference PSP for this
 # [VS] If we do, then PSP should be a normative reference
-# [VS] I think we'd rather to avoid this and re-define these things here
-# [VS] BTW, VNI is not used in the text
+# [VS] I think we'd rather to avoid this and re-define these things
+# [VS] here. BTW, VNI is not used in the text
 This document uses the following terms defined in [[PSP]]: PSP (a
 recursive acronym for PSP Security Protocol), Network Identifier
 (VNI), Crypt Offset.
@@ -103,21 +107,26 @@ recursive acronym for PSP Security Protocol), Network Identifier
 This document uses the following terms defined in [[RFC2992]]:
 Equal-cost multi-path (ECMP)
 
-# [VS] Again, the above we mentioned that readers should be familiar with ESP
-# [VS] Is there a need to repeat it?
+# [VS] Again, the above we mentioned that readers should be familiar 
+# [VS] with ESP. Is there a need to repeat it?
 This document uses the following terms defined in [[RFC4303]]:
 Encapsulating Security Payload (ESP).
 
 # [VS] See note above. This should either be a normative reference
-# [VS] And we use a different term - Sub SA. "Sub-Child SA" is not used in the text
-# [VS] I'd rather to delete this
+# [VS] And we use a different term - Sub SA. "Sub-Child SA" is not
+# [VS] used in the text. I'd rather to delete this
 # This document uses the following terms defined in
 # [[I-D.mrossberg-ipsecme-multiple-sequence-counters]]: Sub-Child SA.
 
-# [VS] This is the name of transform, I don't think we should reference ikev2-rename-esn here
-# [VS] ikev2-rename-esn is only relevant *now* until it becomes an RFC and IANA updates IKEv2 registries
-# [VS] For this reason it is referenced in G-IKEv2 draft, which uses not-yet-assigned name for this transform
-# [VS] But by the time this draft would be published, the ikev2-rename-esn will most probably become an RFC and IANA completes the renaming, 
+# [VS] This is the name of transform, I don't think we should 
+# [VS] reference ikev2-rename-esn here
+# [VS] ikev2-rename-esn is only relevant *now* until it becomes an 
+# [VS] RFC and IANA updates IKEv2 registries
+# [VS] For this reason it is referenced in G-IKEv2 draft, which uses 
+# [VS] not-yet-assigned name for this transform
+# [VS] But by the time this draft would be published, the 
+# [VS] ikev2-rename-esn will most probably become an RFC and IANA 
+# [VS] completes the renaming,
 # [VS] thus we can just reference the IANA registry
 # This document uses the following terms defined in
 # [[I-D.ietf-ipsecme-ikev2-rename-esn]] : Replay Protection.
@@ -132,18 +141,18 @@ Encapsulating Security Payload (ESP).
 ** EESP Version
 
 Each EESP packets carry EESP Base Header version, which is specified
-in Section [XXX] of [[I-D.klassert-ipsecme-eesp]]. This SHOULD be negotiated using
-IKEv2. Each Base Header version, to be able to negotiate via IKEv2,
-SHOULD have a corresponding ~IKEv2 Security Protocol Identifiers~
-The initial version sepecified EESPv0 (TBD1)
+in Section [XXX] of [[I-D.klassert-ipsecme-eesp]]. This SHOULD be 
+negotiated using IKEv2. Each Base Header version, to be able to 
+negotiate via IKEv2, SHOULD have a corresponding ~IKEv2 Security 
+Protocol Identifiers~ The initial version sepecified EESPv0 (TBD1)
 
 ** EESP Sub SA
 Existing mechanisms for establishing Child SAs, as described in
 [[RFC7296]], yield pair of SAs. High-speed IP traffic is often
 asymmetric. Creating multiple pairs of Child SAs, e.g. [[RFC9611]] or
-for DSCP to carry asymetric traffic is inefficient. A pair of Child SA
-combined with multiple unidirectional a set of  Sub SAs with Sub SA
-IDs greater than 0, provides a more flexible approach to carrying
+for DSCP to carry asymetric traffic is inefficient. A pair of Child 
+SA combined with multiple unidirectional a set of Sub SAs with Sub 
+SA IDs greater than 0, provides a more flexible approach to carrying
 asymmetric traffic patterns, particularly in high-speed environments.
 Sub SAs reduces overhead, improves resource utilization, and enhances
 scalability for large-scale deployments. In many use cases, several
@@ -156,47 +165,47 @@ in high-throughput or low-latency environments, where rapid setup and
 teardown of SAs is essential to maintain performance.
 
 An EESP Sub SA provides a unidirectional Security Association
-derived from an existing EESP Child SA pair.  It inherits all of
+derived from an existing EESP Child SA pair. It inherits all of
 the Child SA’s properties except for keys, sequence number space,
-and IV space, each of which MUST be unique to each Sub SA.  By
+and IV space, each of which MUST be unique to each Sub SA. By
 defining these unidirectional flows, Sub SAs offer a more efficient
 alternative to large numbers of bidirectional Child SAs with the
 same traffic selectors [[RFC7296]], [[RFC9611]].
 
 Each Sub SA is identified by a Sub SA ID, which MUST be carried in
-each EESP packet in the Session ID field—consistent with the negotiation of the EESP Child SA.  This
-Sub SA ID is used to derive a unique key, yielding the following
-benefits:
+each EESP packet in the Session ID field—consistent with the
+negotiation of the EESP Child SA. This Sub SA ID is used to derive a 
+unique key, yielding the following benefits:
 
 - Unidirectional Operation: In contrast to the per-resource
   SAs of [[RFC9611]], which are bidirectional, Sub SAs MAY be
   defined strictly in one direction when reverse traffic is
-  absent.  CREATE_CHILD_SA does not otherwise support
+  absent. CREATE_CHILD_SA does not otherwise support
   unidirectional SAs.
 
 - Zero Additional Setup Time: Sub SAs require no extra IKE
   message exchanges, unlike requesting more Child SAs or relying
-  on large IKE windows [[RFC7296]].  This allows rapid provisioning
+  on large IKE windows [[RFC7296]]. This allows rapid provisioning
   of extra flows without introducing round-trip delays.
 
 - Simplified Lifecycle Management**: Sub SAs are more efficient
-  to create, rekey, and delete than traditional Child SAs.  Their
+  to create, rekey, and delete than traditional Child SAs. Their
   narrow scope streamlines both key management and policy
   enforcement.
 
 - On-the-Fly Key Derivation: Implementations using hierarchical
   key derivation, particularly with hardware offload, MAY derive
-  Sub SA keys dynamically on a per-packet basis.  This mitigates
+  Sub SA keys dynamically on a per-packet basis. This mitigates
   the risk of data-plane performance degradation caused by a large
   number of keys [[I-D.ponchon-ipsecme-anti-replay-subspaces]].
 
 AEAD transforms such as AES-GCM [[RFC4106]], [[RFC8750]] require
-that the IV never repeat within a single Sub SA.  Because each
+that the IV never repeat within a single Sub SA. Because each
 Sub SA uses a distinct key, the IV MAY be reused across different
 Sub SAs, satisfying the requirement that each key be paired with a
-unique IV.  Implementations MUST also maintain an independent
+unique IV. Implementations MUST also maintain an independent
 sequence number space for each Sub SA when full 64-bit sequence
-numbers are in use.  For a given Sub SA key, sequence numbers MUST
+numbers are in use. For a given Sub SA key, sequence numbers MUST
 remain unique and monotonically increasing to meet cryptographic
 requirements.
 
@@ -204,7 +213,8 @@ requirements.
 
 Unlike ESP, EESPv0 header allows to transmit 64-bit sequence numbers.
 In addition, the Sequence Number field in the EESPv0 header is optional
-and can be omitted from the packet if replay protection service is not needed. 
+and can be omitted from the packet if replay protection service is 
+not needed.
 
 # EESP provides an optional Replay service using
 # 64-bit sequence numbers carried in the packet.
@@ -250,7 +260,7 @@ flexible handling of EESP traffic, particularly ECMP support
 along the path and in the NIC.
 
 A receiver indenting to support both ESP and EESP encapsulated in UDP
-must start ESP  SPI, most significant bit of the SPI, with zero.
+must start ESP SPI, most significant bit of the SPI, with zero.
 
 * EESP Crypt Offset Option
 This option is typically used for within one Datacenter use case
@@ -258,14 +268,14 @@ such as [[PSP]]. To negotiate, the initiator sends USE_CRYPTOFFSET
 together with USE_TRANSPORT_MODE and the responder respond with the
 same. USE_EESP_CRYPTOFFSET is not supported in Tunnel mode or BEET
 mode.
-# Note STK:  This needs discussion
+# Note STK: This needs discussion
 #
 ~NOTE~ Add EESP draft UDP section reference.
 
 *** UDP Encapsulation of Sub SA
 
 An EESP SA primarily uses UDP encapsulation to facilitate NAT
-traversal.  However, an additional use case for UDP encapsulation is
+traversal. However, an additional use case for UDP encapsulation is
 to introduce source port entropy, which supports ECMP or/and
 RSS (Receive Side Scaling) mechanisms. In such scenarios, the
 initiator MAY also use a distinct, ephemeral source port for
@@ -292,28 +302,32 @@ different Sub SAs when a NAT is present.
 
 * EESP SA Negotiation in IKEv2
 
-Current EESP specification [[I-D.klassert-ipsecme-eesp]] defines version 0
-of the EESP protocol. Consequently, this document limits its scope to only
-deal with EESPv0. If other EESP versions are defined in future, their negotiation
-using IKEv2 should be covered by separate documents.
+Current EESP specification [[I-D.klassert-ipsecme-eesp]] defines
+version 0 of the EESP protocol. Consequently, this document limits 
+its scope to only deal with EESPv0. If other EESP versions are 
+defined in future, their negotiation using IKEv2 should be covered by 
+separate documents.
 
-EESP Security Associations (SAs) are negotiated in IKEv2 similarly to ESP SAs - 
-as Child SAs in the IKE_AUTH or the CREATE_CHILD_SA exchanges. 
-For this purpose a new Security Protocol Identifier EESPv0 (<TBD1>)
-is defined. This protocol identifier is placed in the Proposal Num field of the Proposal Substructure
-in the SA Payload when peers negotiate EESP version 0.
-It is possible for the initiator to include both ESP and EESPv0 proposals in the SA
+EESP Security Associations (SAs) are negotiated in IKEv2 similarly 
+to ESP SAs - as Child SAs in the IKE_AUTH or the CREATE_CHILD_SA 
+exchanges. For this purpose a new Security Protocol Identifier EESPv0 
+(<TBD1>) is defined. This protocol identifier is placed in the 
+Proposal Num field of the Proposal Substructure in the SA Payload 
+when peers negotiate EESP version 0. It is possible for the initiator 
+to include both ESP and EESPv0 proposals in the SA
 payload to negotiate either ESP or EESP.
 
 ** EESP Specific Transform Types and Transform IDs
 
 *** Sub SA Key Derivation Function Transform
 
-This document defines a new Sub SA Key Derivation Function (SSKDF) transform type, that is used to
-negotiate a key derivation function for Sub SAs as described in [[EESP Sub SA]].
+This document defines a new Sub SA Key Derivation Function (SSKDF) 
+transform type, that is used to negotiate a key derivation function 
+for Sub SAs as described in [[EESP Sub SA]].
 
-This document creates a new IKEv2 IANA registry for the Key Derivation
-Functions transform IDs. The initially defined Transform IDs are listed in the table below.
+This document creates a new IKEv2 IANA registry for the Key 
+Derivation Functions transform IDs. The initially defined Transform 
+IDs are listed in the table below.
 
 #+caption: Sub SA Key Derivation Functions
 | Value   | Algorithm           |
@@ -345,18 +359,18 @@ The type of the Sub SA Key Derivation Function transform is <TBA2>.
 
 *** New Transform IDs for Sequence Numbers Transform Type
 
-This document defines two new Transfor IDs for the Sequence Numbers transform type:
-64-bit Sequential Numbers (<TBD4>) and None (<TBD5>). 
+This document defines two new Transfor IDs for the Sequence Numbers 
+transform type: 64-bit Sequential Numbers (<TBD4>) and None (<TBD5>). 
 
-To enable presence of sequence numbers in the EESP header the initiator MUST
-propose SN = (64-bit Sequential Numbers) in the
+To enable presence of sequence numbers in the EESP header the 
+initiator MUST propose SN = (64-bit Sequential Numbers) in the
 Proposal Substructure inside the Security Association (SA) payload. 
 When the responder selects 64-bit Sequential Numbers, Sequence Number
 field is included into the EESP header, that allows peers to 
 achieve replay protection.
 
-# NOTE STK: I'd say MUST above as we want to negotiate Anti-Replay service
-# and not just the presense of the seq nr field.
+# NOTE STK: I'd say MUST above as we want to negotiate Anti-Replay 
+# service and not just the presense of the seq nr field.
 
 To disable sequence numbering, and thus replay protection based on
 sequence numbers, the initiator MUST propose SN=None (<TBD5>). 
@@ -369,35 +383,40 @@ addresses without using IKEv2 Mobility [[RFC4555]].
 
 ## Transforms Consistency
 
-IKEv2 limits trasform types that can appear in the Proposal substructure
-based on its Protocol Num field (see Section 3.3.3 of [[RFC7296]]).
-For EESPv0 the following transform types are allowed:
+IKEv2 limits trasform types that can appear in the Proposal 
+substructure based on its Protocol Num field (see Section 3.3.3 of 
+[[RFC7296]]). For EESPv0 the following transform types are allowed:
 
 | Protocol | Mandatory Types  | Optional Types   |
 |----------+------------------+------------------+
 | EESPv0   | ENCR, SN         | KE, SSKDF        |
 
-# [VS} I assume we want to only allow AEAD ciphers for EESP, thus no INTEG transforms are allowed? Or not?
+# [VS} I assume we want to only allow AEAD ciphers for EESP, thus no 
+# [VS] INTEG transforms are allowed? Or not?
 In case of EESPv0 for the ENCR transform type only
 those transform IDs that define use of AEAD cipher mode are allowed.
-Transform IDs that define pure encryption MUST NOT be used in the context of EESPv0.
+Transform IDs that define pure encryption MUST NOT be used in the 
+context of EESPv0.
 
-# [VS] Discussion: perhaps we should which ciphers among the currently registered
-# [VS] are OK for use in EESP.
+# [VS] Discussion: perhaps we should which ciphers among the
+# [VS] currently registered # [VS] are OK for use in EESP.
 # [VS] The use of these transforms should be specified somewhere
-# [VS] Currently all transforms are specified for ESP (and some for IKEv2),
-# [VS} My understanding is that for EESP a separate document
-# [VS] similar to RFC 4309, RFC 7634 etc. should be created. In particular,
-# [VS] it must specify the AAD for EESP (which is different than for ESP) IV format and nonce calculation 
+# [VS] Currently all transforms are specified for ESP (and some for 
+# [VS] IKEv2). My understanding is that for EESP a separate document
+# [VS] similar to RFC 4309, RFC 7634 etc. should be created. In 
+# [VS] particular, it must specify the AAD for EESP (which is 
+# [VS] different than for ESP) IV format and nonce calculation
 # [VS] (these can be the same as for ESP).
-# [VS] This can be done either in the core eesp document or in a separate draft, but not in this document, 
+# [VS] This can be done either in the core eesp document or in a 
+# [VS] separate draft, but not in this document,
 # [VS] since this is not concerned with IKEv2
 
 
 Note, that 64-bit Sequential Numbers and None transform IDs are 
 meaningless for ESP and MUST NOT be used in ESP proposals.
 On the other hand, currently defined transform IDs for the
-Sequence Numbers transform type (32-bit Sequential Numbers and 	Partially Transmitted 64-bit Sequential Numbers)
+Sequence Numbers transform type (32-bit Sequential Numbers and 	
+Partially Transmitted 64-bit Sequential Numbers)
 are meaningless for EESPv0 and MUST NOT be used in EESPv0 proposals.
 
 Implemenattions MUST ignore transforms containing invalid
@@ -441,7 +460,9 @@ The ESP_TFC_PADDING_NOT_SUPPORTED, [[RFC7296]], notification is not
 supported in EESP, instead use IP-TFS, USE_AGGFRAG, [[RFC9347]].
 If this notification is received it MUST be ignored.
 
-# [VS] I don't think this should be repeated. We've said that EESP SA is a Child SA, thus all mentioned in these sections applies automatically
+# [VS] I don't think this should be repeated. We've said that EESP 
+# [VS] SA is a Child SA, thus all mentioned in these sections 
+# [VS] applies automatically
 # ** Negotiating an EESP SA using IKE_AUTH or CREATE_CHILD_SA
 # To negotiate an EESP Child SA, use the IKEv2 IKE_AUTH or
 # CREATE_CHILD_SA new SA exchange. The SA Payload, Proposal
@@ -475,13 +496,15 @@ If this notification is received it MUST be ignored.
 
 ** Announcing Maximum Number of Sub SAs
 
-In the process of establishing the EESP SA, each peer can inform the other side
-about the maximum number of Sub SAs that it is ready to handle as a receiver.
-This is not a negotiation and the maximum number (as well as the actual number) 
-of Sub SAs can be different in different directions.
+In the process of establishing the EESP SA, each peer can inform the 
+other side about the maximum number of Sub SAs that it is ready to 
+handle as a receiver. This is not a negotiation and the maximum 
+number (as well as the actual number) of Sub SAs can be different in 
+different directions.
 
-A new notify status type EESP_MAX_SUB_SAS (<TBD3>) is defined by this document.
-The format of the Notify payload for this notification is shown below.
+A new notify status type EESP_MAX_SUB_SAS (<TBD3>) is defined by 
+this document. The format of the Notify payload for this notification 
+is shown below.
 
 #+caption: Sub SA Notifier
 #+name: sub-sa-notifier
@@ -499,12 +522,14 @@ The format of the Notify payload for this notification is shown below.
 
 - Protocol ID (1 octet) - MUST be 0. MUST be ignored if not 0.
 - SPI Size (1 octet) - MUST be 0. MUST be ignored if not 0.
-- Notify Status Message Type (2 octets) - set to EESP_MAX_SUB_SAS (<TBD3>).
+- Notify Status Message Type (2 octets) - set to EESP_MAX_SUB_SAS 
+(<TBD3>). 
 # [VS] Why it is 16-bit and not 32-bit in size?
-- Maximum number of Sub SAs (2 octets) - specifies maximum number of EESP Sub SAs 
-  the sender of this notification can handle as an EESP SA  receiver.
-#  MUST be greater than 0.
-#  If 0 is received, it MUST be interpreted as 1.
+- Maximum number of Sub SAs (2 octets) - specifies maximum number of 
+EESP Sub SAs the sender of this notification can handle as an EESP SA
+receiver. 
+# MUST be greater than 0.
+# If 0 is received, it MUST be interpreted as 1.
 
 * Key Derivation for Sub SAs
 
@@ -524,26 +549,33 @@ created by either peer and the key derivation for the in- and
 outbound EESP SAs of the Child SA are done as described in section
 2.17 of [[RFC7296]].
 
-# [VS] Discussion: perhaps it is easier to always allow at least one Sub SA - with Session ID 0.
-# [VS] In this case the 'parent' becomes a Sub SA with Session ID 0.
-# [VS} In this case the key derivation would be uniform, regardless on whether additional Sub SAs are used or not.
-# [VS] This would require SSKDF to be a mandatory transform type for EESP.
+# [VS] Discussion: perhaps it is easier to always allow at least one 
+# [VS] Sub SA - with Session ID 0. In this case the 'parent' 
+# [VS] becomes a Sub SA with Session ID 0.
+# [VS} In this case the key derivation would be uniform, regardless 
+# [VS] on whether additional Sub SAs are used or not. This 
+# [VS] would require SSKDF to be a mandatory transform type for EESP.
 
 If an SSKDF is selected as part of the proposal, instead of directly
 taking keys for the Sub SAs from KEYMAT, as described in section 2.17
 of [[RFC7296]], only one "root" key is taken for each EESP SA of the
 Child SA. Their length is determined by the key size of the
-negotiated SSKDF.  The root key for the EESP SA carrying data from
+negotiated SSKDF. The root key for the EESP SA carrying data from
 the initiator to the responder is taken before that for the SA going
 from the responder to the initiator.
 
-# [VS] Discussion: perhaps the key derivation argument can be part of the SSKDSF transform
-# [VS] In other words - definition of a particular SSKDF would not only the specify KDF to use, but also include its arguments 
-# [VS] This would make key Sub SA derivation more flexible (in future it can be defined over other stuff than SPI + Session ID, e.g. over SN)
-# [VS] Disadvantage - the SSKDF definition would become more 'heavy' and in adding new SSKDFs would in theory be more difficult
+# [VS] Discussion: perhaps the key derivation argument can be part 
+# [VS] of the SSKDSF transform. In other words - definition of 
+# [VS] a particular SSKDF would not only the specify KDF to use, but 
+# [VS] also include its arguments. This would make key Sub SA 
+# [VS] derivation more flexible (in future it can be defined over 
+# [VS] other stuff than SPI + Session ID, e.g. over SN).
+# [VS] Disadvantage - the SSKDF definition would become more 'heavy' 
+# [VS] and in adding new SSKDFs would in theory be more difficult
 
-# [VS] The Sub SA key derivation stuff should be moved to the eesp draft
-# [VS] This key derivation is done inside EESP and is opaque for IKE
+# [VS] The Sub SA key derivation stuff should be moved to the eesp 
+# [VS] draft. This key derivation is done inside EESP and is opaque 
+# [VS] for IKE
 
 Using the EESP SA's root key, SK_sub, the KEYMAT for each Sub SA is
 derived as follows:
@@ -568,7 +600,8 @@ Because individual Sub SAs can't be rekeyed, the complete EESP Child
 SA MUST be rekeyed when either a cryptographic limit or a time-based
 limit is reached for any individual Sub SA.
 
-# [VS] I think this stuff should be in a separate document (or in the next versions)
+# [VS] I think this stuff should be in a separate document (or in 
+# [VS] the next versions) 
 # ** Multiple Sender Group SA Key Derivation
 #
 # When using EESP with a group SA, as specified in
@@ -603,16 +636,21 @@ This document defines new Protocol ID in the
 
 *** IKEv2 Transform Type Values
 
-This document defines a new transform type in the "Transform Type Values" registry:
+This document defines a new transform type in the "Transform Type 
+Values" registry:
 
-| Type   | Description                            | Used In  |  Reference      |
-|--------+----------------------------------------+----------+-----------------+
-| <TBD2> | Sub SA Key Derivation Function (SSKDF) | (EESPv0) | [this document] |
+| Type   | Description            | Used In  |  Reference      |
+|--------+------------------------+----------+-----------------+
+| <TBD2> | Sub SA Key Derivation  | (EESPv0) | [this document] |
+|  	 | Function (SSKDF)       |          |                 |
 
-Valid Transform IDs are defined in a new registry listed in [[tbl-sskdfids]].
+Valid Transform IDs are defined in a new registry listed in 
+[[tbl-sskdfids]].
 
-This document also modifies the "Used In" column of existing "Encryption Algorithm (ENCR)" transform type
-by adding EESPv0 as allowed protocol for this transform and adding a rederence to this document.
+This document also modifies the "Used In" column of existing 
+"Encryption Algorithm (ENCR)" transform type by adding EESPv0 as 
+allowed protocol for this transform and adding a rederence to this 
+document.
 
 *** IKEv2 Notify Message Status Types registry.
 
@@ -630,8 +668,8 @@ by adding EESPv0 as allowed protocol for this transform and adding a rederence t
 
 *** Sequence Number
 
-This document defines two new values in the IKEv2 "Transform Type 5 - Sequence
-   Numbers Properties Transform IDs" registry:
+This document defines two new values in the IKEv2 "Transform Type 5 
+- Sequence Numbers Properties Transform IDs" registry:
 
 | Value   | Name                          | Reference       |
 |---------+-------------------------------+-----------------+
@@ -651,8 +689,8 @@ in [[RFC8126]].
 # SSKDF_AES256_CMAC is currently unspecified
 
 This documents creates the new IKEv2 registry "Transform Type <TBD2> -
-Sub SA Key Derivation Function Transform IDs".  The initial values of this
-registry are:
+Sub SA Key Derivation Function Transform IDs". The initial values of 
+this registry are:
 
 #+caption: "Transform Type <TBD2>" Registry
 #+name: tbl-sskdfids
@@ -672,12 +710,13 @@ by the Expert Review Policy [[RFC8126]].
 *** Guidance for Designated Experts
 
 In all cases of Expert Review Policy described here,
-the Designated Expert (DE) is expected to ascertain the existence of suitable
-documentation (a specification) as described in [[RFC8126]] and to
-verify that the document is permanently and publicly available.  The
-DE is also expected to check the clarity of purpose and use of the
-requested code points. Last, the DE must verify that any specification produced outside the IETF does not
-conflict with work that is active or already published within the IETF.
+the Designated Expert (DE) is expected to ascertain the existence of 
+suitable documentation (a specification) as described in [[RFC8126]] 
+and to verify that the document is permanently and publicly 
+available. The DE is also expected to check the clarity of purpose 
+and use of the requested code points. Last, the DE must verify that 
+any specification produced outside the IETF does not conflict with 
+work that is active or already published within the IETF.
 
 * Implementation Status
 
@@ -721,7 +760,7 @@ the IPsec Architecture document [[RFC4301]], section 4.4.1. However,
 the receiver MUST validate the negotiated Security Policy through
 other means to ensure compliance with the intended security
 requirements. For by adding Security Policy to the socket or route
-entry. Also comply with ICMP  processing specified  in section 6 of
+entry. Also comply with ICMP processing specified in section 6 of
 [[RFC4301]].
 
 Additional security relevant aspects of using the IPsec protocol are
