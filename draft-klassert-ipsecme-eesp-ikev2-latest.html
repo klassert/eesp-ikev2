@@ -4,16 +4,20 @@
 <meta charset="utf-8">
 <meta content="Common,Latin" name="scripts">
 <meta content="initial-scale=1.0" name="viewport">
-<title>IKEv2 negotiation for Enhanced Encapsulating Security Payload</title>
+<title>IKEv2 negotiation for Enhanced Encapsulating Security Payload (EESP)</title>
 <meta content="Steffen Klassert" name="author">
 <meta content="Antony Antony" name="author">
 <meta content="Tobias Brunner" name="author">
 <meta content="Valery Smyslov" name="author">
 <meta content="
-       This document species how to negotiate Enhanced Encapsulating
-Security Payload (EESP) Security Associations using IKEv2. EESP
-which builds on the existing IP Encapsulating Security Payload (ESP)
-protocol. 
+       This document specfies how to negotiate the use of the Enhanced 
+Encapsulating Security Payload (EESP) protocol using the Internet Key 
+Exchange protocol version 2 (IKEv2). The EESP protocol, which is 
+defined in draft-klassert-ipsecme-eesp, provides the same security
+services as Encapsulating Security Payload (ESP), but has richer 
+functionality and provides better performance in specific 
+circumstances. This document specifies negotiation of version 0 of 
+EESP. 
     " name="description">
 <meta content="xml2rfc 3.27.0" name="generator">
 <meta content="EESP" name="keyword">
@@ -1221,7 +1225,7 @@ li > p:last-of-type:only-child {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Klassert, et al.</td>
-<td class="center">Expires 16 August 2025</td>
+<td class="center">Expires 24 August 2025</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1232,12 +1236,12 @@ li > p:last-of-type:only-child {
 <dd class="workgroup">IPSECME Working Group</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-02-12" class="published">12 February 2025</time>
+<time datetime="2025-02-20" class="published">20 February 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2025-08-16">16 August 2025</time></dd>
+<dd class="expires"><time datetime="2025-08-24">24 August 2025</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1259,13 +1263,17 @@ li > p:last-of-type:only-child {
 </dd>
 </dl>
 </div>
-<h1 id="title">IKEv2 negotiation for Enhanced Encapsulating Security Payload</h1>
+<h1 id="title">IKEv2 negotiation for Enhanced Encapsulating Security Payload (EESP)</h1>
 <section id="section-abstract">
       <h2 id="abstract"><a href="#abstract" class="selfRef">Abstract</a></h2>
-<p id="section-abstract-1">This document species how to negotiate Enhanced Encapsulating
-Security Payload (EESP) Security Associations using IKEv2. EESP
-which builds on the existing IP Encapsulating Security Payload (ESP)
-protocol.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
+<p id="section-abstract-1">This document specfies how to negotiate the use of the Enhanced 
+Encapsulating Security Payload (EESP) protocol using the Internet Key 
+Exchange protocol version 2 (IKEv2). The EESP protocol, which is 
+defined in draft-klassert-ipsecme-eesp, provides the same security
+services as Encapsulating Security Payload (ESP), but has richer 
+functionality and provides better performance in specific 
+circumstances. This document specifies negotiation of version 0 of 
+EESP.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
 </section>
 <div id="status-of-memo">
 <section id="section-boilerplate.1">
@@ -1286,7 +1294,7 @@ protocol.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 16 August 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 24 August 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1327,123 +1335,111 @@ protocol.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2">
-            <p id="section-toc.1-1.2.1"><a href="#section-2" class="auto internal xref">2</a>.  <a href="#name-eesp-sa-ikev2-negotiation" class="internal xref">EESP SA IKEv2 Negotiation</a></p>
+            <p id="section-toc.1-1.2.1"><a href="#section-2" class="auto internal xref">2</a>.  <a href="#name-eesp-overview" class="internal xref">EESP Overview</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2.2.1">
-                <p id="section-toc.1-1.2.2.1.1"><a href="#section-2.1" class="auto internal xref">2.1</a>.  <a href="#name-negotiating-an-eesp-sa-usin" class="internal xref">Negotiating an EESP SA using IKE_AUTH or CREATE_CHILD_SA</a></p>
+                <p id="section-toc.1-1.2.2.1.1"><a href="#section-2.1" class="auto internal xref">2.1</a>.  <a href="#name-eesp-version" class="internal xref">EESP Version</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2.2.2">
-                <p id="section-toc.1-1.2.2.2.1"><a href="#section-2.2" class="auto internal xref">2.2</a>.  <a href="#name-rekeying-an-eesp-sa-with-th" class="internal xref">Rekeying an EESP SA with the CREATE_CHILD_SA Exchange</a></p>
+                <p id="section-toc.1-1.2.2.2.1"><a href="#section-2.2" class="auto internal xref">2.2</a>.  <a href="#name-eesp-sub-sa" class="internal xref">EESP Sub SA</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2.2.3">
-                <p id="section-toc.1-1.2.2.3.1"><a href="#section-2.3" class="auto internal xref">2.3</a>.  <a href="#name-deleting-eesp-sa-with-infor" class="internal xref">Deleting EESP SA with INFORMATIONAL Exchange</a></p>
+                <p id="section-toc.1-1.2.2.3.1"><a href="#section-2.3" class="auto internal xref">2.3</a>.  <a href="#name-eesp-sequence-numbers" class="internal xref">EESP Sequence Numbers</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2.2.4">
+                <p id="section-toc.1-1.2.2.4.1"><a href="#section-2.4" class="auto internal xref">2.4</a>.  <a href="#name-udp-encapsulation-for-eesp" class="internal xref">UDP Encapsulation for EESP</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2.2.4.2.1">
+                    <p id="section-toc.1-1.2.2.4.2.1.1"><a href="#section-2.4.1" class="auto internal xref">2.4.1</a>.  <a href="#name-udp-encapsulation-of-sub-sa" class="internal xref">UDP Encapsulation of Sub SAs</a></p>
+</li>
+                </ul>
 </li>
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3">
-            <p id="section-toc.1-1.3.1"><a href="#section-3" class="auto internal xref">3</a>.  <a href="#name-eesp-sa-transforms" class="internal xref">EESP SA Transforms</a></p>
+            <p id="section-toc.1-1.3.1"><a href="#section-3" class="auto internal xref">3</a>.  <a href="#name-eesp-sa-negotiation-in-ikev" class="internal xref">EESP SA Negotiation in IKEv2</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.1">
-                <p id="section-toc.1-1.3.2.1.1"><a href="#section-3.1" class="auto internal xref">3.1</a>.  <a href="#name-replay-protection-service" class="internal xref">Replay Protection Service</a></p>
+                <p id="section-toc.1-1.3.2.1.1"><a href="#section-3.1" class="auto internal xref">3.1</a>.  <a href="#name-eesp-specific-transform-typ" class="internal xref">EESP Specific Transform Types and Transform IDs</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.1.2.1">
+                    <p id="section-toc.1-1.3.2.1.2.1.1"><a href="#section-3.1.1" class="auto internal xref">3.1.1</a>.  <a href="#name-sub-sa-key-derivation-funct" class="internal xref">Sub SA Key Derivation Function Transform</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.1.2.2">
+                    <p id="section-toc.1-1.3.2.1.2.2.1"><a href="#section-3.1.2" class="auto internal xref">3.1.2</a>.  <a href="#name-new-transform-ids-for-seque" class="internal xref">New Transform IDs for Sequence Numbers Transform Type</a></p>
+</li>
+                </ul>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.2">
-                <p id="section-toc.1-1.3.2.2.1"><a href="#section-3.2" class="auto internal xref">3.2</a>.  <a href="#name-explicit-initialization-vec" class="internal xref">Explicit Initialization Vector</a></p>
+                <p id="section-toc.1-1.3.2.2.1"><a href="#section-3.2" class="auto internal xref">3.2</a>.  <a href="#name-transforms-consistency" class="internal xref">Transforms Consistency</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.3">
-                <p id="section-toc.1-1.3.2.3.1"><a href="#section-3.3" class="auto internal xref">3.3</a>.  <a href="#name-implicit-initialization-vec" class="internal xref">Implicit Initialization Vectors</a></p>
+                <p id="section-toc.1-1.3.2.3.1"><a href="#section-3.3" class="auto internal xref">3.3</a>.  <a href="#name-example-of-sa-payload-negot" class="internal xref">Example of SA Payload Negotiating EESP</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.4">
-                <p id="section-toc.1-1.3.2.4.1"><a href="#section-3.4" class="auto internal xref">3.4</a>.  <a href="#name-eesp-version" class="internal xref">EESP Version</a></p>
+                <p id="section-toc.1-1.3.2.4.1"><a href="#section-3.4" class="auto internal xref">3.4</a>.  <a href="#name-use-of-notifications-in-the" class="internal xref">Use of Notifications in the Process of EESP Negotiation</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.5">
+                <p id="section-toc.1-1.3.2.5.1"><a href="#section-3.5" class="auto internal xref">3.5</a>.  <a href="#name-announcing-maximum-sub-sa-i" class="internal xref">Announcing Maximum Sub SA ID</a></p>
 </li>
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4">
-            <p id="section-toc.1-1.4.1"><a href="#section-4" class="auto internal xref">4</a>.  <a href="#name-sub-sa" class="internal xref">Sub SA</a></p>
-<ul class="compact toc ulBare ulEmpty">
-<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.1">
-                <p id="section-toc.1-1.4.2.1.1"><a href="#section-4.1" class="auto internal xref">4.1</a>.  <a href="#name-negotiation-of-sub-sa" class="internal xref">Negotiation of Sub SA</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.2">
-                <p id="section-toc.1-1.4.2.2.1"><a href="#section-4.2" class="auto internal xref">4.2</a>.  <a href="#name-udp-encapsulation-of-sub-sa" class="internal xref">UDP Encapsulation of Sub SA</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.3">
-                <p id="section-toc.1-1.4.2.3.1"><a href="#section-4.3" class="auto internal xref">4.3</a>.  <a href="#name-key-derivation-for-sub-sas" class="internal xref">Key Derivation for Sub SAs</a></p>
-<ul class="compact toc ulBare ulEmpty">
-<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.3.2.1">
-                    <p id="section-toc.1-1.4.2.3.2.1.1"><a href="#section-4.3.1" class="auto internal xref">4.3.1</a>.  <a href="#name-sub-sa-key-derivation-funct" class="internal xref">Sub SA Key Derivation Function Transform</a></p>
-</li>
-                </ul>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.4">
-                <p id="section-toc.1-1.4.2.4.1"><a href="#section-4.4" class="auto internal xref">4.4</a>.  <a href="#name-multiple-sender-group-sa-ke" class="internal xref">Multiple Sender Group SA Key Derivation</a></p>
-</li>
-            </ul>
+            <p id="section-toc.1-1.4.1"><a href="#section-4" class="auto internal xref">4</a>.  <a href="#name-key-derivation-for-sub-sas" class="internal xref">Key Derivation for Sub SAs</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5">
-            <p id="section-toc.1-1.5.1"><a href="#section-5" class="auto internal xref">5</a>.  <a href="#name-session-id" class="internal xref">Session ID</a></p>
-</li>
-          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6">
-            <p id="section-toc.1-1.6.1"><a href="#section-6" class="auto internal xref">6</a>.  <a href="#name-udp-encapsulation-for-eesp" class="internal xref">UDP Encapsulation for EESP</a></p>
-</li>
-          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7">
-            <p id="section-toc.1-1.7.1"><a href="#section-7" class="auto internal xref">7</a>.  <a href="#name-eesp-crypt-offset-option" class="internal xref">EESP Crypt Offset Option</a></p>
-</li>
-          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8">
-            <p id="section-toc.1-1.8.1"><a href="#section-8" class="auto internal xref">8</a>.  <a href="#name-iana-considerations" class="internal xref">IANA Considerations</a></p>
+            <p id="section-toc.1-1.5.1"><a href="#section-5" class="auto internal xref">5</a>.  <a href="#name-iana-considerations" class="internal xref">IANA Considerations</a></p>
 <ul class="compact toc ulBare ulEmpty">
-<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.1">
-                <p id="section-toc.1-1.8.2.1.1"><a href="#section-8.1" class="auto internal xref">8.1</a>.  <a href="#name-changes-in-the-existing-ike" class="internal xref">Changes in the Existing IKEv2 Registries</a></p>
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.1">
+                <p id="section-toc.1-1.5.2.1.1"><a href="#section-5.1" class="auto internal xref">5.1</a>.  <a href="#name-changes-in-the-existing-ike" class="internal xref">Changes in the Existing IKEv2 Registries</a></p>
 <ul class="compact toc ulBare ulEmpty">
-<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.1.2.1">
-                    <p id="section-toc.1-1.8.2.1.2.1.1"><a href="#section-8.1.1" class="auto internal xref">8.1.1</a>.  <a href="#name-ikev2-security-protocol-ide" class="internal xref">IKEv2 Security Protocol Identifiers registry</a></p>
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.1.2.1">
+                    <p id="section-toc.1-1.5.2.1.2.1.1"><a href="#section-5.1.1" class="auto internal xref">5.1.1</a>.  <a href="#name-ikev2-security-protocol-ide" class="internal xref">IKEv2 Security Protocol Identifiers registry</a></p>
 </li>
-                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.1.2.2">
-                    <p id="section-toc.1-1.8.2.1.2.2.1"><a href="#section-8.1.2" class="auto internal xref">8.1.2</a>.  <a href="#name-ikev2-transform-type-values" class="internal xref">IKEv2 Transform Type Values</a></p>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.1.2.2">
+                    <p id="section-toc.1-1.5.2.1.2.2.1"><a href="#section-5.1.2" class="auto internal xref">5.1.2</a>.  <a href="#name-ikev2-transform-type-values" class="internal xref">IKEv2 Transform Type Values</a></p>
 </li>
-                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.1.2.3">
-                    <p id="section-toc.1-1.8.2.1.2.3.1"><a href="#section-8.1.3" class="auto internal xref">8.1.3</a>.  <a href="#name-ikev2-notify-message-status" class="internal xref">IKEv2 Notify Message Status Types registry.</a></p>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.1.2.3">
+                    <p id="section-toc.1-1.5.2.1.2.3.1"><a href="#section-5.1.3" class="auto internal xref">5.1.3</a>.  <a href="#name-ikev2-notify-message-status" class="internal xref">IKEv2 Notify Message Status Types registry.</a></p>
 </li>
-                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.1.2.4">
-                    <p id="section-toc.1-1.8.2.1.2.4.1"><a href="#section-8.1.4" class="auto internal xref">8.1.4</a>.  <a href="#name-extending-esp-with-eesp" class="internal xref">Extending ESP with EESP</a></p>
-</li>
-                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.1.2.5">
-                    <p id="section-toc.1-1.8.2.1.2.5.1"><a href="#section-8.1.5" class="auto internal xref">8.1.5</a>.  <a href="#name-sequence-number" class="internal xref">Sequence Number</a></p>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.1.2.4">
+                    <p id="section-toc.1-1.5.2.1.2.4.1"><a href="#section-5.1.4" class="auto internal xref">5.1.4</a>.  <a href="#name-sequence-number" class="internal xref">Sequence Number</a></p>
 </li>
                 </ul>
 </li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.2">
-                <p id="section-toc.1-1.8.2.2.1"><a href="#section-8.2" class="auto internal xref">8.2</a>.  <a href="#name-new-ikev2-registries" class="internal xref">New IKEv2 Registries</a></p>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.2">
+                <p id="section-toc.1-1.5.2.2.1"><a href="#section-5.2" class="auto internal xref">5.2</a>.  <a href="#name-new-ikev2-registries" class="internal xref">New IKEv2 Registries</a></p>
 <ul class="compact toc ulBare ulEmpty">
-<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.2.2.1">
-                    <p id="section-toc.1-1.8.2.2.2.1.1"><a href="#section-8.2.1" class="auto internal xref">8.2.1</a>.  <a href="#name-transform-type-tbd2-sub-sa-" class="internal xref">Transform Type &lt;TBD2&gt; - Sub SA Key Derivation Function Transform IDs</a></p>
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.2.2.1">
+                    <p id="section-toc.1-1.5.2.2.2.1.1"><a href="#section-5.2.1" class="auto internal xref">5.2.1</a>.  <a href="#name-transform-type-tbd2-sub-sa-" class="internal xref">Transform Type &lt;TBD2&gt; - Sub SA Key Derivation Function Transform IDs</a></p>
 </li>
-                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.2.2.2">
-                    <p id="section-toc.1-1.8.2.2.2.2.1"><a href="#section-8.2.2" class="auto internal xref">8.2.2</a>.  <a href="#name-guidance-for-designated-exp" class="internal xref">Guidance for Designated Experts</a></p>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.2.2.2">
+                    <p id="section-toc.1-1.5.2.2.2.2.1"><a href="#section-5.2.2" class="auto internal xref">5.2.2</a>.  <a href="#name-guidance-for-designated-exp" class="internal xref">Guidance for Designated Experts</a></p>
 </li>
                 </ul>
 </li>
             </ul>
 </li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6">
+            <p id="section-toc.1-1.6.1"><a href="#section-6" class="auto internal xref">6</a>.  <a href="#name-implementation-status" class="internal xref">Implementation Status</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7">
+            <p id="section-toc.1-1.7.1"><a href="#section-7" class="auto internal xref">7</a>.  <a href="#name-security-considerations" class="internal xref">Security Considerations</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8">
+            <p id="section-toc.1-1.8.1"><a href="#section-8" class="auto internal xref">8</a>.  <a href="#name-acknowledgments" class="internal xref">Acknowledgments</a></p>
+</li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9">
-            <p id="section-toc.1-1.9.1"><a href="#section-9" class="auto internal xref">9</a>.  <a href="#name-implementation-status" class="internal xref">Implementation Status</a></p>
+            <p id="section-toc.1-1.9.1"><a href="#section-9" class="auto internal xref">9</a>.  <a href="#name-normative-references" class="internal xref">Normative References</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10">
-            <p id="section-toc.1-1.10.1"><a href="#section-10" class="auto internal xref">10</a>. <a href="#name-security-considerations" class="internal xref">Security Considerations</a></p>
+            <p id="section-toc.1-1.10.1"><a href="#section-10" class="auto internal xref">10</a>. <a href="#name-informative-references" class="internal xref">Informative References</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11">
-            <p id="section-toc.1-1.11.1"><a href="#section-11" class="auto internal xref">11</a>. <a href="#name-acknowledgments" class="internal xref">Acknowledgments</a></p>
+            <p id="section-toc.1-1.11.1"><a href="#appendix-A" class="auto internal xref">Appendix A</a>.  <a href="#name-additional-stuff" class="internal xref">Additional Stuff</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12">
-            <p id="section-toc.1-1.12.1"><a href="#section-12" class="auto internal xref">12</a>. <a href="#name-normative-references" class="internal xref">Normative References</a></p>
-</li>
-          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.13">
-            <p id="section-toc.1-1.13.1"><a href="#section-13" class="auto internal xref">13</a>. <a href="#name-informative-references" class="internal xref">Informative References</a></p>
-</li>
-          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.14">
-            <p id="section-toc.1-1.14.1"><a href="#appendix-A" class="auto internal xref">Appendix A</a>.  <a href="#name-additional-stuff" class="internal xref">Additional Stuff</a></p>
-</li>
-          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.15">
-            <p id="section-toc.1-1.15.1"><a href="#appendix-B" class="auto internal xref"></a><a href="#name-authors-addresses" class="internal xref">Authors' Addresses</a></p>
+            <p id="section-toc.1-1.12.1"><a href="#appendix-B" class="auto internal xref"></a><a href="#name-authors-addresses" class="internal xref">Authors' Addresses</a></p>
 </li>
         </ul>
 </nav>
@@ -1460,29 +1456,23 @@ improvements address evolving requirements in modern IPsec
 deployments. EESP offers increased flexibility for hardware
 offloads at the packet level. It supports carrying inner packet flow
 identifiers for the use with ECMP, RSS hardware, and IPsec peers
-prior to decryption. EESP also enables the establishment of Sub Child
-SAs with independent sequence number spaces. Additionally, it
-supports the use of 64-bit sequence numbers in each packet or the
-omission of sequence numbers when the Replay Protection service is
-disabled. EESP packets carry a version number, enabling easier
-support for future extensions.<a href="#section-1-1" class="pilcrow">¶</a></p>
+prior to decryption. EESP also enables the establishment of Sub SAs 
+with independent keys and sequence number spaces. Additionally, it
+supports the use of 64-bit sequence numbers transmitted in each
+packet or the omission of sequence numbers when the Replay Protection 
+service is not needed. EESP packets carry a version number, enabling 
+easier support for future extensions.<a href="#section-1-1" class="pilcrow">¶</a></p>
 <p id="section-1-2">This document specifies the negotiation of EESP Security
 Associations (SAs) within the Internet Key Exchange Protocol
 Version 2 (IKEv2) protocol [RFC7296]. It details the creation,
 rekeying, and deletion of EESP SAs, as well as the negotiation of
-EESP specific transform properties and properties.<a href="#section-1-2" class="pilcrow">¶</a></p>
-<p id="section-1-3">The extensions defined here enable EESP SAs to coexist with ESP SAs
-in stateful decryption configurations, while introducing new capabilities
-to enhance IPsec’s performance and versatility in modern use cases.<a href="#section-1-3" class="pilcrow">¶</a></p>
-<p id="section-1-4">EESP Sub SA is a single unidirectional, outgoing, SA derived from
-a pair Child SAs negotiated using IKEv2. Each Sub SA derive
-its own unique encryption key and maintain independent sequence
-number spaces, and IV spaces from an existing Child SA, Sub SAs
-streamline traffic flow management, reduce overhead, and enable more
-efficient lifecycle operations.<a href="#section-1-4" class="pilcrow">¶</a></p>
-<p id="section-1-5">This document does not obsolete or update any existing RFCs. While
+EESP specific transforms and properties.<a href="#section-1-2" class="pilcrow">¶</a></p>
+<p id="section-1-3">The extensions defined here enables EESP SAs to coexist with ESP SAs, 
+while introducing new capabilities to enhance IPsec's performance 
+and versatility in modern use cases.<a href="#section-1-3" class="pilcrow">¶</a></p>
+<p id="section-1-4">This document does not obsolete or update any existing RFCs. While
 stateless implementations of EESP are referenced, their negotiation,
-which is similar to <span>[<a href="#PSP" class="cite xref">PSP</a>]</span>, is outside the scope of this document.<a href="#section-1-5" class="pilcrow">¶</a></p>
+which is similar to <span>[<a href="#PSP" class="cite xref">PSP</a>]</span>, is outside the scope of this document.<a href="#section-1-4" class="pilcrow">¶</a></p>
 <section id="section-1.1">
         <h3 id="name-requirements-language">
 <a href="#section-1.1" class="section-number selfRef">1.1. </a><a href="#name-requirements-language" class="section-name selfRef">Requirements Language</a>
@@ -1497,367 +1487,148 @@ appear in all capitals, as shown here.<a href="#section-1.1-1" class="pilcrow">�
         <h3 id="name-terminology">
 <a href="#section-1.2" class="section-number selfRef">1.2. </a><a href="#name-terminology" class="section-name selfRef">Terminology</a>
         </h3>
-<p id="section-1.2-1">It is assumed that readers are familiar with the IKEv2 negotiation
+<p id="section-1.2-1">It is assumed that readers are familiar with IKEv2 
 <span>[<a href="#RFC7296" class="cite xref">RFC7296</a>]</span>, IPsec architecture <span>[<a href="#RFC4301" class="cite xref">RFC4301</a>]</span> and ESP <span>[<a href="#RFC4303" class="cite xref">RFC4303</a>]</span>.
-This document uses a notation and conventions from IKEv2 [RFC7296]
-to negotiate EESP.<a href="#section-1.2-1" class="pilcrow">¶</a></p>
-<p id="section-1.2-2">This document uses the following terms defined in IKEv2 <span>[<a href="#RFC7296" class="cite xref">RFC7296</a>]</span>:
-Child SA, CREATE_CHILD_SA exchange, IKE_AUTH exchange,
-USE_TRANSPORT_MODE<a href="#section-1.2-2" class="pilcrow">¶</a></p>
-<p id="section-1.2-3">This document uses the following terms defined in <span>[<a href="#PSP" class="cite xref">PSP</a>]</span>: PSP (a
-recursive acronym for PSP Security Protocol), Network Identifier
-(VNI), Crypt Offset.<a href="#section-1.2-3" class="pilcrow">¶</a></p>
-<p id="section-1.2-4">This document uses the following terms defined in <span>[<a href="#RFC2992" class="cite xref">RFC2992</a>]</span>:
-Equal-cost multi-path (ECMP)<a href="#section-1.2-4" class="pilcrow">¶</a></p>
-<p id="section-1.2-5">This document uses the following terms defined in <span>[<a href="#RFC4303" class="cite xref">RFC4303</a>]</span>:
-Encapsulating Security Payload (ESP).<a href="#section-1.2-5" class="pilcrow">¶</a></p>
-<p id="section-1.2-6">This document uses the following terms defined in
-<span>[<a href="#I-D.mrossberg-ipsecme-multiple-sequence-counters" class="cite xref">I-D.mrossberg-ipsecme-multiple-sequence-counters</a>]</span>: Sub-Child SA.<a href="#section-1.2-6" class="pilcrow">¶</a></p>
-<p id="section-1.2-7">This document uses the following terms defined in
-<span>[<a href="#I-D.ietf-ipsecme-ikev2-rename-esn" class="cite xref">I-D.ietf-ipsecme-ikev2-rename-esn</a>]</span> : Replay Protection.<a href="#section-1.2-7" class="pilcrow">¶</a></p>
-<p id="section-1.2-8">This document uses the following terms defined in
-<span>[<a href="#I-D.ietf-ipsecme-g-ikev2" class="cite xref">I-D.ietf-ipsecme-g-ikev2</a>]</span>: Sender-ID, Data-Security SA,
-GWP_SENDER_ID_BITS, GCKS policy.<a href="#section-1.2-8" class="pilcrow">¶</a></p>
+This document uses a notation and conventions from IKEv2 [RFC7296].<a href="#section-1.2-1" class="pilcrow">¶</a></p>
+<p id="section-1.2-2">This document uses the following terms defined in <span>[<a href="#RFC2992" class="cite xref">RFC2992</a>]</span>:
+Equal-cost multi-path (ECMP)<a href="#section-1.2-2" class="pilcrow">¶</a></p>
 </section>
 </section>
 <section id="section-2">
-      <h2 id="name-eesp-sa-ikev2-negotiation">
-<a href="#section-2" class="section-number selfRef">2. </a><a href="#name-eesp-sa-ikev2-negotiation" class="section-name selfRef">EESP SA IKEv2 Negotiation</a>
+      <h2 id="name-eesp-overview">
+<a href="#section-2" class="section-number selfRef">2. </a><a href="#name-eesp-overview" class="section-name selfRef">EESP Overview</a>
       </h2>
-<p id="section-2-1">To negotiate of EESP Security Associations (SAs), as specified
-in <span>[<a href="#I-D.klassert-ipsecme-eesp" class="cite xref">I-D.klassert-ipsecme-eesp</a>]</span>. Propose '<code>Protocol ID</code>' EESP input
-SA Payload, Proposal payload.
-These extensions provide the ability to establish EESP SAs using
-the IKE_AUTH or the CREATE_CHILD_SA exchanges. The initiator includes
-EESP-specific transforms and attributes in the proposal, allowing
-the responder to evaluate and establish the SA if supported.<a href="#section-2-1" class="pilcrow">¶</a></p>
-<p id="section-2-2">IKEv2 Notify Message Status Type USE_WESP_MODE, <span>[<a href="#RFC5840" class="cite xref">RFC5840</a>]</span>, is not
-supported when negotiating EESP SA. As the WESP functionality
-is part of EESP protocol. If this notification is received it
-MUST be discarded.<a href="#section-2-2" class="pilcrow">¶</a></p>
-<p id="section-2-3">The ESP_TFC_PADDING_NOT_SUPPORTED, <span>[<a href="#RFC7296" class="cite xref">RFC7296</a>]</span>, notification is not
-supported in EESP, instead use IP-TFS, USE_AGGFRAG, <span>[<a href="#RFC9347" class="cite xref">RFC9347</a>]</span>.
-If this notification is received it MUST be discarded.<a href="#section-2-3" class="pilcrow">¶</a></p>
 <section id="section-2.1">
-        <h3 id="name-negotiating-an-eesp-sa-usin">
-<a href="#section-2.1" class="section-number selfRef">2.1. </a><a href="#name-negotiating-an-eesp-sa-usin" class="section-name selfRef">Negotiating an EESP SA using IKE_AUTH or CREATE_CHILD_SA</a>
-        </h3>
-<p id="section-2.1-1">To negotiate an EESP Child SA, use the IKEv2 IKE_AUTH or
-CREATE_CHILD_SA new SA exchange. The SA Payload, Proposal
-MUST have Security Protocol Identifier, Proto Id = EESP
-which is specified in <span>[<a href="#I-D.klassert-ipsecme-eesp" class="cite xref">I-D.klassert-ipsecme-eesp</a>]</span>,
-as specified in this document, and uses the
-EESP Transform attributes defined in <a href="#sec-eesp-sa-transforms" class="auto internal xref">Section 3</a>.<a href="#section-2.1-1" class="pilcrow">¶</a></p>
-</section>
-<section id="section-2.2">
-        <h3 id="name-rekeying-an-eesp-sa-with-th">
-<a href="#section-2.2" class="section-number selfRef">2.2. </a><a href="#name-rekeying-an-eesp-sa-with-th" class="section-name selfRef">Rekeying an EESP SA with the CREATE_CHILD_SA Exchange</a>
-        </h3>
-<p id="section-2.2-1">Rekeying an EESP SA follows the same procedure as rekeying an ESP SA,
-as specified in Sections 1.3.3 and 2.8 of <span>[<a href="#RFC7296" class="cite xref">RFC7296</a>]</span>. During the
-rekeying process, the <a href="#sec-eesp-sa-transforms" class="auto internal xref">Section 3</a> MUST remain identical to
-those negotiated when the SA was initially established.<a href="#section-2.2-1" class="pilcrow">¶</a></p>
-</section>
-<section id="section-2.3">
-        <h3 id="name-deleting-eesp-sa-with-infor">
-<a href="#section-2.3" class="section-number selfRef">2.3. </a><a href="#name-deleting-eesp-sa-with-infor" class="section-name selfRef">Deleting EESP SA with INFORMATIONAL Exchange</a>
-        </h3>
-<p id="section-2.3-1">EESP SA always exist in pairs. Deleting EESP SA follows the same
-procedure as deleting Child SA using IKEv2 INFORMATIONAL exchange as
-specified in Section 1.4.1 <span>[<a href="#RFC7296" class="cite xref">RFC7296</a>]</span><a href="#section-2.3-1" class="pilcrow">¶</a></p>
-</section>
-</section>
-<div id="sec-eesp-sa-transforms">
-<section id="section-3">
-      <h2 id="name-eesp-sa-transforms">
-<a href="#section-3" class="section-number selfRef">3. </a><a href="#name-eesp-sa-transforms" class="section-name selfRef">EESP SA Transforms</a>
-      </h2>
-<p id="section-3-1">EESP introduces several transform properties that are negotiated
-during the establishment of an EESP SA. These properties MUST be
-identical for the duration of the SA. When the SA is rekeyed,
-the new SA MUST inherit all EESP transform properties negotiated for
-the original EESP SA.<a href="#section-3-1" class="pilcrow">¶</a></p>
-<table class="center" id="table-1">
-        <caption><a href="#table-1" class="selfRef">Table 1</a></caption>
-<thead>
-          <tr>
-            <th class="text-left" rowspan="1" colspan="1">Type</th>
-            <th class="text-left" rowspan="1" colspan="1">Description</th>
-            <th class="text-left" rowspan="1" colspan="1">Used In</th>
-            <th class="text-left" rowspan="1" colspan="1">Reference</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td class="text-left" rowspan="1" colspan="1">TBD6</td>
-            <td class="text-left" rowspan="1" colspan="1">EESP Session ID(EESPSID)</td>
-            <td class="text-left" rowspan="1" colspan="1">(EESP)</td>
-            <td class="text-left" rowspan="1" colspan="1">[this document]</td>
-          </tr>
-        </tbody>
-      </table>
-<span id="name-eesp-sa-proposal"></span><div id="eesp-sa-proposal">
-<figure id="figure-1">
-        <div class="sourcecode" id="section-3-3.1">
-<pre>
-SA Payload
-   |
-   +--- Proposal #1 ( Proto ID = EESPv0(&lt;TBD1&gt;), SPI size = 4,
-   |     |            8 transforms,      SPI = 0x052357bb )
-   |     |
-   |     +-- Transform ENCR ( Name = ENCR_AES_CBC )
-   |     |     +-- Attribute ( Key Length = 128 )
-   |     +-- Transform INTEG ( Name = AUTH_HMAC_SHA1_96 )
-   |     +-- Transform INTEG ( Name = AUTH_AES_XCBC_96 )
-   |     +-- Transform SN ( Name = 64-bit Sequential Numbers )
-</pre>
-</div>
-<figcaption><a href="#figure-1" class="selfRef">Figure 1</a>:
-<a href="#name-eesp-sa-proposal" class="selfRef">EESP SA proposal</a>
-        </figcaption></figure>
-</div>
-<section id="section-3.1">
-        <h3 id="name-replay-protection-service">
-<a href="#section-3.1" class="section-number selfRef">3.1. </a><a href="#name-replay-protection-service" class="section-name selfRef">Replay Protection Service</a>
-        </h3>
-<p id="section-3.1-1">EESP provides an optional Replay service using
-64-bit sequence numbers carried in the packet.
-To enable Replay service the initiator SHOULD
-propose Sequence Numbers Transforms,
-SN = (64-bit Sequential Numbers) in the
-Proposal Substructure inside the Security Association (SA) payload
-in the IKEv2 Exchange. When the responder selects 64-bit Sequential Numbers, a
-both sides MUST enable Reply Protection.<a href="#section-3.1-1" class="pilcrow">¶</a></p>
-<p id="section-3.1-2">To disable sequence numbering, and thus replay protection based on
-sequence numbers, the initiator MUST propose SN=None (&lt;TBD5&gt;). When the
-sequence numbers are disabled, there won't be any SN in the
-EESP packet, the receiver SHOULD NOT dynamically modify ports or
-addresses without using IKEv2 Mobility <span>[<a href="#RFC4555" class="cite xref">RFC4555</a>]</span>.<a href="#section-3.1-2" class="pilcrow">¶</a></p>
-<p id="section-3.1-3">Because the Replay Protection service is disabled, an attacker can re
-play packets with a different source address. Such an attacker could
-disrupt the connection by replaying a single packet with a different
-source address or port number.<a href="#section-3.1-3" class="pilcrow">¶</a></p>
-</section>
-<section id="section-3.2">
-        <h3 id="name-explicit-initialization-vec">
-<a href="#section-3.2" class="section-number selfRef">3.2. </a><a href="#name-explicit-initialization-vec" class="section-name selfRef">Explicit Initialization Vector</a>
-        </h3>
-<p id="section-3.2-1">If the algorithm used to encrypt the payload requires cryptographic
-synchronization data, e.g., an Initialization Vector (IV), then this
-may be carried explicitly in every EESP packet.<a href="#section-3.2-1" class="pilcrow">¶</a></p>
-</section>
-<section id="section-3.3">
-        <h3 id="name-implicit-initialization-vec">
-<a href="#section-3.3" class="section-number selfRef">3.3. </a><a href="#name-implicit-initialization-vec" class="section-name selfRef">Implicit Initialization Vectors</a>
-        </h3>
-<p id="section-3.3-1">With the Implicit Initialization Vector (IIV) encryption algorithm,
-as specified in <span>[<a href="#RFC8750" class="cite xref">RFC8750</a>]</span>, the IV MUST be omitted in the EESP
-packet. To enable this functionality, IIV transforms defined in
-<span>[<a href="#IKEv2-Enc" class="cite xref">IKEv2-Enc</a>]</span> MUST be used during negotiation. Furthermore,
-the <span>[<a href="#IKEv2-SN" class="cite xref">IKEv2-SN</a>]</span> extension MUST be negotiated to support the use of
-64-bit Sequential Numbers in EESP packets. If the the proposal
-does not include 64-bit Sequential Numbers return error
-NO_PROPOSAL_CHOSEN.<a href="#section-3.3-1" class="pilcrow">¶</a></p>
-</section>
-<section id="section-3.4">
         <h3 id="name-eesp-version">
-<a href="#section-3.4" class="section-number selfRef">3.4. </a><a href="#name-eesp-version" class="section-name selfRef">EESP Version</a>
+<a href="#section-2.1" class="section-number selfRef">2.1. </a><a href="#name-eesp-version" class="section-name selfRef">EESP Version</a>
         </h3>
-<p id="section-3.4-1">Each EESP packets carry EESP Base Header version, which is specified
-<span>[<a href="#I-D.klassert-ipsecme-eesp" class="cite xref">I-D.klassert-ipsecme-eesp</a>]</span>. This SHOULD BE negotiated using
-IKEv2. Each Base Header version, to be able to negotiate via IKEv2,
-SHOULD have a corresponding '<code>IKEv2 Security Protocol Identifiers</code>'
-The initial version sepecified EESPv0(TBD1)<a href="#section-3.4-1" class="pilcrow">¶</a></p>
+<p id="section-2.1-1">Each EESP packet carries the EESP Base Header version, which is 
+specified in Section [XXX] of <span>[<a href="#I-D.klassert-ipsecme-eesp" class="cite xref">I-D.klassert-ipsecme-eesp</a>]</span>. EESP 
+version determines the format of the EESP packet and its processing 
+rules. The initial version specified in 
+<span>[<a href="#I-D.klassert-ipsecme-eesp" class="cite xref">I-D.klassert-ipsecme-eesp</a>]</span> is version 0.<a href="#section-2.1-1" class="pilcrow">¶</a></p>
 </section>
-</section>
-</div>
-<section id="section-4">
-      <h2 id="name-sub-sa">
-<a href="#section-4" class="section-number selfRef">4. </a><a href="#name-sub-sa" class="section-name selfRef">Sub SA</a>
-      </h2>
-<p id="section-4-1">Existing mechanisms for establishing Child SAs, as described in
+<div id="sec-eesp-sub-sa">
+<section id="section-2.2">
+        <h3 id="name-eesp-sub-sa">
+<a href="#section-2.2" class="section-number selfRef">2.2. </a><a href="#name-eesp-sub-sa" class="section-name selfRef">EESP Sub SA</a>
+        </h3>
+<p id="section-2.2-1">Existing mechanisms for establishing Child SAs, as described in
 <span>[<a href="#RFC7296" class="cite xref">RFC7296</a>]</span>, yield pair of SAs. High-speed IP traffic is often
-asymmetric. Creating multiple pairs of Child SAs, e.g. <span>[<a href="#RFC9611" class="cite xref">RFC9611</a>]</span> or
-for DSCP to carry asymetric traffic is inefficient. A pair of Child SA
-combined with multiple unidirectional a set of  Sub SAs with Sub SA
-IDs greater than 0, provides a more flexible approach to carrying
-asymmetric traffic patterns, particularly in high-speed environments.
-Sub SAs reduces overhead, improves resource utilization, and enhances
-scalability for large-scale deployments. In many use cases, several
-uni directinal SAs utilized, while others are unused which can result
-in unnecessary overhead for management, rekeying, and resource
-consumption. Furthermore, using multiple bidirectional Child SAs for
-granular traffic flows often leads to additional setup delays and
-complex lifetime management. This inefficiency is particularly acute
-in high-throughput or low-latency environments, where rapid setup and
-teardown of SAs is essential to maintain performance.<a href="#section-4-1" class="pilcrow">¶</a></p>
-<p id="section-4-2">An EESP Sub SA provides a unidirectional Security Association
-derived from an existing EESP Child SA pair.  It inherits all of
-the Child SA’s properties except for keys, sequence number space,
-and IV space, each of which MUST be unique to each Sub SA.  By
-defining these unidirectional flows, Sub SAs offer a more efficient
-alternative to large numbers of bidirectional Child SAs with the
-same traffic selectors <span>[<a href="#RFC7296" class="cite xref">RFC7296</a>]</span>, <span>[<a href="#RFC9611" class="cite xref">RFC9611</a>]</span>.<a href="#section-4-2" class="pilcrow">¶</a></p>
-<p id="section-4-3">Each Sub SA is identified by a Sub SA ID, which MUST be carried in
-each EESP packet in the Session ID field—consistent with the negotiation of the EESP Child SA.  This
-Sub SA ID is used to derive a unique key, yielding the following
-benefits:<a href="#section-4-3" class="pilcrow">¶</a></p>
-<ul class="normal">
-<li class="normal" id="section-4-4.1">
-          <p id="section-4-4.1.1">Unidirectional Operation: In contrast to the per-resource
-SAs of <span>[<a href="#RFC9611" class="cite xref">RFC9611</a>]</span>, which are bidirectional, Sub SAs MAY be
-defined strictly in one direction when reverse traffic is
-absent.  CREATE_CHILD_SA does not otherwise support
-unidirectional SAs.<a href="#section-4-4.1.1" class="pilcrow">¶</a></p>
-</li>
-        <li class="normal" id="section-4-4.2">
-          <p id="section-4-4.2.1">Zero Additional Setup Time: Sub SAs require no extra IKE
-message exchanges, unlike requesting more Child SAs or relying
-on large IKE windows <span>[<a href="#RFC7296" class="cite xref">RFC7296</a>]</span>.  This allows rapid provisioning
-of extra flows without introducing round-trip delays.<a href="#section-4-4.2.1" class="pilcrow">¶</a></p>
-</li>
-        <li class="normal" id="section-4-4.3">
-          <p id="section-4-4.3.1">Simplified Lifecycle Management**: Sub SAs are more efficient
-to create, rekey, and delete than traditional Child SAs.  Their
-narrow scope streamlines both key management and policy
-enforcement.<a href="#section-4-4.3.1" class="pilcrow">¶</a></p>
-</li>
-        <li class="normal" id="section-4-4.4">
-          <p id="section-4-4.4.1">On-the-Fly Key Derivation: Implementations using hierarchical
-key derivation, particularly with hardware offload, MAY derive
-Sub SA keys dynamically on a per-packet basis.  This mitigates
-the risk of data-plane performance degradation caused by a large
-number of keys <span>[<a href="#I-D.ponchon-ipsecme-anti-replay-subspaces" class="cite xref">I-D.ponchon-ipsecme-anti-replay-subspaces</a>]</span>.<a href="#section-4-4.4.1" class="pilcrow">¶</a></p>
-</li>
-      </ul>
-<p id="section-4-5">AEAD transforms such as AES-GCM <span>[<a href="#RFC4106" class="cite xref">RFC4106</a>]</span>, <span>[<a href="#RFC8750" class="cite xref">RFC8750</a>]</span> require
-that the IV never repeat within a single Sub SA.  Because each
-Sub SA uses a distinct key, the IV MAY be reused across different
-Sub SAs, satisfying the requirement that each key be paired with a
-unique IV.  Implementations MUST also maintain an independent
-sequence number space for each Sub SA when full 64-bit sequence
-numbers are in use.  For a given Sub SA key, sequence numbers MUST
-remain unique and monotonically increasing to meet cryptographic
-requirements.<a href="#section-4-5" class="pilcrow">¶</a></p>
-<section id="section-4.1">
-        <h3 id="name-negotiation-of-sub-sa">
-<a href="#section-4.1" class="section-number selfRef">4.1. </a><a href="#name-negotiation-of-sub-sa" class="section-name selfRef">Negotiation of Sub SA</a>
-        </h3>
-<span id="name-sub-sa-notifier"></span><div id="sub-sa-notifier">
-<figure id="figure-2">
-          <div class="sourcecode" id="section-4.1-1.1">
-<pre>
-                    1                   2                   3
-0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-+-+-----------------------------+-------------------------------+
-! Next Payload  !C!  RESERVED   !         Payload Length        !
-+---------------+---------------+-------------------------------+
-!  Protocol ID  !   SPI Size    !      Notify Message Type      !
-+---------------+---------------+-------------------------------+
-!  Minimum number of Sub SAs    |      RESERVED                 !
-+-------------------------------+-------------------------------+
-</pre>
-</div>
-<figcaption><a href="#figure-2" class="selfRef">Figure 2</a>:
-<a href="#name-sub-sa-notifier" class="selfRef">Sub SA Notifier</a>
-          </figcaption></figure>
-</div>
-<ul class="normal">
-<li class="normal" id="section-4.1-2.1">
-            <p id="section-4.1-2.1.1">Protocol ID (1 octet) - MUST be 0. MUST be ignored if not 0.<a href="#section-4.1-2.1.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-4.1-2.2">
-            <p id="section-4.1-2.2.1">SPI Size (1 octet) - MUST be 0. MUST be ignored if not 0.<a href="#section-4.1-2.2.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-4.1-2.3">
-            <p id="section-4.1-2.3.1">Notify Status Message Type (2 octets) - set to &lt;TBDXXX&gt;.<a href="#section-4.1-2.3.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-4.1-2.4">
-            <p id="section-4.1-2.4.1">Minimum number of Sub SAs (2 octets). MUST be greater than 0.
-If 0 is received, it MUST be interpreted as 1.<a href="#section-4.1-2.4.1" class="pilcrow">¶</a></p>
-</li>
-        </ul>
+asymmetric. Creating multiple pairs of Child SAs, e.g. for multiple
+resources (<span>[<a href="#RFC9611" class="cite xref">RFC9611</a>]</span>), or for DSCP to carry asymmetric traffic,
+is inefficient.<a href="#section-2.2-1" class="pilcrow">¶</a></p>
+<p id="section-2.2-2">To deal with this limitations EESP introduces the concept of Sub SAs.
+An EESP Sub SA is an unidirectional SA derived from
+the same-direction EESP SA of the pair of SAs negotiated using
+IKEv2. Each Sub SA derives its own keying material and 
+maintains independent sequence number spaces and IV spaces from the 
+parent Child SA; all other characteristics of Sub SAs (algorithms, 
+traffic selectors etc.) are identical to the EESP SA they belong to.<a href="#section-2.2-2" class="pilcrow">¶</a></p>
+<p id="section-2.2-3">Each Sub SA is identified by a Sub SA Id, which is a number in the 
+range from zero up to the maximum Sub SA ID indicated by the 
+receiver of the Sub SA during EESP SA negotiation via IKEv2 (see  
+<a href="#sec-announcing-maximum-sub-sa-id" class="auto internal xref">Section 3.5</a>). The Sub SA ID is carried 
+in the Session ID field of the EESP base header (see Section [XXX] of 
+<span>[<a href="#I-D.klassert-ipsecme-eesp" class="cite xref">I-D.klassert-ipsecme-eesp</a>]</span>). The Sub SA ID MUST be unique for 
+all Sub SAs in the context of an EESP SA.<a href="#section-2.2-3" class="pilcrow">¶</a></p>
+<p id="section-2.2-4">If a peer receives an EESP packet with a Sub SA ID greater than the 
+maximum value it announced during EESP SA setup, that peer MAY drop 
+this packet without further processing.<a href="#section-2.2-4" class="pilcrow">¶</a></p>
+<p id="section-2.2-5">Use of Sub SAs is optional in EESP and can be negotiated using IKEv2.<a href="#section-2.2-5" class="pilcrow">¶</a></p>
 </section>
-<section id="section-4.2">
-        <h3 id="name-udp-encapsulation-of-sub-sa">
-<a href="#section-4.2" class="section-number selfRef">4.2. </a><a href="#name-udp-encapsulation-of-sub-sa" class="section-name selfRef">UDP Encapsulation of Sub SA</a>
+</div>
+<section id="section-2.3">
+        <h3 id="name-eesp-sequence-numbers">
+<a href="#section-2.3" class="section-number selfRef">2.3. </a><a href="#name-eesp-sequence-numbers" class="section-name selfRef">EESP Sequence Numbers</a>
         </h3>
-<p id="section-4.2-1">An EESP SA primarily uses UDP encapsulation to facilitate NAT
-traversal.  However, an additional use case for UDP encapsulation is
+<p id="section-2.3-1">Unlike ESP, EESPv0 header allows to transmit 64-bit sequence numbers.
+In addition, the Sequence Number field in the EESPv0 header is 
+optional and can be omitted from the packet if replay protection 
+service is not needed. Note that while possible, disabling the 
+replay protection service is generally NOT RECOMMENDED and should 
+only be done if the upper level protocol provides this service. See 
+<a href="#sec-security-considerations" class="auto internal xref">Section 7</a> for details.<a href="#section-2.3-1" class="pilcrow">¶</a></p>
+</section>
+<section id="section-2.4">
+        <h3 id="name-udp-encapsulation-for-eesp">
+<a href="#section-2.4" class="section-number selfRef">2.4. </a><a href="#name-udp-encapsulation-for-eesp" class="section-name selfRef">UDP Encapsulation for EESP</a>
+        </h3>
+<p id="section-2.4-1">UDP encapsulation for EESP is largely similar to the ESP UDP
+encapsulation specified in <span>[<a href="#RFC3948" class="cite xref">RFC3948</a>]</span>, with the primary difference
+being the UDP source port used by the EESP Sub SA may be different
+from IKE SA source port, as specified in <span>[<a href="#RFC3947" class="cite xref">RFC3947</a>]</span>, for more
+flexible handling of EESP traffic, particularly ECMP support
+along the path and in the NIC.<a href="#section-2.4-1" class="pilcrow">¶</a></p>
+<p id="section-2.4-2">A receiver indenting to support both ESP and EESP encapsulated in UDP
+must be able to distinguish ESP and EESP incoming traffic that will 
+arrive at the same UDP port. To be able to handle this the SPIs
+for the incoming ESP SAs MUST be choosen in such a way, that they 
+can be distinguished from the EESP base header. Since the 
+most significant bit of the EESP base header is fixed to be one, this 
+can be achieved if ESP SPIs are selected in such a way, that the most 
+significant bit of the ESP SPIs is always set to zero.<a href="#section-2.4-2" class="pilcrow">¶</a></p>
+<section id="section-2.4.1">
+          <h4 id="name-udp-encapsulation-of-sub-sa">
+<a href="#section-2.4.1" class="section-number selfRef">2.4.1. </a><a href="#name-udp-encapsulation-of-sub-sa" class="section-name selfRef">UDP Encapsulation of Sub SAs</a>
+          </h4>
+<p id="section-2.4.1-1">An EESP SA primarily uses UDP encapsulation to facilitate NAT
+traversal. However, an additional use case for UDP encapsulation is
 to introduce source port entropy, which supports ECMP or/and
 RSS (Receive Side Scaling) mechanisms. In such scenarios, the
 initiator MAY also use a distinct, ephemeral source port for
-Sub SA IDs greater than zero. Both peers MAY independently select
-different source ports for the same Sub SA ID.<a href="#section-4.2-1" class="pilcrow">¶</a></p>
-<p id="section-4.2-2">It is important to note that IKE messages MUST NOT utilize these
+Sub SA IDs greater than zero.<a href="#section-2.4.1-1" class="pilcrow">¶</a></p>
+<p id="section-2.4.1-2">It is important to note that IKE messages MUST NOT utilize these
 ephemeral source ports. Instead, IKE traffic should be confined to
 the source and destination ports to ensure proper protocol operation
-and maintain compatibility with existing implementations.<a href="#section-4.2-2" class="pilcrow">¶</a></p>
-<p id="section-4.2-3">When using ephemeral source ports, the receiver can only set the
+and maintain compatibility with existing implementations.<a href="#section-2.4.1-2" class="pilcrow">¶</a></p>
+<p id="section-2.4.1-3">When using ephemeral source ports, the receiver can only set the
 source port upon arrival of an EESP packet with that Sub SA ID. If
 the receiver is pre-populating a Sub SA, it may have to install it
 with a source port set to zero and, upon arrival of a packet,
-update the source port using a mapping change.<a href="#section-4.2-3" class="pilcrow">¶</a></p>
-<p id="section-4.2-4">Additionally, when multiple Sub SAs exist, the receiver SHOULD
+update the source port using a mapping change.<a href="#section-2.4.1-3" class="pilcrow">¶</a></p>
+<p id="section-2.4.1-4">Additionally, when multiple Sub SAs exist, the receiver SHOULD
 maintain a mapping table to track the source port associated with
 each Sub SA independently. This ensures that traffic is correctly
 routed and prevents ambiguity in handling packets associated with
-different Sub SAs when a NAT is present.<a href="#section-4.2-4" class="pilcrow">¶</a></p>
+different Sub SAs when a NAT is present.<a href="#section-2.4.1-4" class="pilcrow">¶</a></p>
 </section>
-<section id="section-4.3">
-        <h3 id="name-key-derivation-for-sub-sas">
-<a href="#section-4.3" class="section-number selfRef">4.3. </a><a href="#name-key-derivation-for-sub-sas" class="section-name selfRef">Key Derivation for Sub SAs</a>
+</section>
+</section>
+<section id="section-3">
+      <h2 id="name-eesp-sa-negotiation-in-ikev">
+<a href="#section-3" class="section-number selfRef">3. </a><a href="#name-eesp-sa-negotiation-in-ikev" class="section-name selfRef">EESP SA Negotiation in IKEv2</a>
+      </h2>
+<p id="section-3-1">Current EESP specification <span>[<a href="#I-D.klassert-ipsecme-eesp" class="cite xref">I-D.klassert-ipsecme-eesp</a>]</span> defines
+version 0 of the EESP protocol. Consequently, this document limits 
+its scope to only deal with EESPv0. If other EESP versions are 
+defined in future, their negotiation using IKEv2 should be covered by 
+separate documents.<a href="#section-3-1" class="pilcrow">¶</a></p>
+<p id="section-3-2">EESP Security Associations (SAs) are negotiated in IKEv2 similarly 
+to ESP SAs - as Child SAs in the IKE_AUTH or the CREATE_CHILD_SA 
+exchanges. For this purpose a new Security Protocol Identifier EESPv0 
+(&lt;TBD1&gt;) is defined. This protocol identifier is placed in the 
+Protocol ID field of the Proposal Substructure in the SA Payload 
+when peers negotiate EESP version 0. It is possible for the initiator 
+to include both ESP and EESPv0 proposals in the SA
+payload to negotiate either ESP or EESP.<a href="#section-3-2" class="pilcrow">¶</a></p>
+<section id="section-3.1">
+        <h3 id="name-eesp-specific-transform-typ">
+<a href="#section-3.1" class="section-number selfRef">3.1. </a><a href="#name-eesp-specific-transform-typ" class="section-name selfRef">EESP Specific Transform Types and Transform IDs</a>
         </h3>
-<p id="section-4.3-1">When an EESP SA is using Sub SAs, each Sub SA (including the one
-with Session ID 0) uses separate keys. This allows each Sub SA to use
-its own independent Sequence Number and IV space.<a href="#section-4.3-1" class="pilcrow">¶</a></p>
-<p id="section-4.3-2">In order to derive these keys, a Sub SA Key Derivation Function
-(SSKDF) is negotiated as part of the proposal of the EESP SA using
-Transform Type &lt;TBD2&gt;. This SSKDF is independent of the PRF
-negotiated for IKEv2.<a href="#section-4.3-2" class="pilcrow">¶</a></p>
-<p id="section-4.3-3">If no Sub SAs are to be used for an EESP SA, Transform Type &lt;TBD2&gt;
-SHOULD be omitted in the proposal, but it MAY be NONE. If it's
-omitted or NONE is selected by the responder, Sub SAs MUST NOT be
-created by either peer and the key derivation for the in- and
-outbound EESP SAs of the Child SA are done as described in section
-2.17 of <span>[<a href="#RFC7296" class="cite xref">RFC7296</a>]</span>.<a href="#section-4.3-3" class="pilcrow">¶</a></p>
-<p id="section-4.3-4">If an SSKDF is selected as part of the proposal, instead of directly
-taking keys for the Sub SAs from KEYMAT, as described in section 2.17
-of <span>[<a href="#RFC7296" class="cite xref">RFC7296</a>]</span>, only one "root" key is taken for each EESP SA of the
-Child SA. Their length is determined by the key size of the
-negotiated SSKDF.  The root key for the EESP SA carrying data from
-the initiator to the responder is taken before that for the SA going
-from the responder to the initiator.<a href="#section-4.3-4" class="pilcrow">¶</a></p>
-<p id="section-4.3-5">Using the EESP SA's root key, SK_sub, the KEYMAT for each Sub SA is
-derived as follows:<a href="#section-4.3-5" class="pilcrow">¶</a></p>
-<p id="section-4.3-6">KEYMAT_sub = SSKDF(SK_sub, SPI | Session_ID, L)<a href="#section-4.3-6" class="pilcrow">¶</a></p>
-<p id="section-4.3-7">Where L is the total length of the key material KEYMAT_sub and the
-salt value is comprised of the full SPI and the full Session ID of
-the Sub SA.<a href="#section-4.3-7" class="pilcrow">¶</a></p>
-<p id="section-4.3-8">If multiple keys are required for a Sub SA, the encryption key MUST
-be taken from the first bits of KEYMAT_sub, the integrity key MUST be
-taken from the remaining bits.<a href="#section-4.3-8" class="pilcrow">¶</a></p>
-<p id="section-4.3-9">Keys for Sub SAs may be derived immediately or on demand when the
-first packet is processed. Memory constrained implementations may
-even decide to derive the Sub SA keys on the fly for each received
-packet as only SK_sub has to be stored to derive the keys of all
-Sub SAs.<a href="#section-4.3-9" class="pilcrow">¶</a></p>
-<p id="section-4.3-10">Because individual Sub SAs can't be rekeyed, the complete EESP Child
-SA MUST be rekeyed when either a cryptographic limit or a time-based
-limit is reached for any individual Sub SA.<a href="#section-4.3-10" class="pilcrow">¶</a></p>
-<section id="section-4.3.1">
+<section id="section-3.1.1">
           <h4 id="name-sub-sa-key-derivation-funct">
-<a href="#section-4.3.1" class="section-number selfRef">4.3.1. </a><a href="#name-sub-sa-key-derivation-funct" class="section-name selfRef">Sub SA Key Derivation Function Transform</a>
+<a href="#section-3.1.1" class="section-number selfRef">3.1.1. </a><a href="#name-sub-sa-key-derivation-funct" class="section-name selfRef">Sub SA Key Derivation Function Transform</a>
           </h4>
-<p id="section-4.3.1-1">The new Sub SA Key Derivation Function (SSKDF) transform is used to
-negotiate a key derivation function for Sub SAs as described in the
-previous section.<a href="#section-4.3.1-1" class="pilcrow">¶</a></p>
-<p id="section-4.3.1-2">This document creates a new IKEv2 IANA registry for key derivation
-functions that can be negotiated with this transform type. The
-initially defined Transform IDs are listed in the table below.<a href="#section-4.3.1-2" class="pilcrow">¶</a></p>
-<span id="name-sub-sa-key-derivation-functi"></span><table class="center" id="table-2">
+<p id="section-3.1.1-1">This document defines a new Sub SA Key Derivation Function (SSKDF) 
+transform type, that is used to negotiate a key derivation function 
+for Sub SAs as described in <a href="#sec-eesp-sub-sa" class="auto internal xref">Section 2.2</a>.<a href="#section-3.1.1-1" class="pilcrow">¶</a></p>
+<p id="section-3.1.1-2">This document creates a new IKEv2 IANA registry for the Key 
+Derivation Functions transform IDs. The initially defined Transform 
+IDs are listed in the table below.<a href="#section-3.1.1-2" class="pilcrow">¶</a></p>
+<span id="name-sub-sa-key-derivation-functi"></span><table class="center" id="table-1">
             <caption>
-<a href="#table-2" class="selfRef">Table 2</a>:
+<a href="#table-1" class="selfRef">Table 1</a>:
 <a href="#name-sub-sa-key-derivation-functi" class="selfRef">Sub SA Key Derivation Functions</a>
             </caption>
 <thead>
@@ -1889,94 +1660,262 @@ initially defined Transform IDs are listed in the table below.<a href="#section-
               </tr>
             </tbody>
           </table>
-<p id="section-4.3.1-4">These algorithms are defined as follows:<a href="#section-4.3.1-4" class="pilcrow">¶</a></p>
+<p id="section-3.1.1-4">These algorithms are defined as follows:<a href="#section-3.1.1-4" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-4.3.1-5.1">
-              <p id="section-4.3.1-5.1.1">SSKDF_HKDF_SHA2_256, SSKDF_HKDF_SHA2_384 and SSKDF_HKDF_SHA2_512
+<li class="normal" id="section-3.1.1-5.1">
+              <p id="section-3.1.1-5.1.1">SSKDF_HKDF_SHA2_256, SSKDF_HKDF_SHA2_384 and SSKDF_HKDF_SHA2_512
 use HKDF-Expand defined in <span>[<a href="#RFC5869" class="cite xref">RFC5869</a>]</span> with the indicated hash
 functions, that is, SHA-256, SHA-384 or SHA-512, respectively, with
 corresponding key sizes of 32, 48 and 64 octets. SSKDF is then
-defined as:<a href="#section-4.3.1-5.1.1" class="pilcrow">¶</a></p>
-<p id="section-4.3.1-5.1.2">SSKDF(K, S, L) = HKDF-Expand(K, S, L)<a href="#section-4.3.1-5.1.2" class="pilcrow">¶</a></p>
+defined as:<a href="#section-3.1.1-5.1.1" class="pilcrow">¶</a></p>
+<p id="section-3.1.1-5.1.2">SSKDF(K, S, L) = HKDF-Expand(K, S, L)<a href="#section-3.1.1-5.1.2" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-4.3.1-5.2">
-              <p id="section-4.3.1-5.2.1">SSKDF_AES256_CMAC is currently undefined<a href="#section-4.3.1-5.2.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-3.1.1-5.2">
+              <p id="section-3.1.1-5.2.1">SSKDF_AES256_CMAC is currently undefined<a href="#section-3.1.1-5.2.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
-<p id="section-4.3.1-6">Other key derivation functions may be added after the publication of
+<p id="section-3.1.1-6">Other key derivation functions may be added after the publication of
 this document. Readers should refer to <span>[<a href="#IKEv2-IANA" class="cite xref">IKEv2-IANA</a>]</span> for the latest
-values.<a href="#section-4.3.1-6" class="pilcrow">¶</a></p>
-<p id="section-4.3.1-7">The type of the Sub SA Key Derivation Function transform is &lt;TBA2&gt;.<a href="#section-4.3.1-7" class="pilcrow">¶</a></p>
+values.<a href="#section-3.1.1-6" class="pilcrow">¶</a></p>
+<p id="section-3.1.1-7">The type of the Sub SA Key Derivation Function transform is &lt;TBA2&gt;.<a href="#section-3.1.1-7" class="pilcrow">¶</a></p>
+</section>
+<section id="section-3.1.2">
+          <h4 id="name-new-transform-ids-for-seque">
+<a href="#section-3.1.2" class="section-number selfRef">3.1.2. </a><a href="#name-new-transform-ids-for-seque" class="section-name selfRef">New Transform IDs for Sequence Numbers Transform Type</a>
+          </h4>
+<p id="section-3.1.2-1">This document defines two new Transfor IDs for the Sequence Numbers 
+transform type: 64-bit Sequential Numbers (&lt;TBD4&gt;) and None (&lt;TBD5&gt;).<a href="#section-3.1.2-1" class="pilcrow">¶</a></p>
+<p id="section-3.1.2-2">To enable presence of sequence numbers in the EESP header the 
+initiator MUST propose SN = (64-bit Sequential Numbers) in the
+Proposal Substructure inside the Security Association (SA) payload. 
+When the responder selects 64-bit Sequential Numbers, Sequence Number
+field is included into the EESP header, that allows peers to 
+achieve replay protection.<a href="#section-3.1.2-2" class="pilcrow">¶</a></p>
+<p id="section-3.1.2-3">To disable sequence numbering, and thus replay protection based on
+sequence numbers, the initiator MUST propose SN=None (&lt;TBD5&gt;). 
+When the responder selects None, Sequence Number field is omitted
+from the EESP header.<a href="#section-3.1.2-3" class="pilcrow">¶</a></p>
 </section>
 </section>
-<section id="section-4.4">
-        <h3 id="name-multiple-sender-group-sa-ke">
-<a href="#section-4.4" class="section-number selfRef">4.4. </a><a href="#name-multiple-sender-group-sa-ke" class="section-name selfRef">Multiple Sender Group SA Key Derivation</a>
+<section id="section-3.2">
+        <h3 id="name-transforms-consistency">
+<a href="#section-3.2" class="section-number selfRef">3.2. </a><a href="#name-transforms-consistency" class="section-name selfRef">Transforms Consistency</a>
         </h3>
-<p id="section-4.4-1">When using EESP with a group SA, as specified in
-<span>[<a href="#I-D.ietf-ipsecme-g-ikev2" class="cite xref">I-D.ietf-ipsecme-g-ikev2</a>]</span>, the Sender-ID MUST be used for
-deriving a unique key for each sender. This ensures that each
-sender maintains a distinct IV and/or sequence number space.
-When using independent keys, the Implicit IV (IIV) transforms
-may be used.<a href="#section-4.4-1" class="pilcrow">¶</a></p>
-<p id="section-4.4-2">The Sender-ID is carried in each packet within the Session ID
-field, allowing efficient and reliable key differentiation for
-data security and integrity.<a href="#section-4.4-2" class="pilcrow">¶</a></p>
-<p id="section-4.4-3">The maximum length of GWP_SENDER_ID_BITS in GCKS policy
-is 16 bits when using the Session ID to carry the Sender-ID.<a href="#section-4.4-3" class="pilcrow">¶</a></p>
-<p id="section-4.4-4">[Note: we could allow 32 bit or any lenght field for
-GWP_SENDER_ID_BITS then it would have be carried in
-a EESP Options TLV and not in Session ID]<a href="#section-4.4-4" class="pilcrow">¶</a></p>
+<p id="section-3.2-1">IKEv2 limits transform types that can appear in the Proposal 
+substructure based on its Protocol ID field (see Section 3.3.3 of 
+<span>[<a href="#RFC7296" class="cite xref">RFC7296</a>]</span>). For EESPv0 the following transform types are allowed:<a href="#section-3.2-1" class="pilcrow">¶</a></p>
+<table class="center" id="table-2">
+          <caption><a href="#table-2" class="selfRef">Table 2</a></caption>
+<thead>
+            <tr>
+              <th class="text-left" rowspan="1" colspan="1">Protocol</th>
+              <th class="text-left" rowspan="1" colspan="1">Mandatory Types</th>
+              <th class="text-left" rowspan="1" colspan="1">Optional Types</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">EESPv0</td>
+              <td class="text-left" rowspan="1" colspan="1">ENCR, SN</td>
+              <td class="text-left" rowspan="1" colspan="1">KE, SSKDF</td>
+            </tr>
+          </tbody>
+        </table>
+<p id="section-3.2-3">For the ENCR transform type only those transform IDs that define use 
+of AEAD cipher mode are allowed in case of EESPv0.
+Transform IDs that define pure encryption MUST NOT be used in the 
+context of EESPv0.<a href="#section-3.2-3" class="pilcrow">¶</a></p>
+<p id="section-3.2-4">Note, that 64-bit Sequential Numbers and None transform IDs are 
+unspecified for ESP and MUST NOT be used in ESP proposals.
+On the other hand, currently defined transform IDs for the
+Sequence Numbers transform type (32-bit Sequential Numbers and  
+Partially Transmitted 64-bit Sequential Numbers)
+are unspecified for EESPv0 and MUST NOT be used in EESPv0 proposals.<a href="#section-3.2-4" class="pilcrow">¶</a></p>
+<p id="section-3.2-5">Implemenattions MUST ignore transforms containing invalid
+values for the current proposal (as if they are unrecognized,
+in accordance with Section 3.3.6 of <span>[<a href="#RFC7296" class="cite xref">RFC7296</a>]</span>).<a href="#section-3.2-5" class="pilcrow">¶</a></p>
+<p id="section-3.2-6">The use of the None Transform ID for the SN tranform 
+if further limited by the ENCR transform. In particular,
+if the selected ENCR transform defines use of implicit IV 
+(as transforms defined in <span>[<a href="#RFC8750" class="cite xref">RFC8750</a>]</span>), then the value None MUST NOT 
+be selected for the SN transform.<a href="#section-3.2-6" class="pilcrow">¶</a></p>
 </section>
+<section id="section-3.3">
+        <h3 id="name-example-of-sa-payload-negot">
+<a href="#section-3.3" class="section-number selfRef">3.3. </a><a href="#name-example-of-sa-payload-negot" class="section-name selfRef">Example of SA Payload Negotiating EESP</a>
+        </h3>
+<p id="section-3.3-1">Below is the example of SA payload for EESP negotiation.<a href="#section-3.3-1" class="pilcrow">¶</a></p>
+<span id="name-eespv0-sa-proposal"></span><div id="eesp-sa-proposal">
+<figure id="figure-1">
+          <div class="sourcecode" id="section-3.3-2.1">
+<pre>
+SA Payload
+   |
+   +--- Proposal #1 ( Proto ID = EESPv0(&lt;TBD1&gt;), SPI size = 4,
+   |     |            5 transforms,      SPI = 0x052357bb )
+   |     |
+   |     +-- Transform ENCR ( Name = ENCR_AES_GCM_16 )
+   |     |     +-- Attribute ( Key Length = 256 )
+   |     +-- Transform ENCR ( Name = ENCR_AES_GCM_16 )
+   |     |     +-- Attribute ( Key Length = 128 )
+   |     +-- Transform SSKDF ( Name = SSKDF_HKDF_SHA2_256 )
+   |     +-- Transform SSKDF ( Name = SSKDF_HKDF_SHA2_512 )
+   |     +-- Transform SN ( Name = 64-bit Sequential Numbers )
+</pre>
+</div>
+<figcaption><a href="#figure-1" class="selfRef">Figure 1</a>:
+<a href="#name-eespv0-sa-proposal" class="selfRef">EESPv0 SA proposal</a>
+          </figcaption></figure>
+</div>
+</section>
+<section id="section-3.4">
+        <h3 id="name-use-of-notifications-in-the">
+<a href="#section-3.4" class="section-number selfRef">3.4. </a><a href="#name-use-of-notifications-in-the" class="section-name selfRef">Use of Notifications in the Process of EESP Negotiation</a>
+        </h3>
+<p id="section-3.4-1">IKEv2 Notify Message Status Type USE_WESP_MODE, <span>[<a href="#RFC5840" class="cite xref">RFC5840</a>]</span>, is not
+supported when negotiating EESP SA, because the WESP functionality
+is part of EESP protocol. If this notification is received it
+MUST be ignored.<a href="#section-3.4-1" class="pilcrow">¶</a></p>
+<p id="section-3.4-2">The ESP_TFC_PADDING_NOT_SUPPORTED, <span>[<a href="#RFC7296" class="cite xref">RFC7296</a>]</span>, notification is not
+supported in EESP, instead use IP-TFS, USE_AGGFRAG, <span>[<a href="#RFC9347" class="cite xref">RFC9347</a>]</span>.
+If this notification is received it MUST be ignored.<a href="#section-3.4-2" class="pilcrow">¶</a></p>
+</section>
+<div id="sec-announcing-maximum-sub-sa-id">
+<section id="section-3.5">
+        <h3 id="name-announcing-maximum-sub-sa-i">
+<a href="#section-3.5" class="section-number selfRef">3.5. </a><a href="#name-announcing-maximum-sub-sa-i" class="section-name selfRef">Announcing Maximum Sub SA ID</a>
+        </h3>
+<p id="section-3.5-1">In the process of establishing the EESP SA, each peer MAY inform the 
+other side about the maximum value of Sub SA ID that it can 
+accept as a receiver. The other side MUST choose IDs for its outgoing 
+Sub SAs in the range from zero to this value (inclusive). Thus, 
+announcing the maximum value for Sub SA ID effectively limits the 
+number of Sub SAs the sending side is ready to handle as a Sub SA 
+receiver.<a href="#section-3.5-1" class="pilcrow">¶</a></p>
+<p id="section-3.5-2">Note that this is not a negotiation: each side can indicate its own 
+value for the maximum Sub SA ID. In addition, sending side is not 
+required to consume all possible Sub SA IDs up to the indicated 
+maximum value - it can create fewer Sub SAs. In any case, when 
+creating Sub SAs as a sender an endpoint nas to consider that Sub SA
+IDs MUST NOT repeat for a given EESP SA and MUST NOT exceed the value 
+sent by the peer in this notification. The actual number of Sub SAs 
+can be different in different directions.<a href="#section-3.5-2" class="pilcrow">¶</a></p>
+<p id="section-3.5-3">A new notify status type EESP_MAX_SUB_SA_ID (&lt;TBD3&gt;) is defined by 
+this document. The format of the Notify payload for this notification 
+is shown below.<a href="#section-3.5-3" class="pilcrow">¶</a></p>
+<span id="name-sub-sa-notifier"></span><div id="sub-sa-notifier">
+<figure id="figure-2">
+          <div class="sourcecode" id="section-3.5-4.1">
+<pre>
+                    1                   2                   3
+0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-----------------------------+-------------------------------+
+! Next Payload  !C!  RESERVED   !         Payload Length        !
++---------------+---------------+-------------------------------+
+!  Protocol ID  !   SPI Size    !      Notify Message Type      !
++---------------+---------------+-------------------------------+
+!      Maximum Sub SA ID        |
++-------------------------------+
+</pre>
+</div>
+<figcaption><a href="#figure-2" class="selfRef">Figure 2</a>:
+<a href="#name-sub-sa-notifier" class="selfRef">Sub SA Notifier</a>
+          </figcaption></figure>
+</div>
+<ul class="normal">
+<li class="normal" id="section-3.5-5.1">
+            <p id="section-3.5-5.1.1">Protocol ID (1 octet) - MUST be 0. MUST be ignored if not 0.<a href="#section-3.5-5.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-3.5-5.2">
+            <p id="section-3.5-5.2.1">SPI Size (1 octet) - MUST be 0. MUST be ignored if not 0.<a href="#section-3.5-5.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-3.5-5.3">
+            <p id="section-3.5-5.3.1">Notify Status Message Type (2 octets) - set to EESP_MAX_SUB_SA_ID<a href="#section-3.5-5.3.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="section-3.5-6">(&lt;TBD3&gt;).<a href="#section-3.5-6" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3.5-7.1">
+            <p id="section-3.5-7.1.1">Maximum Sub SA ID (2 octets, integer in network byte order) 
+-- specifies the maximum value for the EESP Sub SA ID the 
+sender of this notification is expecting to receive<a href="#section-3.5-7.1.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="section-3.5-8">The maximum number of Sub SAs the sender of this notification can 
+handle as a receiver can be calculated as the value of the Maximum 
+Sub SA ID field plus 1. For example, value 0 in the Maximum Sub SA ID 
+field means that only one Sub SA (with Subs SA ID = 0) can be 
+handled.<a href="#section-3.5-8" class="pilcrow">¶</a></p>
+<p id="section-3.5-9">If a peer doesn't have any restrictions on the number of the incoming 
+Sub SAs, then it MAY omit sending this notification. As a consequence<a href="#section-3.5-9" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3.5-10.1">
+            <p id="section-3.5-10.1.1">if no this notification was received by a peer, that peer can<a href="#section-3.5-10.1.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="section-3.5-11">assume that it create as many outgoing Sub SAs as it needs (provided 
+that Sub SA IDs not repeat).<a href="#section-3.5-11" class="pilcrow">¶</a></p>
+<p id="section-3.5-12">If no SSKDF transform was negotiated, this notification MUST be 
+ignored by peers.<a href="#section-3.5-12" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+<section id="section-4">
+      <h2 id="name-key-derivation-for-sub-sas">
+<a href="#section-4" class="section-number selfRef">4. </a><a href="#name-key-derivation-for-sub-sas" class="section-name selfRef">Key Derivation for Sub SAs</a>
+      </h2>
+<p id="section-4-1">When an EESP SA is using Sub SAs, each Sub SA (including the one
+with Session ID 0) uses separate keys. This allows each Sub SA to use
+its own independent Sequence Number and IV space.<a href="#section-4-1" class="pilcrow">¶</a></p>
+<p id="section-4-2">In order to derive these keys, a Sub SA Key Derivation Function
+(SSKDF) MUST be negotiated as part of the proposal of the EESP SA 
+using Transform Type &lt;TBD2&gt;. This SSKDF is independent of the PRF
+negotiated for IKEv2.<a href="#section-4-2" class="pilcrow">¶</a></p>
+<p id="section-4-3">If no Sub SAs are to be used for an EESP SA, Transform Type &lt;TBD2&gt;
+SHOULD be omitted in the proposal, but it MAY be NONE. If it's
+omitted or NONE is selected by the responder, Sub SAs cannot be
+created by either peer and the key derivation for the in- and
+outbound EESP SAs of the Child SA are done as described in section
+2.17 of <span>[<a href="#RFC7296" class="cite xref">RFC7296</a>]</span>.<a href="#section-4-3" class="pilcrow">¶</a></p>
+<p id="section-4-4">If an SSKDF is selected as part of the proposal, instead of directly
+taking keys for the Sub SAs from KEYMAT, as described in section 2.17
+of <span>[<a href="#RFC7296" class="cite xref">RFC7296</a>]</span>, only one "root" key is taken for each EESP SA of the
+Child SA. Their length is determined by the key size of the
+negotiated SSKDF. The root key for the EESP SA carrying data from
+the initiator to the responder is taken before that for the SA going
+from the responder to the initiator.<a href="#section-4-4" class="pilcrow">¶</a></p>
+<p id="section-4-5">Using the EESP SA's root key, SK_sub, the KEYMAT for each Sub SA is
+derived as follows:<a href="#section-4-5" class="pilcrow">¶</a></p>
+<p id="section-4-6">KEYMAT_sub = SSKDF(SK_sub, SPI | Session_ID, L)<a href="#section-4-6" class="pilcrow">¶</a></p>
+<p id="section-4-7">Where L is the total length of the key material KEYMAT_sub and the
+salt value is comprised of the full SPI and the full Session ID of
+the Sub SA.<a href="#section-4-7" class="pilcrow">¶</a></p>
+<p id="section-4-8">If multiple keys are required for a Sub SA, the encryption key MUST
+be taken from the first bits of KEYMAT_sub, the integrity key MUST be
+taken from the remaining bits.<a href="#section-4-8" class="pilcrow">¶</a></p>
+<p id="section-4-9">Keys for Sub SAs may be derived immediately or on demand when the
+first packet is processed. Memory constrained implementations may
+even decide to derive the Sub SA keys on the fly for each received
+packet as only SK_sub has to be stored to derive the keys of all
+Sub SAs.<a href="#section-4-9" class="pilcrow">¶</a></p>
+<p id="section-4-10">Because individual Sub SAs can't be rekeyed, the complete EESP Child
+SA MUST be rekeyed when either a cryptographic limit or a time-based
+limit is reached for any individual Sub SA.<a href="#section-4-10" class="pilcrow">¶</a></p>
 </section>
 <section id="section-5">
-      <h2 id="name-session-id">
-<a href="#section-5" class="section-number selfRef">5. </a><a href="#name-session-id" class="section-name selfRef">Session ID</a>
-      </h2>
-<p id="section-5-1">The Session ID is a multi-purpose attribute with mutually
-exclusive values. The initiator MUST propose a single value in the
-Child SA proposal, Transform EESPSSID (Value). The responder MUST
-either accept the proposed value or reject it with an
-INVALID_SESSION_ID error message, indicating a supported value.<a href="#section-5-1" class="pilcrow">¶</a></p>
-</section>
-<section id="section-6">
-      <h2 id="name-udp-encapsulation-for-eesp">
-<a href="#section-6" class="section-number selfRef">6. </a><a href="#name-udp-encapsulation-for-eesp" class="section-name selfRef">UDP Encapsulation for EESP</a>
-      </h2>
-<p id="section-6-1">UDP encapsulation for EESP is largely similar to the ESP UDP
-encapsulation specified in <span>[<a href="#RFC3948" class="cite xref">RFC3948</a>]</span>, with the primary difference
-being the UDP source port used by the EESP Sub SA may be different
-from IKE_SA source port, as specified in <span>[<a href="#RFC3947" class="cite xref">RFC3947</a>]</span>, for more
-flexible handling of EESP traffic, particularly ECMP support
-along the path and in the NIC.<a href="#section-6-1" class="pilcrow">¶</a></p>
-<p id="section-6-2">A receiver indenting to support both ESP and EESP encapsulated in UDP
-must start ESP  SPI, most significant bit of the SPI, with zero.<a href="#section-6-2" class="pilcrow">¶</a></p>
-</section>
-<section id="section-7">
-      <h2 id="name-eesp-crypt-offset-option">
-<a href="#section-7" class="section-number selfRef">7. </a><a href="#name-eesp-crypt-offset-option" class="section-name selfRef">EESP Crypt Offset Option</a>
-      </h2>
-<p id="section-7-1">This option is typically used for within one Datacenter use case
-such as <span>[<a href="#PSP" class="cite xref">PSP</a>]</span>. To negotiate, the initiator sends USE_CRYPTOFFSET
-together with USE_TRANSPORT_MODE and the responder respond with the
-same. USE_EESP_CRYPTOFFSET is not supported in Tunnel mode or BEET
-mode.<a href="#section-7-1" class="pilcrow">¶</a></p>
-<p id="section-7-2">'<code>NOTE</code>' Add EESP draft UDP section reference.<a href="#section-7-2" class="pilcrow">¶</a></p>
-</section>
-<section id="section-8">
       <h2 id="name-iana-considerations">
-<a href="#section-8" class="section-number selfRef">8. </a><a href="#name-iana-considerations" class="section-name selfRef">IANA Considerations</a>
+<a href="#section-5" class="section-number selfRef">5. </a><a href="#name-iana-considerations" class="section-name selfRef">IANA Considerations</a>
       </h2>
-<section id="section-8.1">
+<section id="section-5.1">
         <h3 id="name-changes-in-the-existing-ike">
-<a href="#section-8.1" class="section-number selfRef">8.1. </a><a href="#name-changes-in-the-existing-ike" class="section-name selfRef">Changes in the Existing IKEv2 Registries</a>
+<a href="#section-5.1" class="section-number selfRef">5.1. </a><a href="#name-changes-in-the-existing-ike" class="section-name selfRef">Changes in the Existing IKEv2 Registries</a>
         </h3>
-<section id="section-8.1.1">
+<section id="section-5.1.1">
           <h4 id="name-ikev2-security-protocol-ide">
-<a href="#section-8.1.1" class="section-number selfRef">8.1.1. </a><a href="#name-ikev2-security-protocol-ide" class="section-name selfRef">IKEv2 Security Protocol Identifiers registry</a>
+<a href="#section-5.1.1" class="section-number selfRef">5.1.1. </a><a href="#name-ikev2-security-protocol-ide" class="section-name selfRef">IKEv2 Security Protocol Identifiers registry</a>
           </h4>
-<p id="section-8.1.1-1">This document defines new Protocol ID in the
-"IKEv2 Security Protocol Identifiers" registry, <span>[<a href="#IKEv2-SP" class="cite xref">IKEv2-SP</a>]</span>:<a href="#section-8.1.1-1" class="pilcrow">¶</a></p>
+<p id="section-5.1.1-1">This document defines new Protocol ID in the
+"IKEv2 Security Protocol Identifiers" registry:<a href="#section-5.1.1-1" class="pilcrow">¶</a></p>
 <table class="center" id="table-3">
             <caption><a href="#table-3" class="selfRef">Table 3</a></caption>
 <thead>
@@ -1995,36 +1934,47 @@ mode.<a href="#section-7-1" class="pilcrow">¶</a></p>
             </tbody>
           </table>
 </section>
-<section id="section-8.1.2">
+<section id="section-5.1.2">
           <h4 id="name-ikev2-transform-type-values">
-<a href="#section-8.1.2" class="section-number selfRef">8.1.2. </a><a href="#name-ikev2-transform-type-values" class="section-name selfRef">IKEv2 Transform Type Values</a>
+<a href="#section-5.1.2" class="section-number selfRef">5.1.2. </a><a href="#name-ikev2-transform-type-values" class="section-name selfRef">IKEv2 Transform Type Values</a>
           </h4>
-<span id="name-transform-type-values-regis"></span><table class="center" id="table-4">
-            <caption>
-<a href="#table-4" class="selfRef">Table 4</a>:
-<a href="#name-transform-type-values-regis" class="selfRef">"Transform Type Values" Registry</a>
-            </caption>
+<p id="section-5.1.2-1">This document defines a new transform type in the "Transform Type 
+Values" registry:<a href="#section-5.1.2-1" class="pilcrow">¶</a></p>
+<table class="center" id="table-4">
+            <caption><a href="#table-4" class="selfRef">Table 4</a></caption>
 <thead>
               <tr>
                 <th class="text-left" rowspan="1" colspan="1">Type</th>
                 <th class="text-left" rowspan="1" colspan="1">Description</th>
+                <th class="text-left" rowspan="1" colspan="1">Used In</th>
                 <th class="text-left" rowspan="1" colspan="1">Reference</th>
               </tr>
             </thead>
             <tbody>
               <tr>
                 <td class="text-left" rowspan="1" colspan="1">&lt;TBD2&gt;</td>
-                <td class="text-left" rowspan="1" colspan="1">Sub SA Key Derivation Function (SSKDF)</td>
+                <td class="text-left" rowspan="1" colspan="1">Sub SA Key Derivation</td>
+                <td class="text-left" rowspan="1" colspan="1">(EESPv0)</td>
                 <td class="text-left" rowspan="1" colspan="1">[this document]</td>
+              </tr>
+              <tr>
+                <td class="text-left" rowspan="1" colspan="1"> </td>
+                <td class="text-left" rowspan="1" colspan="1">Function (SSKDF)</td>
+                <td class="text-left" rowspan="1" colspan="1"> </td>
+                <td class="text-left" rowspan="1" colspan="1"> </td>
               </tr>
             </tbody>
           </table>
-<p id="section-8.1.2-2">This new Transform Type is only valid for EESP. Valid Transform IDs
-are defined in a new registry listed in <a href="#tbl-sskdfids" class="auto internal xref">Table 7</a>.<a href="#section-8.1.2-2" class="pilcrow">¶</a></p>
+<p id="section-5.1.2-3">Valid Transform IDs are defined in a new registry listed in 
+<a href="#tbl-sskdfids" class="auto internal xref">Table 7</a>.<a href="#section-5.1.2-3" class="pilcrow">¶</a></p>
+<p id="section-5.1.2-4">This document also modifies the "Used In" column of existing 
+"Encryption Algorithm (ENCR)" transform type by adding EESPv0 as 
+allowed protocol for this transform and adding a rederence to this 
+document.<a href="#section-5.1.2-4" class="pilcrow">¶</a></p>
 </section>
-<section id="section-8.1.3">
+<section id="section-5.1.3">
           <h4 id="name-ikev2-notify-message-status">
-<a href="#section-8.1.3" class="section-number selfRef">8.1.3. </a><a href="#name-ikev2-notify-message-status" class="section-name selfRef">IKEv2 Notify Message Status Types registry.</a>
+<a href="#section-5.1.3" class="section-number selfRef">5.1.3. </a><a href="#name-ikev2-notify-message-status" class="section-name selfRef">IKEv2 Notify Message Status Types registry.</a>
           </h4>
 <table class="center" id="table-5">
             <caption><a href="#table-5" class="selfRef">Table 5</a></caption>
@@ -2038,28 +1988,27 @@ are defined in a new registry listed in <a href="#tbl-sskdfids" class="auto inte
             <tbody>
               <tr>
                 <td class="text-left" rowspan="1" colspan="1">&lt;TBD3&gt;</td>
-                <td class="text-left" rowspan="1" colspan="1">USE_EESP_CRYPTOFFSET</td>
+                <td class="text-left" rowspan="1" colspan="1">EESP_MAX_SUB_SA_ID</td>
                 <td class="text-left" rowspan="1" colspan="1">[this document]</td>
               </tr>
             </tbody>
           </table>
+<p id="section-5.1.3-2">#Several tables in <span>[<a href="#IKEv2-IANA" class="cite xref">IKEv2-IANA</a>]</span> that specify ESP as protocol
+#should be extended with EESP. Should we list each table one by one or
+#specify as replace ESP, with ESP, EESP.e.g in the Transform Type Values,
+#replace 'IKE and ESP' with 'IKE, ESP, and EESP'<a href="#section-5.1.3-2" class="pilcrow">¶</a></p>
+<p id="section-5.1.3-3">#Changes the "Used In" column for the existing allocations as follows;<a href="#section-5.1.3-3" class="pilcrow">¶</a></p>
 </section>
-<section id="section-8.1.4">
-          <h4 id="name-extending-esp-with-eesp">
-<a href="#section-8.1.4" class="section-number selfRef">8.1.4. </a><a href="#name-extending-esp-with-eesp" class="section-name selfRef">Extending ESP with EESP</a>
-          </h4>
-<p id="section-8.1.4-1">Several tables in <span>[<a href="#IKEv2-IANA" class="cite xref">IKEv2-IANA</a>]</span> that specify ESP as protocol
-should be extended with EESP. Should we list each table one by one or
-specify as replace ESP, with ESP, EESP.e.g in the Transform Type Values,
-replace 'IKE and ESP' with 'IKE, ESP, and EESP'<a href="#section-8.1.4-1" class="pilcrow">¶</a></p>
-<p id="section-8.1.4-2">Changes the "Used In" column for the existing allocations as follows;<a href="#section-8.1.4-2" class="pilcrow">¶</a></p>
-</section>
-<section id="section-8.1.5">
+<section id="section-5.1.4">
           <h4 id="name-sequence-number">
-<a href="#section-8.1.5" class="section-number selfRef">8.1.5. </a><a href="#name-sequence-number" class="section-name selfRef">Sequence Number</a>
+<a href="#section-5.1.4" class="section-number selfRef">5.1.4. </a><a href="#name-sequence-number" class="section-name selfRef">Sequence Number</a>
           </h4>
-<p id="section-8.1.5-1">This document defines a new value in the IKEv2 "Transform Type 5 - Sequence
-   Numbers Properties Transform IDs" registry:<a href="#section-8.1.5-1" class="pilcrow">¶</a></p>
+<p id="section-5.1.4-1">This document defines two new values in the IKEv2 "Transform Type 5<a href="#section-5.1.4-1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-5.1.4-2.1">
+              <p id="section-5.1.4-2.1.1">Sequence Numbers Properties Transform IDs" registry:<a href="#section-5.1.4-2.1.1" class="pilcrow">¶</a></p>
+</li>
+          </ul>
 <table class="center" id="table-6">
             <caption><a href="#table-6" class="selfRef">Table 6</a></caption>
 <thead>
@@ -2084,21 +2033,21 @@ replace 'IKE and ESP' with 'IKE, ESP, and EESP'<a href="#section-8.1.4-1" class=
           </table>
 </section>
 </section>
-<section id="section-8.2">
+<section id="section-5.2">
         <h3 id="name-new-ikev2-registries">
-<a href="#section-8.2" class="section-number selfRef">8.2. </a><a href="#name-new-ikev2-registries" class="section-name selfRef">New IKEv2 Registries</a>
+<a href="#section-5.2" class="section-number selfRef">5.2. </a><a href="#name-new-ikev2-registries" class="section-name selfRef">New IKEv2 Registries</a>
         </h3>
-<p id="section-8.2-1">A new set of registries is created for EESP on IKEv2
+<p id="section-5.2-1">A new set of registries is created for EESP on IKEv2
 parameters page <span>[<a href="#IKEv2-IANA" class="cite xref">IKEv2-IANA</a>]</span>. The terms
 Reserved, Expert Review and Private Use are to be applied as defined
-in <span>[<a href="#RFC8126" class="cite xref">RFC8126</a>]</span>.<a href="#section-8.2-1" class="pilcrow">¶</a></p>
-<section id="section-8.2.1">
+in <span>[<a href="#RFC8126" class="cite xref">RFC8126</a>]</span>.<a href="#section-5.2-1" class="pilcrow">¶</a></p>
+<section id="section-5.2.1">
           <h4 id="name-transform-type-tbd2-sub-sa-">
-<a href="#section-8.2.1" class="section-number selfRef">8.2.1. </a><a href="#name-transform-type-tbd2-sub-sa-" class="section-name selfRef">Transform Type &lt;TBD2&gt; - Sub SA Key Derivation Function Transform IDs</a>
+<a href="#section-5.2.1" class="section-number selfRef">5.2.1. </a><a href="#name-transform-type-tbd2-sub-sa-" class="section-name selfRef">Transform Type &lt;TBD2&gt; - Sub SA Key Derivation Function Transform IDs</a>
           </h4>
-<p id="section-8.2.1-1">This documents creates the new IKEv2 registry "Transform Type &lt;TBD2&gt; -
-Sub SA Key Derivation Function Transform IDs".  The initial values of this
-registry are:<a href="#section-8.2.1-1" class="pilcrow">¶</a></p>
+<p id="section-5.2.1-1">This documents creates the new IKEv2 registry "Transform Type &lt;TBD2&gt; -
+Sub SA Key Derivation Function Transform IDs". The initial values of 
+this registry are:<a href="#section-5.2.1-1" class="pilcrow">¶</a></p>
 <span id="name-transform-type-tbd2-registr"></span><div id="tbl-sskdfids">
 <table class="center" id="table-7">
             <caption>
@@ -2151,30 +2100,31 @@ registry are:<a href="#section-8.2.1-1" class="pilcrow">¶</a></p>
             </tbody>
           </table>
 </div>
-<p id="section-8.2.1-3">Changes and additions to the unassigned range of this registry are
-by the Expert Review Policy <span>[<a href="#RFC8126" class="cite xref">RFC8126</a>]</span>.<a href="#section-8.2.1-3" class="pilcrow">¶</a></p>
+<p id="section-5.2.1-3">Changes and additions to the unassigned range of this registry are
+by the Expert Review Policy <span>[<a href="#RFC8126" class="cite xref">RFC8126</a>]</span>.<a href="#section-5.2.1-3" class="pilcrow">¶</a></p>
 </section>
-<section id="section-8.2.2">
+<section id="section-5.2.2">
           <h4 id="name-guidance-for-designated-exp">
-<a href="#section-8.2.2" class="section-number selfRef">8.2.2. </a><a href="#name-guidance-for-designated-exp" class="section-name selfRef">Guidance for Designated Experts</a>
+<a href="#section-5.2.2" class="section-number selfRef">5.2.2. </a><a href="#name-guidance-for-designated-exp" class="section-name selfRef">Guidance for Designated Experts</a>
           </h4>
-<p id="section-8.2.2-1">In all cases of Expert Review Policy described here,
-the Designated Expert (DE) is expected to ascertain the existence of suitable
-documentation (a specification) as described in <span>[<a href="#RFC8126" class="cite xref">RFC8126</a>]</span> and to
-verify that the document is permanently and publicly available.  The
-DE is also expected to check the clarity of purpose and use of the
-requested code points. Last, the DE must verify that any specification produced outside the IETF does not
-conflict with work that is active or already published within the IETF.<a href="#section-8.2.2-1" class="pilcrow">¶</a></p>
+<p id="section-5.2.2-1">In all cases of Expert Review Policy described here,
+the Designated Expert (DE) is expected to ascertain the existence of 
+suitable documentation (a specification) as described in <span>[<a href="#RFC8126" class="cite xref">RFC8126</a>]</span> 
+and to verify that the document is permanently and publicly 
+available. The DE is also expected to check the clarity of purpose 
+and use of the requested code points. Last, the DE must verify that 
+any specification produced outside the IETF does not conflict with 
+work that is active or already published within the IETF.<a href="#section-5.2.2-1" class="pilcrow">¶</a></p>
 </section>
 </section>
 </section>
-<section id="section-9">
+<section id="section-6">
       <h2 id="name-implementation-status">
-<a href="#section-9" class="section-number selfRef">9. </a><a href="#name-implementation-status" class="section-name selfRef">Implementation Status</a>
+<a href="#section-6" class="section-number selfRef">6. </a><a href="#name-implementation-status" class="section-name selfRef">Implementation Status</a>
       </h2>
-<p id="section-9-1">[Note to RFC Editor: Please remove this section and the reference to
-<span>[<a href="#RFC7942" class="cite xref">RFC7942</a>]</span> before publication.]<a href="#section-9-1" class="pilcrow">¶</a></p>
-<p id="section-9-2">This section records the status of known implementations of the
+<p id="section-6-1">[Note to RFC Editor: Please remove this section and the reference to
+<span>[<a href="#RFC7942" class="cite xref">RFC7942</a>]</span> before publication.]<a href="#section-6-1" class="pilcrow">¶</a></p>
+<p id="section-6-2">This section records the status of known implementations of the
 protocol defined by this specification at the time of posting of this
 Internet-Draft, and is based on a proposal described in <span>[<a href="#RFC7942" class="cite xref">RFC7942</a>]</span>.
 The description of implementations in this section is intended to
@@ -2185,50 +2135,54 @@ has been spent to verify the information presented here that was
 supplied by IETF contributors. This is not intended as, and must not
 be construed to be, a catalog of available implementations or their
 features. Readers are advised to note that other implementations may
-exist.<a href="#section-9-2" class="pilcrow">¶</a></p>
-<p id="section-9-3">According to <span>[<a href="#RFC7942" class="cite xref">RFC7942</a>]</span>, "this will allow reviewers and working
+exist.<a href="#section-6-2" class="pilcrow">¶</a></p>
+<p id="section-6-3">According to <span>[<a href="#RFC7942" class="cite xref">RFC7942</a>]</span>, "this will allow reviewers and working
 groups to assign due consideration to documents that have the benefit
 of running code, which may serve as evidence of valuable
 experimentation and feedback that have made the implemented protocols
 more mature. It is up to the individual working groups to use this
-information as they see fit".<a href="#section-9-3" class="pilcrow">¶</a></p>
-<p id="section-9-4">Authors are requested to add a note to the RFC Editor at the top of
+information as they see fit".<a href="#section-6-3" class="pilcrow">¶</a></p>
+<p id="section-6-4">Authors are requested to add a note to the RFC Editor at the top of
 this section, advising the Editor to remove the entire section before
-publication, as well as the reference to <span>[<a href="#RFC7942" class="cite xref">RFC7942</a>]</span>.<a href="#section-9-4" class="pilcrow">¶</a></p>
+publication, as well as the reference to <span>[<a href="#RFC7942" class="cite xref">RFC7942</a>]</span>.<a href="#section-6-4" class="pilcrow">¶</a></p>
 </section>
-<section id="section-10">
+<div id="sec-security-considerations">
+<section id="section-7">
       <h2 id="name-security-considerations">
-<a href="#section-10" class="section-number selfRef">10. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
+<a href="#section-7" class="section-number selfRef">7. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
       </h2>
-<p id="section-10-1">EESP option Crypt Offset <span>[<a href="#I-D.klassert-ipsecme-eesp" class="cite xref">I-D.klassert-ipsecme-eesp</a>]</span> section [XXX]
+<p id="section-7-1">EESP option Crypt Offset <span>[<a href="#I-D.klassert-ipsecme-eesp" class="cite xref">I-D.klassert-ipsecme-eesp</a>]</span> section [XXX]
 allows exposing transport headers for telemetry.
-It is indented use of within data center.<a href="#section-10-1" class="pilcrow">¶</a></p>
-<p id="section-10-2">When an EESP receiver implementation uses Stateless Decryption, it
+It is indented use of within data center.<a href="#section-7-1" class="pilcrow">¶</a></p>
+<p id="section-7-2">When an EESP receiver implementation uses Stateless Decryption, it
 may not rely on single Security Policy Database (SPD) as specified in
 the IPsec Architecture document <span>[<a href="#RFC4301" class="cite xref">RFC4301</a>]</span>, section 4.4.1. However,
 the receiver MUST validate the negotiated Security Policy through
 other means to ensure compliance with the intended security
 requirements. For by adding Security Policy to the socket or route
-entry. Also comply with ICMP  processing specified  in section 6 of
-<span>[<a href="#RFC4301" class="cite xref">RFC4301</a>]</span>.<a href="#section-10-2" class="pilcrow">¶</a></p>
-<p id="section-10-3">Additional security relevant aspects of using the IPsec protocol are
-discussed in the Security Architecture document <span>[<a href="#RFC4301" class="cite xref">RFC4301</a>]</span>.<a href="#section-10-3" class="pilcrow">¶</a></p>
+entry. Also comply with ICMP processing specified in section 6 of
+<span>[<a href="#RFC4301" class="cite xref">RFC4301</a>]</span>.<a href="#section-7-2" class="pilcrow">¶</a></p>
+<p id="section-7-3">If the replay protection service is disabled, an attacker can 
+re-play packets with a different source address. Such an attacker  
+could disrupt the connection by replaying a single packet with a 
+different source address or port number.
+In this case the receiver SHOULD NOT dynamically modify ports or
+addresses without using IKEv2 Mobility <span>[<a href="#RFC4555" class="cite xref">RFC4555</a>]</span>.<a href="#section-7-3" class="pilcrow">¶</a></p>
+<p id="section-7-4">Additional security relevant aspects of using the IPsec protocol are
+discussed in the Security Architecture document <span>[<a href="#RFC4301" class="cite xref">RFC4301</a>]</span>.<a href="#section-7-4" class="pilcrow">¶</a></p>
 </section>
-<section id="section-11">
+</div>
+<section id="section-8">
       <h2 id="name-acknowledgments">
-<a href="#section-11" class="section-number selfRef">11. </a><a href="#name-acknowledgments" class="section-name selfRef">Acknowledgments</a>
+<a href="#section-8" class="section-number selfRef">8. </a><a href="#name-acknowledgments" class="section-name selfRef">Acknowledgments</a>
       </h2>
-<p id="section-11-1">TBD<a href="#section-11-1" class="pilcrow">¶</a></p>
+<p id="section-8-1">TBD<a href="#section-8-1" class="pilcrow">¶</a></p>
 </section>
-<section id="section-12">
+<section id="section-9">
       <h2 id="name-normative-references">
-<a href="#section-12" class="section-number selfRef">12. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
+<a href="#section-9" class="section-number selfRef">9. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
       </h2>
 <dl class="references">
-<dt id="I-D.ietf-ipsecme-ikev2-rename-esn">[I-D.ietf-ipsecme-ikev2-rename-esn]</dt>
-      <dd>
-<span class="refAuthor">Smyslov, V.</span>, <span class="refTitle">"Renaming Extended Sequence Number (ESN) Transform Type in the Internet Key Exchange Protocol Version 2 (IKEv2)"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-ipsecme-ikev2-rename-esn-04</span>, <time datetime="2025-02-06" class="refDate">6 February 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-ipsecme-ikev2-rename-esn-04">https://datatracker.ietf.org/doc/html/draft-ietf-ipsecme-ikev2-rename-esn-04</a>&gt;</span>. </dd>
-<dd class="break"></dd>
 <dt id="I-D.klassert-ipsecme-eesp">[I-D.klassert-ipsecme-eesp]</dt>
       <dd>
 <span class="refAuthor">Klassert, S.</span>, <span class="refAuthor">Antony, A.</span>, and <span class="refAuthor">C. Hopps</span>, <span class="refTitle">"Enhanced Encapsulating Security Payload (EESP)"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-klassert-ipsecme-eesp-01</span>, <time datetime="2024-10-14" class="refDate">14 October 2024</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-klassert-ipsecme-eesp-01">https://datatracker.ietf.org/doc/html/draft-klassert-ipsecme-eesp-01</a>&gt;</span>. </dd>
@@ -2263,42 +2217,14 @@ discussed in the Security Architecture document <span>[<a href="#RFC4301" class=
 <dd class="break"></dd>
 </dl>
 </section>
-<section id="section-13">
+<section id="section-10">
       <h2 id="name-informative-references">
-<a href="#section-13" class="section-number selfRef">13. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
+<a href="#section-10" class="section-number selfRef">10. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
       </h2>
 <dl class="references">
-<dt id="I-D.ietf-ipsecme-g-ikev2">[I-D.ietf-ipsecme-g-ikev2]</dt>
-      <dd>
-<span class="refAuthor">Smyslov, V.</span> and <span class="refAuthor">B. Weis</span>, <span class="refTitle">"Group Key Management using IKEv2"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-ipsecme-g-ikev2-21</span>, <time datetime="2025-02-10" class="refDate">10 February 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-ipsecme-g-ikev2-21">https://datatracker.ietf.org/doc/html/draft-ietf-ipsecme-g-ikev2-21</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="I-D.mrossberg-ipsecme-multiple-sequence-counters">[I-D.mrossberg-ipsecme-multiple-sequence-counters]</dt>
-      <dd>
-<span class="refAuthor">Rossberg, M.</span>, <span class="refAuthor">Klassert, S.</span>, and <span class="refAuthor">M. Pfeiffer</span>, <span class="refTitle">"Broadening the Scope of Encapsulating Security Payload (ESP) Protocol"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-mrossberg-ipsecme-multiple-sequence-counters-02</span>, <time datetime="2024-02-15" class="refDate">15 February 2024</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-mrossberg-ipsecme-multiple-sequence-counters-02">https://datatracker.ietf.org/doc/html/draft-mrossberg-ipsecme-multiple-sequence-counters-02</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="I-D.ponchon-ipsecme-anti-replay-subspaces">[I-D.ponchon-ipsecme-anti-replay-subspaces]</dt>
-      <dd>
-<span class="refAuthor">Ponchon, P.</span>, <span class="refAuthor">Shaikh, M.</span>, <span class="refAuthor">Dernaika, H.</span>, <span class="refAuthor">Pfister, P.</span>, and <span class="refAuthor">G. Solignac</span>, <span class="refTitle">"IPsec and IKE anti-replay sequence number subspaces for traffic-engineered paths and multi-core processing"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ponchon-ipsecme-anti-replay-subspaces-03</span>, <time datetime="2023-10-23" class="refDate">23 October 2023</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ponchon-ipsecme-anti-replay-subspaces-03">https://datatracker.ietf.org/doc/html/draft-ponchon-ipsecme-anti-replay-subspaces-03</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="IKEv2-Enc">[IKEv2-Enc]</dt>
-      <dd>
-<span class="refAuthor">IANA</span>, <span class="refTitle">"IKEv2 Parameters: Extended Sequence Numbers Transform IDs"</span>, <span>&lt;<a href="https://www.iana.org/assignments/ikev2-parameters/ikev2-parameters.xhtml#ikev2-parameters-5">https://www.iana.org/assignments/ikev2-parameters/ikev2-parameters.xhtml#ikev2-parameters-5</a>&gt;</span>. </dd>
-<dd class="break"></dd>
 <dt id="IKEv2-IANA">[IKEv2-IANA]</dt>
       <dd>
 <span class="refAuthor">IANA</span>, <span class="refTitle">"IKEv2 Parameters"</span>, <span>&lt;<a href="https://www.iana.org/assignments/ikev2-parameters/ikev2-parameters.xhtml">https://www.iana.org/assignments/ikev2-parameters/ikev2-parameters.xhtml</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="IKEv2-SN">[IKEv2-SN]</dt>
-      <dd>
-<span class="refAuthor">IANA</span>, <span class="refTitle">"IKEv2 Parameters: Encryption Algorithm Transform IDs"</span>, <span>&lt;<a href="https://www.iana.org/assignments/ikev2-parameters/ikev2-parameters.xhtml#ikev2-parameters-9">https://www.iana.org/assignments/ikev2-parameters/ikev2-parameters.xhtml#ikev2-parameters-9</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="IKEv2-SP">[IKEv2-SP]</dt>
-      <dd>
-<span class="refAuthor">IANA</span>, <span class="refTitle">"IKEv2 Parameters: Security Protocol Identifiers"</span>, <span>&lt;<a href="https://www.iana.org/assignments/ikev2-parameters/ikev2-parameters.xhtml#ikev2-parameters-18">https://www.iana.org/assignments/ikev2-parameters/ikev2-parameters.xhtml#ikev2-parameters-18</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="IKEv2-Transforms">[IKEv2-Transforms]</dt>
-      <dd>
-<span class="refAuthor">IANA</span>, <span class="refTitle">"IKEv2 Parameters: Transform Type Values"</span>, <span>&lt;<a href="https://www.iana.org/assignments/ikev2-parameters/ikev2-parameters.xhtml#ikev2-parameters-3">https://www.iana.org/assignments/ikev2-parameters/ikev2-parameters.xhtml#ikev2-parameters-3</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="PSP">[PSP]</dt>
       <dd>
@@ -2315,10 +2241,6 @@ discussed in the Security Architecture document <span>[<a href="#RFC4301" class=
 <dt id="RFC3947">[RFC3947]</dt>
       <dd>
 <span class="refAuthor">Kivinen, T.</span>, <span class="refAuthor">Swander, B.</span>, <span class="refAuthor">Huttunen, A.</span>, and <span class="refAuthor">V. Volpe</span>, <span class="refTitle">"Negotiation of NAT-Traversal in the IKE"</span>, <span class="seriesInfo">RFC 3947</span>, <span class="seriesInfo">DOI 10.17487/RFC3947</span>, <time datetime="2005-01" class="refDate">January 2005</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc3947">https://www.rfc-editor.org/info/rfc3947</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="RFC4106">[RFC4106]</dt>
-      <dd>
-<span class="refAuthor">Viega, J.</span> and <span class="refAuthor">D. McGrew</span>, <span class="refTitle">"The Use of Galois/Counter Mode (GCM) in IPsec Encapsulating Security Payload (ESP)"</span>, <span class="seriesInfo">RFC 4106</span>, <span class="seriesInfo">DOI 10.17487/RFC4106</span>, <time datetime="2005-06" class="refDate">June 2005</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc4106">https://www.rfc-editor.org/info/rfc4106</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC4555">[RFC4555]</dt>
       <dd>
