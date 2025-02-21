@@ -391,13 +391,13 @@ The type of the Sub SA Key Derivation Function transform is <TBA2>.
 
 *** New Transform IDs for Sequence Numbers Transform Type
 
-This document defines two new Transfor IDs for the Sequence Numbers
-transform type: 64-bit Sequential Numbers (<TBD4>) and None (<TBD5>).
+This document defines two new Transform IDs for the Sequence Numbers
+transform type: ~64-bit Sequential Numbers~ (<TBD4>) and ~None~ (<TBD5>).
 
 To enable presence of sequence numbers in the EESP header the
 initiator MUST propose SN = (64-bit Sequential Numbers) in the
 Proposal Substructure inside the Security Association (SA) payload.
-When the responder selects 64-bit Sequential Numbers, Sequence Number
+When the responder selects 64-bit Sequential Numbers, the Sequence Number
 field is included into the EESP header, that allows peers to
 achieve replay protection.
 
@@ -441,7 +441,7 @@ context of EESPv0.
 # [VS] In addition, that document must request IANA to add a column
 # [VS] "EESPv0 Reference" to the ENCR Transform IDs registry.
 
-Note, that 64-bit Sequential Numbers and None transform IDs are
+Note, that ~64-bit Sequential Numbers~ and ~None~ transform IDs are
 unspecified for ESP and MUST NOT be used in ESP proposals.
 On the other hand, currently defined transform IDs for the
 Sequence Numbers transform type (32-bit Sequential Numbers and
@@ -452,7 +452,7 @@ Implemenattions MUST ignore transforms containing invalid
 values for the current proposal (as if they are unrecognized,
 in accordance with Section 3.3.6 of [[RFC7296]]).
 
-The use of the None Transform ID for the SN tranform
+The use of the None Transform ID for the SN transform
 if further limited by the ENCR transform. In particular,
 if the selected ENCR transform defines use of implicit IV
 (as transforms defined in [[RFC8750]]), then the value None MUST NOT
@@ -607,7 +607,7 @@ outbound EESP SAs of the Child SA are done as described in section
 
 If an SSKDF is selected as part of the proposal, instead of directly
 taking keys for the Sub SAs from KEYMAT, as described in section 2.17
-of [[RFC7296]], only one "root" key is taken for each EESP SA of the
+of [[RFC7296]], only one ~root~ key is taken for each EESP SA of the
 Child SA. Their length is determined by the key size of the
 negotiated SSKDF. The root key for the EESP SA carrying data from
 the initiator to the responder is taken before that for the SA going
