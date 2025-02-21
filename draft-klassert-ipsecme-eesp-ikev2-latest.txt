@@ -5,11 +5,11 @@
 IPSECME Working Group                                        S. Klassert
 Internet-Draft                                                 A. Antony
 Intended status: Standards Track                                 secunet
-Expires: 24 August 2025                                       T. Brunner
+Expires: 25 August 2025                                       T. Brunner
                                                            codelabs GmbH
                                                               V. Smyslov
                                                               ELVIS-PLUS
-                                                        20 February 2025
+                                                        21 February 2025
 
 
   IKEv2 negotiation for Enhanced Encapsulating Security Payload (EESP)
@@ -41,7 +41,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 24 August 2025.
+   This Internet-Draft will expire on 25 August 2025.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Klassert, et al.         Expires 24 August 2025                 [Page 1]
+Klassert, et al.         Expires 25 August 2025                 [Page 1]
 
 Internet-Draft           EESP IKEv2 negotiation            February 2025
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Klassert, et al.         Expires 24 August 2025                 [Page 2]
+Klassert, et al.         Expires 25 August 2025                 [Page 2]
 
 Internet-Draft           EESP IKEv2 negotiation            February 2025
 
@@ -165,7 +165,7 @@ Internet-Draft           EESP IKEv2 negotiation            February 2025
 
 
 
-Klassert, et al.         Expires 24 August 2025                 [Page 3]
+Klassert, et al.         Expires 25 August 2025                 [Page 3]
 
 Internet-Draft           EESP IKEv2 negotiation            February 2025
 
@@ -221,7 +221,7 @@ Internet-Draft           EESP IKEv2 negotiation            February 2025
 
 
 
-Klassert, et al.         Expires 24 August 2025                 [Page 4]
+Klassert, et al.         Expires 25 August 2025                 [Page 4]
 
 Internet-Draft           EESP IKEv2 negotiation            February 2025
 
@@ -277,7 +277,7 @@ Internet-Draft           EESP IKEv2 negotiation            February 2025
 
 
 
-Klassert, et al.         Expires 24 August 2025                 [Page 5]
+Klassert, et al.         Expires 25 August 2025                 [Page 5]
 
 Internet-Draft           EESP IKEv2 negotiation            February 2025
 
@@ -333,7 +333,7 @@ Internet-Draft           EESP IKEv2 negotiation            February 2025
 
 
 
-Klassert, et al.         Expires 24 August 2025                 [Page 6]
+Klassert, et al.         Expires 25 August 2025                 [Page 6]
 
 Internet-Draft           EESP IKEv2 negotiation            February 2025
 
@@ -356,15 +356,16 @@ Internet-Draft           EESP IKEv2 negotiation            February 2025
 
 3.1.2.  New Transform IDs for Sequence Numbers Transform Type
 
-   This document defines two new Transfor IDs for the Sequence Numbers
-   transform type: 64-bit Sequential Numbers (<TBD4>) and None (<TBD5>).
+   This document defines two new Transform IDs for the Sequence Numbers
+   transform type: '64-bit Sequential Numbers' (<TBD4>) and 'None'
+   (<TBD5>).
 
    To enable presence of sequence numbers in the EESP header the
    initiator MUST propose SN = (64-bit Sequential Numbers) in the
    Proposal Substructure inside the Security Association (SA) payload.
-   When the responder selects 64-bit Sequential Numbers, Sequence Number
-   field is included into the EESP header, that allows peers to achieve
-   replay protection.
+   When the responder selects 64-bit Sequential Numbers, the Sequence
+   Number field is included into the EESP header, that allows peers to
+   achieve replay protection.
 
    To disable sequence numbering, and thus replay protection based on
    sequence numbers, the initiator MUST propose SN=None (<TBD5>).  When
@@ -388,8 +389,7 @@ Internet-Draft           EESP IKEv2 negotiation            February 2025
 
 
 
-
-Klassert, et al.         Expires 24 August 2025                 [Page 7]
+Klassert, et al.         Expires 25 August 2025                 [Page 7]
 
 Internet-Draft           EESP IKEv2 negotiation            February 2025
 
@@ -399,7 +399,7 @@ Internet-Draft           EESP IKEv2 negotiation            February 2025
    that define pure encryption MUST NOT be used in the context of
    EESPv0.
 
-   Note, that 64-bit Sequential Numbers and None transform IDs are
+   Note, that '64-bit Sequential Numbers' and 'None' transform IDs are
    unspecified for ESP and MUST NOT be used in ESP proposals.  On the
    other hand, currently defined transform IDs for the Sequence Numbers
    transform type (32-bit Sequential Numbers and Partially Transmitted
@@ -410,7 +410,7 @@ Internet-Draft           EESP IKEv2 negotiation            February 2025
    the current proposal (as if they are unrecognized, in accordance with
    Section 3.3.6 of [RFC7296]).
 
-   The use of the None Transform ID for the SN tranform if further
+   The use of the None Transform ID for the SN transform if further
    limited by the ENCR transform.  In particular, if the selected ENCR
    transform defines use of implicit IV (as transforms defined in
    [RFC8750]), then the value None MUST NOT be selected for the SN
@@ -445,7 +445,7 @@ Internet-Draft           EESP IKEv2 negotiation            February 2025
 
 
 
-Klassert, et al.         Expires 24 August 2025                 [Page 8]
+Klassert, et al.         Expires 25 August 2025                 [Page 8]
 
 Internet-Draft           EESP IKEv2 negotiation            February 2025
 
@@ -501,7 +501,7 @@ Internet-Draft           EESP IKEv2 negotiation            February 2025
 
 
 
-Klassert, et al.         Expires 24 August 2025                 [Page 9]
+Klassert, et al.         Expires 25 August 2025                 [Page 9]
 
 Internet-Draft           EESP IKEv2 negotiation            February 2025
 
@@ -548,7 +548,7 @@ Internet-Draft           EESP IKEv2 negotiation            February 2025
 
    If an SSKDF is selected as part of the proposal, instead of directly
    taking keys for the Sub SAs from KEYMAT, as described in section 2.17
-   of [RFC7296], only one "root" key is taken for each EESP SA of the
+   of [RFC7296], only one 'root' key is taken for each EESP SA of the
    Child SA.  Their length is determined by the key size of the
    negotiated SSKDF.  The root key for the EESP SA carrying data from
    the initiator to the responder is taken before that for the SA going
@@ -557,7 +557,7 @@ Internet-Draft           EESP IKEv2 negotiation            February 2025
 
 
 
-Klassert, et al.         Expires 24 August 2025                [Page 10]
+Klassert, et al.         Expires 25 August 2025                [Page 10]
 
 Internet-Draft           EESP IKEv2 negotiation            February 2025
 
@@ -613,7 +613,7 @@ Internet-Draft           EESP IKEv2 negotiation            February 2025
 
 
 
-Klassert, et al.         Expires 24 August 2025                [Page 11]
+Klassert, et al.         Expires 25 August 2025                [Page 11]
 
 Internet-Draft           EESP IKEv2 negotiation            February 2025
 
@@ -669,7 +669,7 @@ Internet-Draft           EESP IKEv2 negotiation            February 2025
 
 
 
-Klassert, et al.         Expires 24 August 2025                [Page 12]
+Klassert, et al.         Expires 25 August 2025                [Page 12]
 
 Internet-Draft           EESP IKEv2 negotiation            February 2025
 
@@ -725,7 +725,7 @@ Internet-Draft           EESP IKEv2 negotiation            February 2025
 
 
 
-Klassert, et al.         Expires 24 August 2025                [Page 13]
+Klassert, et al.         Expires 25 August 2025                [Page 13]
 
 Internet-Draft           EESP IKEv2 negotiation            February 2025
 
@@ -781,7 +781,7 @@ Internet-Draft           EESP IKEv2 negotiation            February 2025
 
 
 
-Klassert, et al.         Expires 24 August 2025                [Page 14]
+Klassert, et al.         Expires 25 August 2025                [Page 14]
 
 Internet-Draft           EESP IKEv2 negotiation            February 2025
 
@@ -837,7 +837,7 @@ Internet-Draft           EESP IKEv2 negotiation            February 2025
 
 
 
-Klassert, et al.         Expires 24 August 2025                [Page 15]
+Klassert, et al.         Expires 25 August 2025                [Page 15]
 
 Internet-Draft           EESP IKEv2 negotiation            February 2025
 
@@ -893,7 +893,7 @@ Internet-Draft           EESP IKEv2 negotiation            February 2025
 
 
 
-Klassert, et al.         Expires 24 August 2025                [Page 16]
+Klassert, et al.         Expires 25 August 2025                [Page 16]
 
 Internet-Draft           EESP IKEv2 negotiation            February 2025
 
@@ -949,7 +949,7 @@ Authors' Addresses
 
 
 
-Klassert, et al.         Expires 24 August 2025                [Page 17]
+Klassert, et al.         Expires 25 August 2025                [Page 17]
 
 Internet-Draft           EESP IKEv2 negotiation            February 2025
 
@@ -1005,4 +1005,4 @@ Internet-Draft           EESP IKEv2 negotiation            February 2025
 
 
 
-Klassert, et al.         Expires 24 August 2025                [Page 18]
+Klassert, et al.         Expires 25 August 2025                [Page 18]
