@@ -270,24 +270,6 @@ only be done if the upper level protocol provides this service. See
 # The Session ID is a multi-purpose attribute with mutually
 # exclusive values.
 
-** UDP Encapsulation for EESP
-
-UDP encapsulation for EESP is largely similar to the ESP UDP
-encapsulation specified in [[RFC3948]], with the primary difference
-being the UDP source port used by the EESP Sub SA may be different
-from IKE SA source port, as specified in [[RFC3947]], for more
-flexible handling of EESP traffic, particularly ECMP support
-along the path and in the NIC.
-
-A receiver indenting to support both ESP and EESP encapsulated in UDP
-must be able to distinguish ESP and EESP incoming traffic that will
-arrive at the same UDP port. To be able to handle this the SPIs
-for the incoming ESP SAs MUST be choosen in such a way, that they
-can be distinguished from the EESP base header. Since the
-most significant bit of the EESP base header is fixed to be one, this
-can be achieved if ESP SPIs are selected in such a way, that the most
-significant bit of the ESP SPIs is always set to zero.
-
 # [VS] From my recollection of the discussion during the last call,
 # [VS] we decided that Cryp Offset is carried in the EESP header and
 # [VS] there is no need to negotiate it. Correct me if I'm wrong, for
@@ -300,37 +282,6 @@ significant bit of the ESP SPIs is always set to zero.
 # same. USE_EESP_CRYPTOFFSET is not supported in Tunnel mode or BEET
 # mode.
 # Note STK: This needs discussion
-# #
-# ~NOTE~ Add EESP draft UDP section reference.
-
-*** UDP Encapsulation of Sub SAs
-
-An EESP SA primarily uses UDP encapsulation to facilitate NAT
-traversal. However, an additional use case for UDP encapsulation is
-to introduce source port entropy, which supports ECMP or/and
-RSS (Receive Side Scaling) mechanisms. In such scenarios, the
-initiator MAY also use a distinct, ephemeral source port for
-Sub SA IDs greater than zero.
-# Both peers MAY independently select
-# different source ports for the same Sub SA ID.
-
-It is important to note that IKE messages MUST NOT utilize these
-ephemeral source ports. Instead, IKE traffic should be confined to
-the source and destination ports to ensure proper protocol operation
-and maintain compatibility with existing implementations.
-
-When using ephemeral source ports, the receiver can only set the
-source port upon arrival of an EESP packet with that Sub SA ID. If
-the receiver is pre-populating a Sub SA, it may have to install it
-with a source port set to zero and, upon arrival of a packet,
-update the source port using a mapping change.
-
-Additionally, when multiple Sub SAs exist, the receiver SHOULD
-maintain a mapping table to track the source port associated with
-each Sub SA independently. This ensures that traffic is correctly
-routed and prevents ambiguity in handling packets associated with
-different Sub SAs when a NAT is present.
-
 
 * EESP SA Negotiation in IKEv2
 
@@ -832,7 +783,6 @@ TBD
 ** RFC5840
 ** RFC4303
 ** RFC7296
-** RFC3948
 ** RFC4301
 ** RFC8126
 ** I-D.klassert-ipsecme-eesp
@@ -844,7 +794,6 @@ TBD
 ** RFC2119
 ** RFC9347
 ** RFC9611
-** RFC3947
 ** RFC2992
 ** RFC7942
 ** RFC8750
