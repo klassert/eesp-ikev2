@@ -564,37 +564,9 @@ negotiated SSKDF. The root key for the EESP SA carrying data from
 the initiator to the responder is taken before that for the SA going
 from the responder to the initiator.
 
-# [VS] Discussion: perhaps the key derivation argument can be part
-# [VS] of the SSKDSF transform. In other words - definition of
-# [VS] a particular SSKDF would not only the specify KDF to use, but
-# [VS] also include its arguments. This would make key Sub SA
-# [VS] derivation more flexible (in future it can be defined over
-# [VS] other stuff than SPI + Session ID, e.g. over SN).
-# [VS] Disadvantage - the SSKDF definition would become more 'heavy'
-# [VS] and in adding new SSKDFs would in theory be more difficult
-
-# [VS] The Sub SA key derivation stuff should be moved to the eesp
-# [VS] draft. This key derivation is done inside EESP and is opaque
-# [VS] for IKE
-
-Using the EESP SA's root key, SK_sub, the KEYMAT for each Sub SA is
-derived as follows:
-
-    KEYMAT_sub = SSKDF(SK_sub, SPI | Session_ID, L)
-
-Where L is the total length of the key material KEYMAT_sub and the
-salt value is comprised of the full SPI and the full Session ID of
-the Sub SA.
-
-If multiple keys are required for a Sub SA, the encryption key MUST
-be taken from the first bits of KEYMAT_sub, the integrity key MUST be
-taken from the remaining bits.
-
-Keys for Sub SAs may be derived immediately or on demand when the
-first packet is processed. Memory constrained implementations may
-even decide to derive the Sub SA keys on the fly for each received
-packet as only SK_sub has to be stored to derive the keys of all
-Sub SAs.
+The root key and SSKDF are configured as properties of an EESP SA,
+which derives the keys for individual Sub SAs as specified in
+[[I-D.klassert-ipsecme-eesp]].
 
 Because individual Sub SAs can't be rekeyed, the complete EESP Child
 SA MUST be rekeyed when either a cryptographic limit or a time-based
