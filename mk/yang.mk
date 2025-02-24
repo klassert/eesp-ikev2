@@ -45,6 +45,7 @@ publish: git-clean-check $(VBASE).xml $(VBASE).txt $(VBASE).html
 	git tag -m "yank.mk: publish-$(SBASE)-$(VERSION)" bp-$(PBRANCH)
 	git add $(PBASE).xml $(PBASE).txt $(PBASE).html
 	git commit -m "yank.mk: publish-$(SBASE)-$(VERSION)"
+	git tag -m "yank.mk: published-$(SBASE)-$(VERSION)" published-$(SBASE)-$(VERSION)
 	$(MAKE) push_to_remote
 	git checkout $(MAIN_BRANCH)
 	git merge --ff-only $(PBRANCH)
