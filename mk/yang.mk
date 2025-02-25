@@ -11,7 +11,7 @@ VBASE := draft/$(BASE)-$(VERSION)
 LBASE := draft/$(BASE)-latest
 SHELL := /bin/bash
 MAIN_BRANCH ?= main #older repos set to master
-PUSH_TO_REMOTE ?=
+PUSH_TO_REMOTE ?= yes
 
 # If you have docker you can avoid having to install anything by leaving this.
 ifeq ($(CIRCLECI),)
