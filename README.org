@@ -15,7 +15,7 @@ The latest version of the draft in HTML format is at:
 # sed -i "s|klassert.github.io/eesp-ikev2|$USERNAME.github.io/$REPO_NAME|g"
 
 * IETF Datatracker Copy of IKEv2 EESP I.D.
-- [[https://datatracker.ietf.org/doc/draft-klassert-ipsecme-eesp-ikev2/]
+- [[https://datatracker.ietf.org/doc/draft-klassert-ipsecme-eesp-ikev2/][IETF Datatracker: draft-klassert-ipsecme-eesp-ikev2]]
 
 * References
 For more detailed information, refer to the following resources:
