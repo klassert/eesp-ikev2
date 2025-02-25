@@ -5,8 +5,8 @@
 This is the working area for the individual Internet-Draft, "EESP IKEv2".
 
 * Introduction
-This README provides information about the Enhanced Encapsulating
-Security Payload (EESP) IKEv2 draft document.
+This README provides information about the ~IKEv2 negotiation for Enhanced Encapsulating Security Payload (EESP)~
+draft document.
 
 * Laest Copy
 The latest version of the draft in HTML format is at:
@@ -14,8 +14,8 @@ The latest version of the draft in HTML format is at:
 # above URL is replaced by .github/workflows/generate.yaml
 # sed -i "s|klassert.github.io/eesp-ikev2|$USERNAME.github.io/$REPO_NAME|g"
 
-* IETF Datatracker Copy
-This document is yet to be submitted to IETF.
+* IETF Datatracker Copy of IKEv2 EESP I.D.
+- [[https://datatracker.ietf.org/doc/draft-klassert-ipsecme-eesp-ikev2/]
 
 * References
 For more detailed information, refer to the following resources:
