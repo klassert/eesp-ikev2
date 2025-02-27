@@ -13,7 +13,7 @@ Expires: 31 August 2025                                       T. Brunner
 
 
   IKEv2 negotiation for Enhanced Encapsulating Security Payload (EESP)
-                  draft-klassert-ipsecme-eesp-ikev2-02
+                  draft-klassert-ipsecme-eesp-ikev2-01
 
 Abstract
 
