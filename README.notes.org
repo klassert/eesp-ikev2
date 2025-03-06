@@ -24,7 +24,9 @@
 
 * Introduction
 
-These are notes on EESP IKEv2 and other EESP related information. To keep it in one place for quick access.
+These are notes on EESP IKEv2 and other EESP related information. To
+keep it all in one place for quick access. Each section is on its
+own.
 
 * KDF methods
 
@@ -342,12 +344,19 @@ first nibble, 4 bits, numbers 4 and 6 could be used by IPv4 or IPv6.
 EESP could use another spi say 3 as an EESP marker.
 However, this 4 bytes would lead to waste of 4 bytes every EESP packet.
 
-* UDP pot sharing on Linux
+* UDP port sharing on Linux
 
 On Linux define EESPINUDP, a type socket encapsulation. It is
 similar to ESPINUDP. When set this socket will accept IKE packets,
 ESP or EESP packets. When sharing the same for port EESP and ESP
 ESP SPI the bit 31 should be zero.
+
+
+* Old references
+
+[[I-D.mostafa-qesp]], [[QESP-Paper]] is an effort which is somewhat similart
+to EESP, especially to expose flow properties outside. The same group also
+worked on [[EESP-presenation]]
 
 * Normative References
 
@@ -382,6 +391,7 @@ ESP SPI the bit 31 should be zero.
 ** I-D.irtf-cfrg-aead-properties
 ** I-D.mattsson-cfrg-aes-gcm-sst
 ** I-D.bottorff-ipsecme-mtdcuc-ipsec-lb
+** I-D.mostafa-qesp
 
 ** Azure-Network
 :PROPERTIES:
@@ -503,4 +513,18 @@ ESP SPI the bit 31 should be zero.
 :REF_TARGET: https://www.youtube.com/watch?v=JWskjzgiIa4
 :REF_TITLE: SHA-3 Hash Function
 :REF_ORG: Christof Paar
+:END:
+
+** EESP-presenation
+:PROPERTIES:
+:REF_TARGET: https://www.acsac.org/2008/program/wip/A_New_QoS_Controllable_Security_Protocol.pdf
+:REF_TITLE: A New QoS Controllable Security Protocol
+:REF_ORG: Mahmoud MOSTAFA, Université de Toulouse, INP, IRIT
+:END:
+
+** QESP-Paper
+:PROPERTIES:
+:REF_TARGET: https://hal.science/hal-00433850v1/file/PID992780-v8-camera-ready-final.pdf
+:REF_TITLE: Q-ESP: a QoS-compliant Security Protocol to enrich IPSec Framework
+:REF_ORG: Mahmoud MOSTAFA, Université de Toulouse, INP, IRIT
 :END:
