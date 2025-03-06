@@ -5,11 +5,11 @@
 IPSECME Working Group                                        S. Klassert
 Internet-Draft                                                 A. Antony
 Intended status: Standards Track                                 secunet
-Expires: 31 August 2025                                       T. Brunner
+Expires: 7 September 2025                                     T. Brunner
                                                            codelabs GmbH
                                                               V. Smyslov
                                                               ELVIS-PLUS
-                                                        27 February 2025
+                                                            6 March 2025
 
 
   IKEv2 negotiation for Enhanced Encapsulating Security Payload (EESP)
@@ -41,7 +41,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 31 August 2025.
+   This Internet-Draft will expire on 7 September 2025.
 
 Copyright Notice
 
@@ -53,9 +53,9 @@ Copyright Notice
 
 
 
-Klassert, et al.         Expires 31 August 2025                 [Page 1]
+Klassert, et al.        Expires 7 September 2025                [Page 1]
 
-Internet-Draft           EESP IKEv2 negotiation            February 2025
+Internet-Draft           EESP IKEv2 negotiation               March 2025
 
 
    This document is subject to BCP 78 and the IETF Trust's Legal
@@ -109,9 +109,9 @@ Table of Contents
 
 
 
-Klassert, et al.         Expires 31 August 2025                 [Page 2]
+Klassert, et al.        Expires 7 September 2025                [Page 2]
 
-Internet-Draft           EESP IKEv2 negotiation            February 2025
+Internet-Draft           EESP IKEv2 negotiation               March 2025
 
 
 1.  Introduction
@@ -165,9 +165,9 @@ Internet-Draft           EESP IKEv2 negotiation            February 2025
 
 
 
-Klassert, et al.         Expires 31 August 2025                 [Page 3]
+Klassert, et al.        Expires 7 September 2025                [Page 3]
 
-Internet-Draft           EESP IKEv2 negotiation            February 2025
+Internet-Draft           EESP IKEv2 negotiation               March 2025
 
 
 2.  EESP Overview
@@ -221,9 +221,9 @@ Internet-Draft           EESP IKEv2 negotiation            February 2025
 
 
 
-Klassert, et al.         Expires 31 August 2025                 [Page 4]
+Klassert, et al.        Expires 7 September 2025                [Page 4]
 
-Internet-Draft           EESP IKEv2 negotiation            February 2025
+Internet-Draft           EESP IKEv2 negotiation               March 2025
 
 
 3.  EESP SA Negotiation in IKEv2
@@ -277,9 +277,9 @@ Internet-Draft           EESP IKEv2 negotiation            February 2025
 
 
 
-Klassert, et al.         Expires 31 August 2025                 [Page 5]
+Klassert, et al.        Expires 7 September 2025                [Page 5]
 
-Internet-Draft           EESP IKEv2 negotiation            February 2025
+Internet-Draft           EESP IKEv2 negotiation               March 2025
 
 
    *  SSKDF_HKDF_SHA2_256, SSKDF_HKDF_SHA2_384 and SSKDF_HKDF_SHA2_512
@@ -333,9 +333,9 @@ Internet-Draft           EESP IKEv2 negotiation            February 2025
 
 
 
-Klassert, et al.         Expires 31 August 2025                 [Page 6]
+Klassert, et al.        Expires 7 September 2025                [Page 6]
 
-Internet-Draft           EESP IKEv2 negotiation            February 2025
+Internet-Draft           EESP IKEv2 negotiation               March 2025
 
 
    For the ENCR transform type only those transform IDs that define use
@@ -389,9 +389,9 @@ Internet-Draft           EESP IKEv2 negotiation            February 2025
 
 
 
-Klassert, et al.         Expires 31 August 2025                 [Page 7]
+Klassert, et al.        Expires 7 September 2025                [Page 7]
 
-Internet-Draft           EESP IKEv2 negotiation            February 2025
+Internet-Draft           EESP IKEv2 negotiation               March 2025
 
 
    The ESP_TFC_PADDING_NOT_SUPPORTED, [RFC7296], notification is not
@@ -445,9 +445,9 @@ Internet-Draft           EESP IKEv2 negotiation            February 2025
 
 
 
-Klassert, et al.         Expires 31 August 2025                 [Page 8]
+Klassert, et al.        Expires 7 September 2025                [Page 8]
 
-Internet-Draft           EESP IKEv2 negotiation            February 2025
+Internet-Draft           EESP IKEv2 negotiation               March 2025
 
 
    *  Maximum Sub SA ID (2 octets, integer in network byte order) --
@@ -501,9 +501,9 @@ Internet-Draft           EESP IKEv2 negotiation            February 2025
 
 
 
-Klassert, et al.         Expires 31 August 2025                 [Page 9]
+Klassert, et al.        Expires 7 September 2025                [Page 9]
 
-Internet-Draft           EESP IKEv2 negotiation            February 2025
+Internet-Draft           EESP IKEv2 negotiation               March 2025
 
 
    The root key and SSKDF are configured as properties of an EESP SA,
@@ -557,9 +557,9 @@ Internet-Draft           EESP IKEv2 negotiation            February 2025
 
 
 
-Klassert, et al.         Expires 31 August 2025                [Page 10]
+Klassert, et al.        Expires 7 September 2025               [Page 10]
 
-Internet-Draft           EESP IKEv2 negotiation            February 2025
+Internet-Draft           EESP IKEv2 negotiation               March 2025
 
 
 5.1.3.  IKEv2 Notify Message Status Types registry.
@@ -613,9 +613,9 @@ Internet-Draft           EESP IKEv2 negotiation            February 2025
 
 
 
-Klassert, et al.         Expires 31 August 2025                [Page 11]
+Klassert, et al.        Expires 7 September 2025               [Page 11]
 
-Internet-Draft           EESP IKEv2 negotiation            February 2025
+Internet-Draft           EESP IKEv2 negotiation               March 2025
 
 
           +============+=====================+=================+
@@ -669,9 +669,9 @@ Internet-Draft           EESP IKEv2 negotiation            February 2025
 
 
 
-Klassert, et al.         Expires 31 August 2025                [Page 12]
+Klassert, et al.        Expires 7 September 2025               [Page 12]
 
-Internet-Draft           EESP IKEv2 negotiation            February 2025
+Internet-Draft           EESP IKEv2 negotiation               March 2025
 
 
    be construed to be, a catalog of available implementations or their
@@ -725,9 +725,9 @@ Internet-Draft           EESP IKEv2 negotiation            February 2025
 
 
 
-Klassert, et al.         Expires 31 August 2025                [Page 13]
+Klassert, et al.        Expires 7 September 2025               [Page 13]
 
-Internet-Draft           EESP IKEv2 negotiation            February 2025
+Internet-Draft           EESP IKEv2 negotiation               March 2025
 
 
    [I-D.klassert-ipsecme-eesp]
@@ -781,9 +781,9 @@ Internet-Draft           EESP IKEv2 negotiation            February 2025
 
 
 
-Klassert, et al.         Expires 31 August 2025                [Page 14]
+Klassert, et al.        Expires 7 September 2025               [Page 14]
 
-Internet-Draft           EESP IKEv2 negotiation            February 2025
+Internet-Draft           EESP IKEv2 negotiation               March 2025
 
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
@@ -837,9 +837,9 @@ Authors' Addresses
 
 
 
-Klassert, et al.         Expires 31 August 2025                [Page 15]
+Klassert, et al.        Expires 7 September 2025               [Page 15]
 
-Internet-Draft           EESP IKEv2 negotiation            February 2025
+Internet-Draft           EESP IKEv2 negotiation               March 2025
 
 
    Steffen Klassert
@@ -893,4 +893,4 @@ Internet-Draft           EESP IKEv2 negotiation            February 2025
 
 
 
-Klassert, et al.         Expires 31 August 2025                [Page 16]
+Klassert, et al.        Expires 7 September 2025               [Page 16]

@@ -5,7 +5,7 @@
 IPSECME Working Group                                        S. Klassert
 Internet-Draft                                                 A. Antony
 Intended status: Informational                                   secunet
-Expires: 31 August 2025                                 27 February 2025
+Expires: 7 September 2025                                   6 March 2025
 
 
                  Notes on IKEv2 Key Derivation Function
@@ -26,7 +26,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 31 August 2025.
+   This Internet-Draft will expire on 7 September 2025.
 
 Copyright Notice
 
@@ -53,9 +53,9 @@ Table of Contents
 
 
 
-Klassert & Antony        Expires 31 August 2025                 [Page 1]
+Klassert & Antony       Expires 7 September 2025                [Page 1]
 
-Internet-Draft               KEv2 KDF Notes                February 2025
+Internet-Draft               KEv2 KDF Notes                   March 2025
 
 
    3.  UDP Encap . . . . . . . . . . . . . . . . . . . . . . . . . .   7
@@ -63,15 +63,17 @@ Internet-Draft               KEv2 KDF Notes                February 2025
      3.2.  Use cases for UDP Encapsulation without NAT . . . . . . .   7
        3.2.1.  UDP Encapsulation in Cloud Provider . . . . . . . . .   7
    4.  WESP UDP Encap  . . . . . . . . . . . . . . . . . . . . . . .   8
-   5.  UDP pot sharing on Linux  . . . . . . . . . . . . . . . . . .   9
-   6.  Normative References  . . . . . . . . . . . . . . . . . . . .   9
-   7.  Informative References  . . . . . . . . . . . . . . . . . . .  10
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  13
+   5.  UDP port sharing on Linux . . . . . . . . . . . . . . . . . .   9
+   6.  Old references  . . . . . . . . . . . . . . . . . . . . . . .   9
+   7.  Normative References  . . . . . . . . . . . . . . . . . . . .   9
+   8.  Informative References  . . . . . . . . . . . . . . . . . . .  10
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  14
 
 1.  Introduction
 
    These are notes on EESP IKEv2 and other EESP related information.  To
-   keep it in one place for quick access.
+   keep it all in one place for quick access.  Each section is on its
+   own.
 
 2.  KDF methods
 
@@ -103,16 +105,17 @@ Internet-Draft               KEv2 KDF Notes                February 2025
    IKEv2 key derivation has two setps.  Above is the first step and next
    key expansion using prf+.
 
+
+
+
+
+Klassert & Antony       Expires 7 September 2025                [Page 2]
+
+Internet-Draft               KEv2 KDF Notes                   March 2025
+
+
    {SK_d | SK_ai | SK_ar | SK_ei | SK_er | SK_pi | SK_pr} = prf+
    (SKEYSEED, Ni | Nr | SPIi | SPIr)
-
-
-
-
-Klassert & Antony        Expires 31 August 2025                 [Page 2]
-
-Internet-Draft               KEv2 KDF Notes                February 2025
-
 
    (indicating that the quantities SK_d, SK_ai, SK_ar, SK_ei, SK_er,
    SK_pi, and SK_pr are taken in order from the generated bits of the
@@ -157,18 +160,20 @@ Internet-Draft               KEv2 KDF Notes                February 2025
    derivations per second?  This should support PSP-like, NIC master
    key, or IKEv2 SK_d as input.
 
+
+
+
+
+
+Klassert & Antony       Expires 7 September 2025                [Page 3]
+
+Internet-Draft               KEv2 KDF Notes                   March 2025
+
+
    Sub-SA KDF for IKEv2 We need a KDF that fits the IKEv2 Child SA
    (using prf and prf+) model and can provide 256-bit strength, ideally
    on a per-packet basis.  We're also open to slower KDF options
    depending on the encryption algorithm.
-
-
-
-
-Klassert & Antony        Expires 31 August 2025                 [Page 3]
-
-Internet-Draft               KEv2 KDF Notes                February 2025
-
 
    Additional Questions: PSP chose AES-CMAC-256 as their KDF, but IETF
    doesn't define or mention it in RFC 8247.  Can we add AES-CMAC-256 to
@@ -213,18 +218,19 @@ Internet-Draft               KEv2 KDF Notes                February 2025
 
    Sub SA KEYMAT = crypto(Sk_d, Sub SA Salt | Sub SA ID);
 
+
+
+
+Klassert & Antony       Expires 7 September 2025                [Page 4]
+
+Internet-Draft               KEv2 KDF Notes                   March 2025
+
+
    e.g with AES-GCM: Sub SA KEYMAT = AES-CTR(Sk_d, Sub SA Salt | Sub SA
    ID);
 
    Where th Sub SA Salt is derived along with Sk_d to generate extra
    secret bytes?  Sub SA salt together with Sub SA ID would be 128 bits.
-
-
-
-Klassert & Antony        Expires 31 August 2025                 [Page 4]
-
-Internet-Draft               KEv2 KDF Notes                February 2025
-
 
    [I-D.mattsson-cfrg-aes-gcm-sst] seems to be deriving per packet keys
    for GCM.  This is an interesting work in cfrg and it is also proposed
@@ -266,21 +272,22 @@ Internet-Draft               KEv2 KDF Notes                February 2025
    entropy. https://mailarchive.ietf.org/arch/msg/ipsec/
    Tz4xsjmEHH57jvdMS9pqSFnGbwc/
 
+
+
+
+
+
+Klassert & Antony       Expires 7 September 2025                [Page 5]
+
+Internet-Draft               KEv2 KDF Notes                   March 2025
+
+
    NIST is coming up with a modern AEAD.  The winner is [ASCON] in 2024.
    The inventors envsions that AEAD as a PRF.  However, only ASCON 128.
    I found it odd this one only support 128 bit tags.  Then we are back
    to the same argument as this is not good enough for IKEv2 PRF.  May
    be because NIST called it light weight crypto:) We need one for
    400Gbps too.  A hardware NIC looks like an IoT.
-
-
-
-
-
-Klassert & Antony        Expires 31 August 2025                 [Page 5]
-
-Internet-Draft               KEv2 KDF Notes                February 2025
-
 
 2.4.  Steffen's findings.
 
@@ -324,19 +331,17 @@ Internet-Draft               KEv2 KDF Notes                February 2025
    But in this case 2^128 'identical' keys is the same as having 2^128
    'different' keys. ---
 
+
+
+Klassert & Antony       Expires 7 September 2025                [Page 6]
+
+Internet-Draft               KEv2 KDF Notes                   March 2025
+
+
    I think this can be generalized.  If we have two pairs (n_j,K_out_j)
    such that:
 
    KDF-AES-256(K_in, n_1) = K_out_1 KDF-AES-256(K_in, n_2) = K_out_2
-
-
-
-
-
-Klassert & Antony        Expires 31 August 2025                 [Page 6]
-
-Internet-Draft               KEv2 KDF Notes                February 2025
-
 
    then we are back at a security level of 2^256.  I.e.  We have
    2^256/(2^128*2^128) =1 'identical' keys.  This would be the case if
@@ -384,14 +389,9 @@ Internet-Draft               KEv2 KDF Notes                February 2025
 
 
 
-
-
-
-
-
-Klassert & Antony        Expires 31 August 2025                 [Page 7]
+Klassert & Antony       Expires 7 September 2025                [Page 7]
 
-Internet-Draft               KEv2 KDF Notes                February 2025
+Internet-Draft               KEv2 KDF Notes                   March 2025
 
 
    Cloud providers often enforce bandwidth limits per flow between nodes
@@ -445,19 +445,25 @@ Internet-Draft               KEv2 KDF Notes                February 2025
 
 
 
-Klassert & Antony        Expires 31 August 2025                 [Page 8]
+Klassert & Antony       Expires 7 September 2025                [Page 8]
 
-Internet-Draft               KEv2 KDF Notes                February 2025
+Internet-Draft               KEv2 KDF Notes                   March 2025
 
 
-5.  UDP pot sharing on Linux
+5.  UDP port sharing on Linux
 
    On Linux define EESPINUDP, a type socket encapsulation.  It is
    similar to ESPINUDP.  When set this socket will accept IKE packets,
    ESP or EESP packets.  When sharing the same for port EESP and ESP ESP
    SPI the bit 31 should be zero.
 
-6.  Normative References
+6.  Old references
+
+   [I-D.mostafa-qesp], [QESP-Paper] is an effort which is somewhat
+   similart to EESP, especially to expose flow properties outside.  The
+   same group also worked on [EESP-presenation]
+
+7.  Normative References
 
    [NIST800-108]
               NIST, "Recommendation for Key Derivation Using
@@ -491,20 +497,19 @@ Internet-Draft               KEv2 KDF Notes                February 2025
               Visibility", RFC 5840, DOI 10.17487/RFC5840, April 2010,
               <https://www.rfc-editor.org/info/rfc5840>.
 
+
+
+
+
+Klassert & Antony       Expires 7 September 2025                [Page 9]
+
+Internet-Draft               KEv2 KDF Notes                   March 2025
+
+
    [RFC5869]  Krawczyk, H. and P. Eronen, "HMAC-based Extract-and-Expand
               Key Derivation Function (HKDF)", RFC 5869,
               DOI 10.17487/RFC5869, May 2010,
               <https://www.rfc-editor.org/info/rfc5869>.
-
-
-
-
-
-
-Klassert & Antony        Expires 31 August 2025                 [Page 9]
-
-Internet-Draft               KEv2 KDF Notes                February 2025
-
 
    [RFC7296]  Kaufman, C., Hoffman, P., Nir, Y., Eronen, P., and T.
               Kivinen, "Internet Key Exchange Protocol Version 2
@@ -517,7 +522,7 @@ Internet-Draft               KEv2 KDF Notes                February 2025
               RFC 8247, DOI 10.17487/RFC8247, September 2017,
               <https://www.rfc-editor.org/info/rfc8247>.
 
-7.  Informative References
+8.  Informative References
 
    [ASCON]    "The Ascon Family: Lightweight Authenticated Encryption,
               Hashing, and More :REF_ORG: Ascon Team",
@@ -540,6 +545,23 @@ Internet-Draft               KEv2 KDF Notes                February 2025
               bandwidth", <https://learn.microsoft.com/en-us/azure/
               virtual-network/virtual-machine-network-throughput>.
 
+   [EESP-presenation]
+              Mahmoud MOSTAFA, Université de Toulouse, INP, IRIT, "A New
+              QoS Controllable Security Protocol",
+              <https://www.acsac.org/2008/program/wip/
+              A_New_QoS_Controllable_Security_Protocol.pdf>.
+
+
+
+
+
+
+
+Klassert & Antony       Expires 7 September 2025               [Page 10]
+
+Internet-Draft               KEv2 KDF Notes                   March 2025
+
+
    [GCM-SST]  "Galois Counter Mode with Secure Short Tags (GCM-SST)
               Slides",
               <https://csrc.nist.gov/csrc/media/Presentations/2023/
@@ -552,15 +574,6 @@ Internet-Draft               KEv2 KDF Notes                February 2025
               workshop-on-block-cipher-modes-of-operation/documents/
               accepted-papers/Galois%20Counter%20Mode%20with%20Secure%20
               Short%20Tags.pdf>.
-
-
-
-
-
-Klassert & Antony        Expires 31 August 2025                [Page 10]
-
-Internet-Draft               KEv2 KDF Notes                February 2025
-
 
    [GCP-Network]
               Google, "Google Compute Engine Network bandwidth",
@@ -592,6 +605,19 @@ Internet-Draft               KEv2 KDF Notes                February 2025
               <https://datatracker.ietf.org/doc/html/draft-irtf-cfrg-
               aead-properties-09>.
 
+
+
+
+
+
+
+
+
+Klassert & Antony       Expires 7 September 2025               [Page 11]
+
+Internet-Draft               KEv2 KDF Notes                   March 2025
+
+
    [I-D.mattsson-cfrg-aes-gcm-sst]
               Campagna, M., Maximov, A., and J. P. Mattsson, "Galois
               Counter Mode with Strong Secure Tags (GCM-SST)", Work in
@@ -599,6 +625,13 @@ Internet-Draft               KEv2 KDF Notes                February 2025
               18, 19 February 2025,
               <https://datatracker.ietf.org/doc/html/draft-mattsson-
               cfrg-aes-gcm-sst-18>.
+
+   [I-D.mostafa-qesp]
+              Mostafa, M., El Kalam, A. A., and C. Fraboul, "QoS-
+              friendly Encapsulating Security Payload (Q-ESP)", Work in
+              Progress, Internet-Draft, draft-mostafa-qesp-00, 2
+              December 2009, <https://datatracker.ietf.org/doc/html/
+              draft-mostafa-qesp-00>.
 
    [IKEv2-prf]
               IANA, "IKEv2 Parameters: Extended Sequence Numbers
@@ -609,14 +642,6 @@ Internet-Draft               KEv2 KDF Notes                February 2025
               "The 8th BIU Winter School: More on Implicit
               Authentication; Key Derivation - Hugo Krawczyk",
               <https://www.youtube.com/watch?v=796TPmaMYY4>.
-
-
-
-
-Klassert & Antony        Expires 31 August 2025                [Page 11]
-
-Internet-Draft               KEv2 KDF Notes                February 2025
-
 
    [Keccak-Lecture]
               Christof Paar, "SHA-3 Hash Function",
@@ -635,6 +660,19 @@ Internet-Draft               KEv2 KDF Notes                February 2025
    [NetDev-2024-psp-video]
               Keccak, "PSP Crypto Protocol and HW Offload",
               <https://www.youtube.com/watch?v=RlsxPMsWdxo>.
+
+
+
+
+
+
+
+
+
+Klassert & Antony       Expires 7 September 2025               [Page 12]
+
+Internet-Draft               KEv2 KDF Notes                   March 2025
+
 
    [NIST-800-108-comments]
               NIST, "Public Comments and Resolutions on Draft NIST SP
@@ -656,6 +694,12 @@ Internet-Draft               KEv2 KDF Notes                February 2025
               <https://github.com/google/psp/blob/main/doc/
               PSP_Arch_Spec.pdf>.
 
+   [QESP-Paper]
+              Mahmoud MOSTAFA, Université de Toulouse, INP, IRIT,
+              "Q-ESP: a QoS-compliant Security Protocol to enrich IPSec
+              Framework", <https://hal.science/hal-00433850v1/file/
+              PID992780-v8-camera-ready-final.pdf>.
+
    [RFC4434]  Hoffman, P., "The AES-XCBC-PRF-128 Algorithm for the
               Internet Key Exchange Protocol (IKE)", RFC 4434,
               DOI 10.17487/RFC4434, February 2006,
@@ -664,15 +708,6 @@ Internet-Draft               KEv2 KDF Notes                February 2025
    [RFC5116]  McGrew, D., "An Interface and Algorithms for Authenticated
               Encryption", RFC 5116, DOI 10.17487/RFC5116, January 2008,
               <https://www.rfc-editor.org/info/rfc5116>.
-
-
-
-
-
-Klassert & Antony        Expires 31 August 2025                [Page 12]
-
-Internet-Draft               KEv2 KDF Notes                February 2025
-
 
    [RFC6188]  McGrew, D., "The Use of AES-192 and AES-256 in Secure
               RTP", RFC 6188, DOI 10.17487/RFC6188, March 2011,
@@ -685,6 +720,15 @@ Internet-Draft               KEv2 KDF Notes                February 2025
    [RFC8446]  Rescorla, E., "The Transport Layer Security (TLS) Protocol
               Version 1.3", RFC 8446, DOI 10.17487/RFC8446, August 2018,
               <https://www.rfc-editor.org/info/rfc8446>.
+
+
+
+
+
+Klassert & Antony       Expires 7 September 2025               [Page 13]
+
+Internet-Draft               KEv2 KDF Notes                   March 2025
+
 
    [RFC9611]  Antony, A., Brunner, T., Klassert, S., and P. Wouters,
               "Internet Key Exchange Protocol Version 2 (IKEv2) Support
@@ -725,4 +769,16 @@ Authors' Addresses
 
 
 
-Klassert & Antony        Expires 31 August 2025                [Page 13]
+
+
+
+
+
+
+
+
+
+
+
+
+Klassert & Antony       Expires 7 September 2025               [Page 14]
