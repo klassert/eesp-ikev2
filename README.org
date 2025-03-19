@@ -17,6 +17,8 @@ The latest version of the draft in HTML format is at:
 * IETF Datatracker Copy of IKEv2 EESP I.D.
 - [[https://datatracker.ietf.org/doc/draft-klassert-ipsecme-eesp-ikev2/][IETF Datatracker: draft-klassert-ipsecme-eesp-ikev2]]
 
+* [[https://author-tools.ietf.org/api/iddiff?doc_1=draft-klassert-ipsecme-eesp-ikev2&url_2=https://raw.githubusercontent.com/klassert/eesp-ikev2/refs/heads/gh-pages/draft-klassert-ipsecme-eesp-ikev2-latest.txt][diff with latest submission]]
+
 * References
 For more detailed information, refer to the following resources:
 - [[https://klassert.github.io/eesp/draft-klassert-ipsecme-eesp-latest.html][EESP I.D. Editor's copy]]
