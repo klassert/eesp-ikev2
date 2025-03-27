@@ -1,5 +1,7 @@
+*.bak
 *.org-e
 *.pdf
+*.swn
 *.swo
 *.swp
 *.tex
