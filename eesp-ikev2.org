@@ -234,16 +234,7 @@ Use of Sub SAs is optional in EESP and can be negotiated using IKEv2.
 
 ** EESP Sequence Numbers
 
-Unlike ESP, EESPv0 header allows to transmit 64-bit sequence numbers.
-In addition, the Sequence Number field in the EESPv0 header is
-optional and can be omitted from the packet if replay protection
-service is not needed. Note that while possible, disabling the
-replay protection service is generally NOT RECOMMENDED and should
-only be done if the upper level protocol provides this service. See
-[[Security Considerations]] for details.
-
-# [VS] I believe this is covered below in the discssion about
-# [VS] restrictions on negotiated parameters
+Unlike ESP, EESPv0 header transmit 64-bit sequence numbers.
 
 #  ** Explicit Initialization Vector
 #
@@ -343,7 +334,7 @@ The type of the Sub SA Key Derivation Function transform is <TBA2>.
 *** New Transform IDs for Sequence Numbers Transform Type
 
 This document defines two new Transform IDs for the Sequence Numbers
-transform type: ~64-bit Sequential Numbers~ (<TBD4>) and ~None~ (<TBD5>).
+transform type: ~64-bit Sequential Numbers~ (<TBD4>).
 
 To enable presence of sequence numbers in the EESP header the
 initiator MUST propose SN = (64-bit Sequential Numbers) in the
@@ -351,14 +342,6 @@ Proposal Substructure inside the Security Association (SA) payload.
 When the responder selects 64-bit Sequential Numbers, the Sequence Number
 field is included into the EESP header, that allows peers to
 achieve replay protection.
-
-# NOTE STK: I'd say MUST above as we want to negotiate Anti-Replay
-# service and not just the presense of the seq nr field.
-
-To disable sequence numbering, and thus replay protection based on
-sequence numbers, the initiator MUST propose SN=None (<TBD5>).
-When the responder selects None, Sequence Number field is omitted
-from the EESP header.
 
 ** Transforms Consistency
 
@@ -392,7 +375,7 @@ context of EESPv0.
 # [VS] In addition, that document must request IANA to add a column
 # [VS] "EESPv0 Reference" to the ENCR Transform IDs registry.
 
-Note, that ~64-bit Sequential Numbers~ and ~None~ transform IDs are
+Note, that ~64-bit Sequential Numbers~ transform ID is
 unspecified for ESP and MUST NOT be used in ESP proposals.
 On the other hand, currently defined transform IDs for the
 Sequence Numbers transform type (32-bit Sequential Numbers and
@@ -402,12 +385,6 @@ are unspecified for EESPv0 and MUST NOT be used in EESPv0 proposals.
 Implemenattions MUST ignore transforms containing invalid
 values for the current proposal (as if they are unrecognized,
 in accordance with Section 3.3.6 of [[RFC7296]]).
-
-The use of the None Transform ID for the SN transform
-if further limited by the ENCR transform. In particular,
-if the selected ENCR transform defines use of implicit IV
-(as transforms defined in [[RFC8750]]), then the value None MUST NOT
-be selected for the SN transform.
 
 ** Example of SA Payload Negotiating EESP
 
@@ -646,7 +623,6 @@ This document defines two new values in the IKEv2 "Transform Type 5
 | Value   | Name                          | Reference       |
 |---------+-------------------------------+-----------------+
 | <TBD4>  | 64-bit Sequential Numbers     | [this document] |
-| <TBD5>  | None                          | [this document] |
 
 ** New IKEv2 Registries
 
@@ -721,26 +697,6 @@ publication, as well as the reference to [[RFC7942]].
 
 
 * Security Considerations
-
-EESP option Crypt Offset [[I-D.klassert-ipsecme-eesp]] section [XXX]
-allows exposing transport headers for telemetry.
-It is indented use of within data center.
-
-When an EESP receiver implementation uses Stateless Decryption, it
-may not rely on single Security Policy Database (SPD) as specified in
-the IPsec Architecture document [[RFC4301]], section 4.4.1. However,
-the receiver MUST validate the negotiated Security Policy through
-other means to ensure compliance with the intended security
-requirements. For by adding Security Policy to the socket or route
-entry. Also comply with ICMP processing specified in section 6 of
-[[RFC4301]].
-
-If the replay protection service is disabled, an attacker can
-re-play packets with a different source address. Such an attacker
-could disrupt the connection by replaying a single packet with a
-different source address or port number.
-In this case the receiver SHOULD NOT dynamically modify ports or
-addresses without using IKEv2 Mobility [[RFC4555]].
 
 Additional security relevant aspects of using the IPsec protocol are
 discussed in the Security Architecture document [[RFC4301]].
