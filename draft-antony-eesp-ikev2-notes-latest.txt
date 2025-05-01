@@ -5,7 +5,7 @@
 IPSECME Working Group                                        S. Klassert
 Internet-Draft                                                 A. Antony
 Intended status: Informational                                   secunet
-Expires: 1 November 2025                                   30 April 2025
+Expires: 2 November 2025                                      1 May 2025
 
 
                  Notes on IKEv2 Key Derivation Function
@@ -26,7 +26,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 1 November 2025.
+   This Internet-Draft will expire on 2 November 2025.
 
 Copyright Notice
 
@@ -53,9 +53,9 @@ Table of Contents
 
 
 
-Klassert & Antony        Expires 1 November 2025                [Page 1]
+Klassert & Antony        Expires 2 November 2025                [Page 1]
 
-Internet-Draft               KEv2 KDF Notes                   April 2025
+Internet-Draft               KEv2 KDF Notes                     May 2025
 
 
    3.  UDP Encap . . . . . . . . . . . . . . . . . . . . . . . . . .   7
@@ -109,9 +109,9 @@ Internet-Draft               KEv2 KDF Notes                   April 2025
 
 
 
-Klassert & Antony        Expires 1 November 2025                [Page 2]
+Klassert & Antony        Expires 2 November 2025                [Page 2]
 
-Internet-Draft               KEv2 KDF Notes                   April 2025
+Internet-Draft               KEv2 KDF Notes                     May 2025
 
 
    {SK_d | SK_ai | SK_ar | SK_ei | SK_er | SK_pi | SK_pr} = prf+
@@ -165,9 +165,9 @@ Internet-Draft               KEv2 KDF Notes                   April 2025
 
 
 
-Klassert & Antony        Expires 1 November 2025                [Page 3]
+Klassert & Antony        Expires 2 November 2025                [Page 3]
 
-Internet-Draft               KEv2 KDF Notes                   April 2025
+Internet-Draft               KEv2 KDF Notes                     May 2025
 
 
    Sub-SA KDF for IKEv2 We need a KDF that fits the IKEv2 Child SA
@@ -221,9 +221,9 @@ Internet-Draft               KEv2 KDF Notes                   April 2025
 
 
 
-Klassert & Antony        Expires 1 November 2025                [Page 4]
+Klassert & Antony        Expires 2 November 2025                [Page 4]
 
-Internet-Draft               KEv2 KDF Notes                   April 2025
+Internet-Draft               KEv2 KDF Notes                     May 2025
 
 
    e.g with AES-GCM: Sub SA KEYMAT = AES-CTR(Sk_d, Sub SA Salt | Sub SA
@@ -277,9 +277,9 @@ Internet-Draft               KEv2 KDF Notes                   April 2025
 
 
 
-Klassert & Antony        Expires 1 November 2025                [Page 5]
+Klassert & Antony        Expires 2 November 2025                [Page 5]
 
-Internet-Draft               KEv2 KDF Notes                   April 2025
+Internet-Draft               KEv2 KDF Notes                     May 2025
 
 
    NIST is coming up with a modern AEAD.  The winner is [ASCON] in 2024.
@@ -333,9 +333,9 @@ Internet-Draft               KEv2 KDF Notes                   April 2025
 
 
 
-Klassert & Antony        Expires 1 November 2025                [Page 6]
+Klassert & Antony        Expires 2 November 2025                [Page 6]
 
-Internet-Draft               KEv2 KDF Notes                   April 2025
+Internet-Draft               KEv2 KDF Notes                     May 2025
 
 
    I think this can be generalized.  If we have two pairs (n_j,K_out_j)
@@ -389,9 +389,9 @@ Internet-Draft               KEv2 KDF Notes                   April 2025
 
 
 
-Klassert & Antony        Expires 1 November 2025                [Page 7]
+Klassert & Antony        Expires 2 November 2025                [Page 7]
 
-Internet-Draft               KEv2 KDF Notes                   April 2025
+Internet-Draft               KEv2 KDF Notes                     May 2025
 
 
    Cloud providers often enforce bandwidth limits per flow between nodes
@@ -445,9 +445,9 @@ Internet-Draft               KEv2 KDF Notes                   April 2025
 
 
 
-Klassert & Antony        Expires 1 November 2025                [Page 8]
+Klassert & Antony        Expires 2 November 2025                [Page 8]
 
-Internet-Draft               KEv2 KDF Notes                   April 2025
+Internet-Draft               KEv2 KDF Notes                     May 2025
 
 
 5.  UDP port sharing on Linux
@@ -501,9 +501,9 @@ Internet-Draft               KEv2 KDF Notes                   April 2025
 
 
 
-Klassert & Antony        Expires 1 November 2025                [Page 9]
+Klassert & Antony        Expires 2 November 2025                [Page 9]
 
-Internet-Draft               KEv2 KDF Notes                   April 2025
+Internet-Draft               KEv2 KDF Notes                     May 2025
 
 
    [RFC5869]  Krawczyk, H. and P. Eronen, "HMAC-based Extract-and-Expand
@@ -557,9 +557,9 @@ Internet-Draft               KEv2 KDF Notes                   April 2025
 
 
 
-Klassert & Antony        Expires 1 November 2025               [Page 10]
+Klassert & Antony        Expires 2 November 2025               [Page 10]
 
-Internet-Draft               KEv2 KDF Notes                   April 2025
+Internet-Draft               KEv2 KDF Notes                     May 2025
 
 
    [GCM-SST]  "Galois Counter Mode with Secure Short Tags (GCM-SST)
@@ -613,9 +613,9 @@ Internet-Draft               KEv2 KDF Notes                   April 2025
 
 
 
-Klassert & Antony        Expires 1 November 2025               [Page 11]
+Klassert & Antony        Expires 2 November 2025               [Page 11]
 
-Internet-Draft               KEv2 KDF Notes                   April 2025
+Internet-Draft               KEv2 KDF Notes                     May 2025
 
 
    [I-D.mattsson-cfrg-aes-gcm-sst]
@@ -669,9 +669,9 @@ Internet-Draft               KEv2 KDF Notes                   April 2025
 
 
 
-Klassert & Antony        Expires 1 November 2025               [Page 12]
+Klassert & Antony        Expires 2 November 2025               [Page 12]
 
-Internet-Draft               KEv2 KDF Notes                   April 2025
+Internet-Draft               KEv2 KDF Notes                     May 2025
 
 
    [NIST-800-108-comments]
@@ -725,9 +725,9 @@ Internet-Draft               KEv2 KDF Notes                   April 2025
 
 
 
-Klassert & Antony        Expires 1 November 2025               [Page 13]
+Klassert & Antony        Expires 2 November 2025               [Page 13]
 
-Internet-Draft               KEv2 KDF Notes                   April 2025
+Internet-Draft               KEv2 KDF Notes                     May 2025
 
 
    [RFC9611]  Antony, A., Brunner, T., Klassert, S., and P. Wouters,
@@ -781,4 +781,4 @@ Authors' Addresses
 
 
 
-Klassert & Antony        Expires 1 November 2025               [Page 14]
+Klassert & Antony        Expires 2 November 2025               [Page 14]
