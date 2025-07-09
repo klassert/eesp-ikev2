@@ -489,7 +489,7 @@ Note that this is not a negotiation: each side can indicate its own
 value for the maximum Sub SA ID. In addition, sending side is not
 required to consume all possible Sub SA IDs up to the indicated
 maximum value - it can create fewer Sub SAs. In any case, when
-creating Sub SAs as a sender an endpoint nas to consider that Sub SA
+creating Sub SAs as a sender an endpoint has to consider that Sub SA
 IDs MUST NOT repeat for a given EESP SA and MUST NOT exceed the value
 sent by the peer in this notification. The actual number of Sub SAs
 can be different in different directions.
@@ -516,8 +516,7 @@ is shown below.
 
 - Protocol ID (1 octet) - MUST be 0. MUST be ignored if not 0.
 - SPI Size (1 octet) - MUST be 0. MUST be ignored if not 0.
-- Notify Status Message Type (2 octets) - set to EESP_MAX_SUB_SA_ID
-(<TBD3>).
+- Notify Status Message Type (2 octets) - set to EESP_MAX_SUB_SA_ID (<TBD3>).
 # [VS] Why it is 16-bit and not 32-bit in size?
 - Maximum Sub SA ID (2 octets, integer in network byte order)
   -- specifies the maximum value for the EESP Sub SA ID the
@@ -530,9 +529,9 @@ field means that only one Sub SA (with Subs SA ID = 0) can be
 handled.
 
 If a peer doesn't have any restrictions on the number of the incoming
-Sub SAs, then it MAY omit sending this notification. As a consequence
-- if no this notification was received by a peer, that peer can
-assume that it create as many outgoing Sub SAs as it needs (provided
+Sub SAs, then it MAY omit sending this notification. As a consequence,
+if this notification was not received by a peer, that peer can assume
+that it can create as many outgoing Sub SAs as it needs (provided
 that Sub SA IDs not repeat).
 
 If no SSKDF transform was negotiated, this notification MUST be
