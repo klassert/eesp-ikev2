@@ -344,7 +344,7 @@ The type of the Sub SA Key Derivation Function transform is <TBA2>.
 *** New Transform IDs for Sequence Numbers Transform Type
 
 This document defines two new Transform IDs for the Sequence Numbers
-transform type: ~64-bit Sequential Numbers~ (<TBD4>) and ~None~ (<TBD5>).
+transform type: ~64-bit Sequential Numbers~ (<TBD5>) and ~None~ (<TBD6>).
 
 To enable the presence of sequence numbers in the EESP header and
 enabling replay protection, the initiator MUST propose SN = (64-bit
@@ -354,7 +354,7 @@ Numbers, the Sequence Number field MUST be included into the EESP
 header and peers MUST perform replay protection.
 
 To disable sequence numbering, and thus replay protection based on
-sequence numbers, the initiator MUST propose SN=None (<TBD5>).
+sequence numbers, the initiator MUST propose SN=None (<TBD6>).
 When the responder selects None, the Sequence Number field is omitted
 from the EESP header.
 
@@ -462,17 +462,6 @@ If this notification is received it MUST be ignored.
 # procedure as deleting Child SA using IKEv2 INFORMATIONAL exchange as
 # specified in Section 1.4.1 [[RFC7296]]
 
-# * EESP SA Transforms
-# EESP introduces several transform properties that are negotiated
-# during the establishment of an EESP SA. These properties MUST be
-# identical for the duration of the SA. When the SA is rekeyed,
-# the new SA MUST inherit all EESP transform properties negotiated for
-# the original EESP SA.
-#
-# | Type | Description               | Used In | Reference       |
-# |------+---------------------------+---------+-----------------+
-# | TBD6 | EESP Session ID(EESPSID)  |  (EESP) | [this document] |
-
 ** Announcing Maximum Sub SA ID
 
 In the process of establishing the EESP SA, each peer MAY inform the
@@ -496,8 +485,8 @@ A new notify status type EESP_MAX_SUB_SA_ID (<TBD3>) is defined by
 this document. The format of the Notify payload for this notification
 is shown below.
 
-#+caption: Sub SA Notifier
-#+name: sub-sa-notifier
+#+caption: Maximum Sub SA Notification
+#+name: max-sub-sa-notify
 #+begin_src
                     1                   2                   3
 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
@@ -534,6 +523,51 @@ that Sub SA IDs not repeat).
 
 If no SSKDF transform was negotiated, this notification MUST be
 ignored by peers.
+
+** Announcing Maximum Crypt Offset
+
+Each peer MAY inform the other side about the maximum offset they
+accept in the EESP ~Crypt Offset~ option. The other side MUST NOT
+use a Crypt Offset exceeding this value (inclusive).
+
+Note that this is not a negotiation: each side can indicate its own
+value for the maximum Crypt Offset. If a valid EESP packet is
+received where the Crypt Offset exceeds the announced maximum, it
+MUST be dropped, and the Child SA SHOULD be deleted.
+
+A new notify status type EESP_MAX_CRYPT_OFFSET (<TBD4>) is defined by
+this document. The format of the Notify payload for this notification
+is shown below.
+
+#+caption: Maximum Crypt Offset Notification
+#+name: max-crypto-offset-notify
+#+begin_src
+                    1                   2                   3
+0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-----------------------------+-------------------------------+
+! Next Payload  !C!  RESERVED   !         Payload Length        !
++---------------+---------------+-------------------------------+
+!  Protocol ID  !   SPI Size    !      Notify Message Type      !
++---------------+---------------+-------------------------------+
+! Maximum C. O. |
++---------------+
+#+end_src
+
+- Protocol ID (1 octet) - MUST be 0. MUST be ignored if not 0.
+- SPI Size (1 octet) - MUST be 0. MUST be ignored if not 0.
+- Notify Status Message Type (2 octets) - set to EESP_MAX_CRYPT_OFFSET (<TBD4>).
+- Maximum Crypt Offset (1 octet)
+  -- specifies the maximum value for the CryptOffset field in the
+  EESP Crypt Offset option the sender of this notification is
+  accepting (measured in 4-octet units). Note that the field in the
+  option is only 6 bits wide.
+
+If a peer doesn't allow the use of the Crypt Offset option, instead
+of sending the value 0, the notification SHOULD be omitted entirely.
+That is, if this notification was not received by a peer, that peer
+MUST not use a Crypt Offset when sending EESP packets. If a packet
+with Crypt Offset option is still received, it MUST be dropped, and
+the Child SA SHOULD be deleted.
 
 * Key Derivation for Sub SAs
 
@@ -626,14 +660,15 @@ document.
 | Value  | Notify Message Status Type |  Reference      |
 |--------+----------------------------+-----------------+
 | <TBD3> | EESP_MAX_SUB_SA_ID         | [this document] |
+| <TBD4> | EESP_MAX_CRYPT_OFFSET      | [this document] |
 
 # *** Extending ESP with EESP
-#Several tables in [[IKEv2-IANA]] that specify ESP as protocol
-#should be extended with EESP. Should we list each table one by one or
-#specify as replace ESP, with ESP, EESP.e.g in the Transform Type Values,
-#replace 'IKE and ESP' with 'IKE, ESP, and EESP'
+# Several tables in [[IKEv2-IANA]] that specify ESP as protocol
+# should be extended with EESP. Should we list each table one by one or
+# specify as replace ESP, with ESP, EESP.e.g in the Transform Type Values,
+# replace 'IKE and ESP' with 'IKE, ESP, and EESP'
 #
-#Changes the "Used In" column for the existing allocations as follows;
+# Changes the "Used In" column for the existing allocations as follows;
 
 *** Sequence Number
 
@@ -642,8 +677,8 @@ This document defines two new values in the IKEv2 "Transform Type 5
 
 | Value   | Name                          | Reference       |
 |---------+-------------------------------+-----------------+
-| <TBD4>  | 64-bit Sequential Numbers     | [this document] |
-| <TBD5>  | None                          | [this document] |
+| <TBD5>  | 64-bit Sequential Numbers     | [this document] |
+| <TBD6>  | None                          | [this document] |
 
 ** New IKEv2 Registries
 
