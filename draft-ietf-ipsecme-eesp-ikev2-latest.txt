@@ -5,11 +5,11 @@
 IPSECME Working Group                                        S. Klassert
 Internet-Draft                                                 A. Antony
 Intended status: Standards Track                                 secunet
-Expires: 10 January 2026                                      T. Brunner
+Expires: 23 February 2026                                     T. Brunner
                                                            codelabs GmbH
                                                               V. Smyslov
                                                               ELVIS-PLUS
-                                                             9 July 2025
+                                                          22 August 2025
 
 
   IKEv2 negotiation for Enhanced Encapsulating Security Payload (EESP)
@@ -41,7 +41,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 10 January 2026.
+   This Internet-Draft will expire on 23 February 2026.
 
 Copyright Notice
 
@@ -53,9 +53,9 @@ Copyright Notice
 
 
 
-Klassert, et al.         Expires 10 January 2026                [Page 1]
+Klassert, et al.        Expires 23 February 2026                [Page 1]
 
-Internet-Draft           EESP IKEv2 negotiation                July 2025
+Internet-Draft           EESP IKEv2 negotiation              August 2025
 
 
    This document is subject to BCP 78 and the IETF Trust's Legal
@@ -86,32 +86,32 @@ Table of Contents
      3.4.  Use of Notifications in the Process of EESP
            Negotiation . . . . . . . . . . . . . . . . . . . . . . .   7
      3.5.  Announcing Maximum Sub SA ID  . . . . . . . . . . . . . .   8
-   4.  Key Derivation for Sub SAs  . . . . . . . . . . . . . . . . .   9
+     3.6.  Announcing Maximum Crypt Offset . . . . . . . . . . . . .   9
+   4.  Key Derivation for Sub SAs  . . . . . . . . . . . . . . . . .  10
    5.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  10
-     5.1.  Changes in the Existing IKEv2 Registries  . . . . . . . .  10
-       5.1.1.  IKEv2 Security Protocol Identifiers registry  . . . .  10
-       5.1.2.  IKEv2 Transform Type Values . . . . . . . . . . . . .  10
-       5.1.3.  IKEv2 Notify Message Status Types registry. . . . . .  10
-       5.1.4.  Sequence Number . . . . . . . . . . . . . . . . . . .  11
-     5.2.  New IKEv2 Registries  . . . . . . . . . . . . . . . . . .  11
+     5.1.  Changes in the Existing IKEv2 Registries  . . . . . . . .  11
+       5.1.1.  IKEv2 Security Protocol Identifiers registry  . . . .  11
+       5.1.2.  IKEv2 Transform Type Values . . . . . . . . . . . . .  11
+       5.1.3.  IKEv2 Notify Message Status Types registry. . . . . .  11
+       5.1.4.  Sequence Number . . . . . . . . . . . . . . . . . . .  12
+     5.2.  New IKEv2 Registries  . . . . . . . . . . . . . . . . . .  12
        5.2.1.  Transform Type <TBD2> - Sub SA Key Derivation Function
-               Transform IDs . . . . . . . . . . . . . . . . . . . .  11
-       5.2.2.  Guidance for Designated Experts . . . . . . . . . . .  12
-   6.  Implementation Status . . . . . . . . . . . . . . . . . . . .  12
+               Transform IDs . . . . . . . . . . . . . . . . . . . .  12
+       5.2.2.  Guidance for Designated Experts . . . . . . . . . . .  13
+   6.  Implementation Status . . . . . . . . . . . . . . . . . . . .  13
    7.  Security Considerations . . . . . . . . . . . . . . . . . . .  13
-   8.  Acknowledgments . . . . . . . . . . . . . . . . . . . . . . .  13
-   9.  Normative References  . . . . . . . . . . . . . . . . . . . .  13
-   10. Informative References  . . . . . . . . . . . . . . . . . . .  14
-   Appendix A.  Additional Stuff . . . . . . . . . . . . . . . . . .  15
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  15
+   8.  Acknowledgments . . . . . . . . . . . . . . . . . . . . . . .  14
+   9.  Normative References  . . . . . . . . . . . . . . . . . . . .  14
+   10. Informative References  . . . . . . . . . . . . . . . . . . .  15
+   Appendix A.  Additional Stuff . . . . . . . . . . . . . . . . . .  16
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  16
 
 
 
 
-
-Klassert, et al.         Expires 10 January 2026                [Page 2]
+Klassert, et al.        Expires 23 February 2026                [Page 2]
 
-Internet-Draft           EESP IKEv2 negotiation                July 2025
+Internet-Draft           EESP IKEv2 negotiation              August 2025
 
 
 1.  Introduction
@@ -127,8 +127,9 @@ Internet-Draft           EESP IKEv2 negotiation                July 2025
    with independent keys and sequence number spaces.  Additionally, it
    supports the use of 64-bit sequence numbers transmitted in each
    packet or the omission of sequence numbers when the Replay Protection
-   service is not needed.  EESP packets carry a version number, enabling
-   easier support for future extensions.
+   service is not needed or cannot be achieved (e.g. in some multicast
+   scenarios).  EESP packets carry a version number, enabling easier
+   support for future extensions.
 
    This document specifies the negotiation of EESP Security Associations
    (SAs) within the Internet Key Exchange Protocol Version 2 (IKEv2)
@@ -164,10 +165,9 @@ Internet-Draft           EESP IKEv2 negotiation                July 2025
 
 
 
-
-Klassert, et al.         Expires 10 January 2026                [Page 3]
+Klassert, et al.        Expires 23 February 2026                [Page 3]
 
-Internet-Draft           EESP IKEv2 negotiation                July 2025
+Internet-Draft           EESP IKEv2 negotiation              August 2025
 
 
 2.  EESP Overview
@@ -211,19 +211,19 @@ Internet-Draft           EESP IKEv2 negotiation                July 2025
 
 2.3.  EESP Sequence Numbers
 
-   Unlike ESP, EESPv0 header allows to transmit 64-bit sequence numbers.
-   In addition, the Sequence Number field in the EESPv0 header is
-   optional and can be omitted from the packet if replay protection
-   service is not needed.  Note that while possible, disabling the
-   replay protection service is generally NOT RECOMMENDED and should
-   only be done if the upper level protocol provides this service.  See
-   Section 7 for details.
+   Unlike ESP, the EESPv0 header transmits 64-bit sequence numbers if
+   replay protection is used.  In addition, the Sequence Number field in
+   the EESPv0 header is optional and can be omitted from the packet if
+   replay protection is not needed.  Note that while possible, disabling
+   replay protection is generally NOT RECOMMENDED and should only be
+   done in case of multicast scenarios or if the upper level protocol
+   provides this service.  See Section 7 for details.
 
 
 
-Klassert, et al.         Expires 10 January 2026                [Page 4]
+Klassert, et al.        Expires 23 February 2026                [Page 4]
 
-Internet-Draft           EESP IKEv2 negotiation                July 2025
+Internet-Draft           EESP IKEv2 negotiation              August 2025
 
 
 3.  EESP SA Negotiation in IKEv2
@@ -277,9 +277,9 @@ Internet-Draft           EESP IKEv2 negotiation                July 2025
 
 
 
-Klassert, et al.         Expires 10 January 2026                [Page 5]
+Klassert, et al.        Expires 23 February 2026                [Page 5]
 
-Internet-Draft           EESP IKEv2 negotiation                July 2025
+Internet-Draft           EESP IKEv2 negotiation              August 2025
 
 
    *  SSKDF_HKDF_SHA2_256, SSKDF_HKDF_SHA2_384 and SSKDF_HKDF_SHA2_512
@@ -301,20 +301,20 @@ Internet-Draft           EESP IKEv2 negotiation                July 2025
 3.1.2.  New Transform IDs for Sequence Numbers Transform Type
 
    This document defines two new Transform IDs for the Sequence Numbers
-   transform type: '64-bit Sequential Numbers' (<TBD4>) and 'None'
-   (<TBD5>).
+   transform type: '64-bit Sequential Numbers' (<TBD5>) and 'None'
+   (<TBD6>).
 
-   To enable presence of sequence numbers in the EESP header the
-   initiator MUST propose SN = (64-bit Sequential Numbers) in the
-   Proposal Substructure inside the Security Association (SA) payload.
-   When the responder selects 64-bit Sequential Numbers, the Sequence
-   Number field is included into the EESP header, that allows peers to
-   achieve replay protection.
+   To enable the presence of sequence numbers in the EESP header and
+   enabling replay protection, the initiator MUST propose SN = (64-bit
+   Sequential Numbers) in the Proposal Substructure inside the Security
+   Association (SA) payload.  When the responder selects 64-bit
+   Sequential Numbers, the Sequence Number field MUST be included into
+   the EESP header and peers MUST perform replay protection.
 
    To disable sequence numbering, and thus replay protection based on
-   sequence numbers, the initiator MUST propose SN=None (<TBD5>).  When
-   the responder selects None, Sequence Number field is omitted from the
-   EESP header.
+   sequence numbers, the initiator MUST propose SN=None (<TBD6>).  When
+   the responder selects None, the Sequence Number field is omitted from
+   the EESP header.
 
 3.2.  Transforms Consistency
 
@@ -333,9 +333,9 @@ Internet-Draft           EESP IKEv2 negotiation                July 2025
 
 
 
-Klassert, et al.         Expires 10 January 2026                [Page 6]
+Klassert, et al.        Expires 23 February 2026                [Page 6]
 
-Internet-Draft           EESP IKEv2 negotiation                July 2025
+Internet-Draft           EESP IKEv2 negotiation              August 2025
 
 
    For the ENCR transform type only those transform IDs that define use
@@ -350,14 +350,14 @@ Internet-Draft           EESP IKEv2 negotiation                July 2025
    64-bit Sequential Numbers) are unspecified for EESPv0 and MUST NOT be
    used in EESPv0 proposals.
 
-   Implemenattions MUST ignore transforms containing invalid values for
+   Implementations MUST ignore transforms containing invalid values for
    the current proposal (as if they are unrecognized, in accordance with
    Section 3.3.6 of [RFC7296]).
 
-   The use of the None Transform ID for the SN transform if further
+   The use of the 'None' Transform ID for the SN transform if further
    limited by the ENCR transform.  In particular, if the selected ENCR
    transform defines use of implicit IV (as transforms defined in
-   [RFC8750]), then the value None MUST NOT be selected for the SN
+   [RFC8750]), then the value 'None' MUST NOT be selected for the SN
    transform.
 
 3.3.  Example of SA Payload Negotiating EESP
@@ -389,9 +389,9 @@ Internet-Draft           EESP IKEv2 negotiation                July 2025
 
 
 
-Klassert, et al.         Expires 10 January 2026                [Page 7]
+Klassert, et al.        Expires 23 February 2026                [Page 7]
 
-Internet-Draft           EESP IKEv2 negotiation                July 2025
+Internet-Draft           EESP IKEv2 negotiation              August 2025
 
 
    The ESP_TFC_PADDING_NOT_SUPPORTED, [RFC7296], notification is not
@@ -430,7 +430,7 @@ Internet-Draft           EESP IKEv2 negotiation                July 2025
    !      Maximum Sub SA ID        |
    +-------------------------------+
 
-                         Figure 2: Sub SA Notifier
+                   Figure 2: Maximum Sub SA Notification
 
    *  Protocol ID (1 octet) - MUST be 0.  MUST be ignored if not 0.
 
@@ -445,9 +445,9 @@ Internet-Draft           EESP IKEv2 negotiation                July 2025
 
 
 
-Klassert, et al.         Expires 10 January 2026                [Page 8]
+Klassert, et al.        Expires 23 February 2026                [Page 8]
 
-Internet-Draft           EESP IKEv2 negotiation                July 2025
+Internet-Draft           EESP IKEv2 negotiation              August 2025
 
 
    The maximum number of Sub SAs the sender of this notification can
@@ -464,6 +464,59 @@ Internet-Draft           EESP IKEv2 negotiation                July 2025
 
    If no SSKDF transform was negotiated, this notification MUST be
    ignored by peers.
+
+3.6.  Announcing Maximum Crypt Offset
+
+   Each peer MAY inform the other side about the maximum offset they
+   accept in the EESP 'Crypt Offset' option.  The other side MUST NOT
+   use a Crypt Offset exceeding this value (inclusive).
+
+   Note that this is not a negotiation: each side can indicate its own
+   value for the maximum Crypt Offset.  If a valid EESP packet is
+   received where the Crypt Offset exceeds the announced maximum, it
+   MUST be dropped, and the Child SA SHOULD be deleted.
+
+   A new notify status type EESP_MAX_CRYPT_OFFSET (<TBD4>) is defined by
+   this document.  The format of the Notify payload for this
+   notification is shown below.
+
+                       1                   2                   3
+   0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+   +-+-----------------------------+-------------------------------+
+   ! Next Payload  !C!  RESERVED   !         Payload Length        !
+   +---------------+---------------+-------------------------------+
+   !  Protocol ID  !   SPI Size    !      Notify Message Type      !
+   +---------------+---------------+-------------------------------+
+   ! Maximum C. O. |
+   +---------------+
+
+                Figure 3: Maximum Crypt Offset Notification
+
+   *  Protocol ID (1 octet) - MUST be 0.  MUST be ignored if not 0.
+
+   *  SPI Size (1 octet) - MUST be 0.  MUST be ignored if not 0.
+
+   *  Notify Status Message Type (2 octets) - set to
+      EESP_MAX_CRYPT_OFFSET (<TBD4>).
+
+
+
+Klassert, et al.        Expires 23 February 2026                [Page 9]
+
+Internet-Draft           EESP IKEv2 negotiation              August 2025
+
+
+   *  Maximum Crypt Offset (1 octet) -- specifies the maximum value for
+      the CryptOffset field in the EESP Crypt Offset option the sender
+      of this notification is accepting (measured in 4-octet units).
+      Note that the field in the option is only 6 bits wide.
+
+   If a peer doesn't allow the use of the Crypt Offset option, instead
+   of sending the value 0, the notification SHOULD be omitted entirely.
+   That is, if this notification was not received by a peer, that peer
+   MUST not use a Crypt Offset when sending EESP packets.  If a packet
+   with Crypt Offset option is still received, it MUST be dropped, and
+   the Child SA SHOULD be deleted.
 
 4.  Key Derivation for Sub SAs
 
@@ -499,14 +552,15 @@ Internet-Draft           EESP IKEv2 negotiation                July 2025
    SA MUST be rekeyed when either a cryptographic limit or a time-based
    limit is reached for any individual Sub SA.
 
-
-
-Klassert, et al.         Expires 10 January 2026                [Page 9]
-
-Internet-Draft           EESP IKEv2 negotiation                July 2025
-
-
 5.  IANA Considerations
+
+
+
+
+Klassert, et al.        Expires 23 February 2026               [Page 10]
+
+Internet-Draft           EESP IKEv2 negotiation              August 2025
+
 
 5.1.  Changes in the Existing IKEv2 Registries
 
@@ -552,23 +606,17 @@ Internet-Draft           EESP IKEv2 negotiation                July 2025
          +========+============================+=================+
          | <TBD3> | EESP_MAX_SUB_SA_ID         | [this document] |
          +--------+----------------------------+-----------------+
+         | <TBD4> | EESP_MAX_CRYPT_OFFSET      | [this document] |
+         +--------+----------------------------+-----------------+
 
                                   Table 5
 
 
 
-Klassert, et al.         Expires 10 January 2026               [Page 10]
+Klassert, et al.        Expires 23 February 2026               [Page 11]
 
-Internet-Draft           EESP IKEv2 negotiation                July 2025
+Internet-Draft           EESP IKEv2 negotiation              August 2025
 
-
-   #Several tables in [IKEv2-IANA] that specify ESP as protocol #should
-   be extended with EESP.  Should we list each table one by one or
-   #specify as replace ESP, with ESP, EESP.e.g in the Transform Type
-   Values, #replace 'IKE and ESP' with 'IKE, ESP, and EESP'
-
-   #Changes the "Used In" column for the existing allocations as
-   follows;
 
 5.1.4.  Sequence Number
 
@@ -579,9 +627,9 @@ Internet-Draft           EESP IKEv2 negotiation                July 2025
          +========+===========================+=================+
          | Value  | Name                      | Reference       |
          +========+===========================+=================+
-         | <TBD4> | 64-bit Sequential Numbers | [this document] |
+         | <TBD5> | 64-bit Sequential Numbers | [this document] |
          +--------+---------------------------+-----------------+
-         | <TBD5> | None                      | [this document] |
+         | <TBD6> | None                      | [this document] |
          +--------+---------------------------+-----------------+
 
                                  Table 6
@@ -598,25 +646,6 @@ Internet-Draft           EESP IKEv2 negotiation                July 2025
    This documents creates the new IKEv2 registry "Transform Type <TBD2>
    - Sub SA Key Derivation Function Transform IDs".  The initial values
    of this registry are:
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Klassert, et al.         Expires 10 January 2026               [Page 11]
-
-Internet-Draft           EESP IKEv2 negotiation                July 2025
-
 
           +============+=====================+=================+
           |     Number | Name                | Reference       |
@@ -637,6 +666,13 @@ Internet-Draft           EESP IKEv2 negotiation                July 2025
           +------------+---------------------+-----------------+
 
                 Table 7: "Transform Type <TBD2>" Registry
+
+
+
+Klassert, et al.        Expires 23 February 2026               [Page 12]
+
+Internet-Draft           EESP IKEv2 negotiation              August 2025
+
 
    Changes and additions to the unassigned range of this registry are by
    the Expert Review Policy [RFC8126].
@@ -666,14 +702,6 @@ Internet-Draft           EESP IKEv2 negotiation                July 2025
    here does not imply endorsement by the IETF.  Furthermore, no effort
    has been spent to verify the information presented here that was
    supplied by IETF contributors.  This is not intended as, and must not
-
-
-
-Klassert, et al.         Expires 10 January 2026               [Page 12]
-
-Internet-Draft           EESP IKEv2 negotiation                July 2025
-
-
    be construed to be, a catalog of available implementations or their
    features.  Readers are advised to note that other implementations may
    exist.
@@ -694,6 +722,13 @@ Internet-Draft           EESP IKEv2 negotiation                July 2025
    EESP option Crypt Offset [I-D.klassert-ipsecme-eesp] section [XXX]
    allows exposing transport headers for telemetry.  It is indented use
    of within data center.
+
+
+
+Klassert, et al.        Expires 23 February 2026               [Page 13]
+
+Internet-Draft           EESP IKEv2 negotiation              August 2025
+
 
    When an EESP receiver implementation uses Stateless Decryption, it
    may not rely on single Security Policy Database (SPD) as specified in
@@ -720,16 +755,6 @@ Internet-Draft           EESP IKEv2 negotiation                July 2025
 
 9.  Normative References
 
-
-
-
-
-
-Klassert, et al.         Expires 10 January 2026               [Page 13]
-
-Internet-Draft           EESP IKEv2 negotiation                July 2025
-
-
    [I-D.klassert-ipsecme-eesp]
               Klassert, S., Antony, A., and C. Hopps, "Enhanced
               Encapsulating Security Payload (EESP)", Work in Progress,
@@ -749,6 +774,17 @@ Internet-Draft           EESP IKEv2 negotiation                July 2025
               Encapsulating Security Payload (ESP) for Traffic
               Visibility", RFC 5840, DOI 10.17487/RFC5840, April 2010,
               <https://www.rfc-editor.org/info/rfc5840>.
+
+
+
+
+
+
+
+Klassert, et al.        Expires 23 February 2026               [Page 14]
+
+Internet-Draft           EESP IKEv2 negotiation              August 2025
+
 
    [RFC7296]  Kaufman, C., Hoffman, P., Nir, Y., Eronen, P., and T.
               Kivinen, "Internet Key Exchange Protocol Version 2
@@ -775,17 +811,6 @@ Internet-Draft           EESP IKEv2 negotiation                July 2025
               <https://github.com/google/psp/blob/main/doc/
               PSP_Arch_Spec.pdf>.
 
-
-
-
-
-
-
-Klassert, et al.         Expires 10 January 2026               [Page 14]
-
-Internet-Draft           EESP IKEv2 negotiation                July 2025
-
-
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
               DOI 10.17487/RFC2119, March 1997,
@@ -808,6 +833,14 @@ Internet-Draft           EESP IKEv2 negotiation                July 2025
               Code: The Implementation Status Section", BCP 205,
               RFC 7942, DOI 10.17487/RFC7942, July 2016,
               <https://www.rfc-editor.org/info/rfc7942>.
+
+
+
+
+Klassert, et al.        Expires 23 February 2026               [Page 15]
+
+Internet-Draft           EESP IKEv2 negotiation              August 2025
+
 
    [RFC8750]  Migault, D., Guggemos, T., and Y. Nir, "Implicit
               Initialization Vector (IV) for Counter-Based Ciphers in
@@ -832,15 +865,6 @@ Appendix A.  Additional Stuff
    TBD
 
 Authors' Addresses
-
-
-
-
-
-Klassert, et al.         Expires 10 January 2026               [Page 15]
-
-Internet-Draft           EESP IKEv2 negotiation                July 2025
-
 
    Steffen Klassert
    secunet Security Networks AG
@@ -869,28 +893,4 @@ Internet-Draft           EESP IKEv2 negotiation                July 2025
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Klassert, et al.         Expires 10 January 2026               [Page 16]
+Klassert, et al.        Expires 23 February 2026               [Page 16]
