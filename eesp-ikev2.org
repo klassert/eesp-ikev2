@@ -26,10 +26,10 @@
 #+RFC_WORKGROUP: IPSECME Working Group
 
 #+begin_abstract
-This document specfies how to negotiate the use of the Enhanced
+This document specifies how to negotiate the use of the Enhanced
 Encapsulating Security Payload (EESP) protocol using the Internet Key
 Exchange protocol version 2 (IKEv2). The EESP protocol, which is
-defined in draft-klassert-ipsecme-eesp, provides the same security
+defined in [[I-D.ietf-ipsecme-eesp]], provides the same security
 services as Encapsulating Security Payload (ESP), but has richer
 functionality and provides better performance in specific
 circumstances. This document specifies negotiation of version 0 of
@@ -41,14 +41,14 @@ EESP.
 * Introduction
 
 The Enhanced Encapsulating Security Payload (EESP), specified in
-[[I-D.klassert-ipsecme-eesp]], introduces enhancements to the
-Encapsulating Security Payload (ESP) defined in [RFC4303]. These
+[[I-D.ietf-ipsecme-eesp]], introduces enhancements to the
+Encapsulating Security Payload (ESP) defined in [[RFC4303]]. These
 improvements address evolving requirements in modern IPsec
 deployments. EESP offers increased flexibility for hardware
-offloads at the packet level. It supports carrying inner packet flow
-identifiers for the use with ECMP, RSS hardware, and IPsec peers
-prior to decryption. EESP also enables the establishment of Sub SAs
-with independent keys and sequence number spaces. Additionally, it
+offloads at the packet level. It adds a Session ID (e.g., to
+support CPU pinning and QoS support based on the inner traffic
+flow) and enables the establishment of Sub SAs with independent
+keys and sequence number spaces. Additionally, it
 supports the use of 64-bit sequence numbers transmitted in each
 packet or the omission of sequence numbers when the Replay Protection
 service is not needed or cannot be achieved (e.g. in some multicast
@@ -57,7 +57,7 @@ support for future extensions.
 
 This document specifies the negotiation of EESP Security
 Associations (SAs) within the Internet Key Exchange Protocol
-Version 2 (IKEv2) protocol [RFC7296]. It details the creation,
+Version 2 (IKEv2) protocol [[RFC7296]]. It details the creation,
 rekeying, and deletion of EESP SAs, as well as the negotiation of
 EESP specific transforms and properties.
 
@@ -136,10 +136,10 @@ Equal-cost multi-path (ECMP)
 ** EESP Version
 
 Each EESP packet carries the EESP Base Header version, which is
-specified in Section [XXX] of [[I-D.klassert-ipsecme-eesp]]. EESP
+specified in Section "Fixed Base Header" of [[I-D.ietf-ipsecme-eesp]]. EESP
 version determines the format of the EESP packet and its processing
 rules. The initial version specified in
-[[I-D.klassert-ipsecme-eesp]] is version 0.
+[[I-D.ietf-ipsecme-eesp]] is version 0.
 
 ** EESP Sub SA
 Existing mechanisms for establishing Child SAs, as described in
@@ -160,8 +160,8 @@ Each Sub SA is identified by a Sub SA Id, which is a number in the
 range from zero up to the maximum Sub SA ID indicated by the
 receiver of the Sub SA during EESP SA negotiation via IKEv2 (see
 [[Announcing Maximum Sub SA ID]]). The Sub SA ID is carried
-in the Session ID field of the EESP base header (see Section [XXX] of
-[[I-D.klassert-ipsecme-eesp]]). The Sub SA ID MUST be unique for
+in the Session ID field of the EESP base header (see Section "Session ID as Sub SA ID" of
+[[I-D.ietf-ipsecme-eesp]]). The Sub SA ID MUST be unique for
 all Sub SAs in the context of an EESP SA.
 
 # [VS] perhaps some words should be added about other fields where
@@ -286,7 +286,7 @@ provides this service. See [[Security Considerations]] for details.
 
 * EESP SA Negotiation in IKEv2
 
-Current EESP specification [[I-D.klassert-ipsecme-eesp]] defines
+Current EESP specification [[I-D.ietf-ipsecme-eesp]] defines
 version 0 of the EESP protocol. Consequently, this document limits
 its scope to only deal with EESPv0. If other EESP versions are
 defined in future, their negotiation using IKEv2 should be covered by
@@ -446,7 +446,7 @@ If this notification is received it MUST be ignored.
 # To negotiate an EESP Child SA, use the IKEv2 IKE_AUTH or
 # CREATE_CHILD_SA new SA exchange. The SA Payload, Proposal
 # MUST have Security Protocol Identifier, Proto Id = EESP
-# which is specified in [[I-D.klassert-ipsecme-eesp]],
+# which is specified in [[I-D.ietf-ipsecme-eesp]],
 # as specified in this document, and uses the
 # EESP Transform attributes defined in [[EESP SA Transforms]].
 
@@ -597,7 +597,7 @@ from the responder to the initiator.
 
 The root key and SSKDF are configured as properties of an EESP SA,
 which derives the keys for individual Sub SAs as specified in
-[[I-D.klassert-ipsecme-eesp]].
+[[I-D.ietf-ipsecme-eesp]].
 
 Because individual Sub SAs can't be rekeyed, the complete EESP Child
 SA MUST be rekeyed when either a cryptographic limit or a time-based
@@ -754,9 +754,11 @@ publication, as well as the reference to [[RFC7942]].
 
 * Security Considerations
 
-EESP option Crypt Offset [[I-D.klassert-ipsecme-eesp]] section [XXX]
-allows exposing transport headers for telemetry.
-It is indented use of within data center.
+The EESP Crypt Offset Option (see Section "EESP Crypt Offset Option" of
+[[I-D.ietf-ipsecme-eesp]]) allows controlled exposure of leading
+bytes of the inner packet for specific deployments (e.g., data
+center telemetry/processing). Its use and the maximum allowed
+Crypt Offset are negotiated (see [[Announcing Maximum Crypt Offset]]).
 
 When an EESP receiver implementation uses Stateless Decryption, it
 may not rely on single Security Policy Database (SPD) as specified in
@@ -789,7 +791,7 @@ TBD
 ** RFC7296
 ** RFC4301
 ** RFC8126
-** I-D.klassert-ipsecme-eesp
+** I-D.ietf-ipsecme-eesp
 # ** I-D.ietf-ipsecme-ikev2-rename-esn
 
 
