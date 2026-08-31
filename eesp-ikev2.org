@@ -751,6 +751,21 @@ Authors are requested to add a note to the RFC Editor at the top of
 this section, advising the Editor to remove the entire section before
 publication, as well as the reference to [[RFC7942]].
 
+** strongSwan
+
+- Organization :: strongSwan (individual contribution)
+
+- Name :: [[https://github.com/antonyantony/strongswan/tree/eesp-ikev2-v00][strongSwan EESP IKEv2]]
+
+- Description :: An implementation of EESP negotiation in IKEv2.
+
+- Level of maturity :: Alpha
+
+- Coverage :: Implements EESP IKEv2 negotiation. Needs an EESP
+  supported kernel from  [[https://git.kernel.org/pub/scm/linux/kernel/git/klassert/linux-stk.git/log/?h=ipsec-next-eesp-v3][Linux XFRM ipsec-next-eesp-v3]].
+
+- Licensing :: GPLv2
+
 
 * Security Considerations
 
