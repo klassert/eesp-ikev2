@@ -5,15 +5,15 @@
 IPSECME Working Group                                        S. Klassert
 Internet-Draft                                                 A. Antony
 Intended status: Standards Track                                 secunet
-Expires: 3 September 2026                                     T. Brunner
+Expires: 4 March 2027                                         T. Brunner
                                                            codelabs GmbH
                                                               V. Smyslov
                                                               ELVIS-PLUS
-                                                            2 March 2026
+                                                          31 August 2026
 
 
   IKEv2 negotiation for Enhanced Encapsulating Security Payload (EESP)
-                    draft-ietf-ipsecme-eesp-ikev2-03
+                    draft-ietf-ipsecme-eesp-ikev2-04
 
 Abstract
 
@@ -41,7 +41,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 3 September 2026.
+   This Internet-Draft will expire on 4 March 2027.
 
 Copyright Notice
 
@@ -53,9 +53,9 @@ Copyright Notice
 
 
 
-Klassert, et al.        Expires 3 September 2026                [Page 1]
+Klassert, et al.          Expires 4 March 2027                  [Page 1]
 
-Internet-Draft           EESP IKEv2 negotiation               March 2026
+Internet-Draft           EESP IKEv2 negotiation              August 2026
 
 
    This document is subject to BCP 78 and the IETF Trust's Legal
@@ -99,19 +99,19 @@ Table of Contents
                Transform IDs . . . . . . . . . . . . . . . . . . . .  12
        5.2.2.  Guidance for Designated Experts . . . . . . . . . . .  13
    6.  Implementation Status . . . . . . . . . . . . . . . . . . . .  13
+     6.1.  strongSwan  . . . . . . . . . . . . . . . . . . . . . . .  14
    7.  Security Considerations . . . . . . . . . . . . . . . . . . .  14
-   8.  Acknowledgments . . . . . . . . . . . . . . . . . . . . . . .  14
-   9.  Normative References  . . . . . . . . . . . . . . . . . . . .  14
-   10. Informative References  . . . . . . . . . . . . . . . . . . .  15
-   Appendix A.  Additional Stuff . . . . . . . . . . . . . . . . . .  16
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  16
+   8.  Acknowledgments . . . . . . . . . . . . . . . . . . . . . . .  15
+   9.  Normative References  . . . . . . . . . . . . . . . . . . . .  15
+   10. Informative References  . . . . . . . . . . . . . . . . . . .  16
+   Appendix A.  Additional Stuff . . . . . . . . . . . . . . . . . .  17
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  17
 
 
 
-
-Klassert, et al.        Expires 3 September 2026                [Page 2]
+Klassert, et al.          Expires 4 March 2027                  [Page 2]
 
-Internet-Draft           EESP IKEv2 negotiation               March 2026
+Internet-Draft           EESP IKEv2 negotiation              August 2026
 
 
 1.  Introduction
@@ -165,9 +165,9 @@ Internet-Draft           EESP IKEv2 negotiation               March 2026
 
 
 
-Klassert, et al.        Expires 3 September 2026                [Page 3]
+Klassert, et al.          Expires 4 March 2027                  [Page 3]
 
-Internet-Draft           EESP IKEv2 negotiation               March 2026
+Internet-Draft           EESP IKEv2 negotiation              August 2026
 
 
 2.  EESP Overview
@@ -221,9 +221,9 @@ Internet-Draft           EESP IKEv2 negotiation               March 2026
 
 
 
-Klassert, et al.        Expires 3 September 2026                [Page 4]
+Klassert, et al.          Expires 4 March 2027                  [Page 4]
 
-Internet-Draft           EESP IKEv2 negotiation               March 2026
+Internet-Draft           EESP IKEv2 negotiation              August 2026
 
 
    provides this service.  See Section 7 for details.
@@ -277,9 +277,9 @@ Internet-Draft           EESP IKEv2 negotiation               March 2026
 
 
 
-Klassert, et al.        Expires 3 September 2026                [Page 5]
+Klassert, et al.          Expires 4 March 2027                  [Page 5]
 
-Internet-Draft           EESP IKEv2 negotiation               March 2026
+Internet-Draft           EESP IKEv2 negotiation              August 2026
 
 
    These algorithms are defined as follows:
@@ -333,9 +333,9 @@ Internet-Draft           EESP IKEv2 negotiation               March 2026
 
 
 
-Klassert, et al.        Expires 3 September 2026                [Page 6]
+Klassert, et al.          Expires 4 March 2027                  [Page 6]
 
-Internet-Draft           EESP IKEv2 negotiation               March 2026
+Internet-Draft           EESP IKEv2 negotiation              August 2026
 
 
               +==========+=================+================+
@@ -389,9 +389,9 @@ Internet-Draft           EESP IKEv2 negotiation               March 2026
 
 
 
-Klassert, et al.        Expires 3 September 2026                [Page 7]
+Klassert, et al.          Expires 4 March 2027                  [Page 7]
 
-Internet-Draft           EESP IKEv2 negotiation               March 2026
+Internet-Draft           EESP IKEv2 negotiation              August 2026
 
 
 3.4.  Use of Notifications in the Process of EESP Negotiation
@@ -445,9 +445,9 @@ Internet-Draft           EESP IKEv2 negotiation               March 2026
 
 
 
-Klassert, et al.        Expires 3 September 2026                [Page 8]
+Klassert, et al.          Expires 4 March 2027                  [Page 8]
 
-Internet-Draft           EESP IKEv2 negotiation               March 2026
+Internet-Draft           EESP IKEv2 negotiation              August 2026
 
 
    *  Notify Status Message Type (2 octets) - set to EESP_MAX_SUB_SA_ID
@@ -501,9 +501,9 @@ Internet-Draft           EESP IKEv2 negotiation               March 2026
 
 
 
-Klassert, et al.        Expires 3 September 2026                [Page 9]
+Klassert, et al.          Expires 4 March 2027                  [Page 9]
 
-Internet-Draft           EESP IKEv2 negotiation               March 2026
+Internet-Draft           EESP IKEv2 negotiation              August 2026
 
 
    *  Protocol ID (1 octet) - MUST be 0.  MUST be ignored if not 0.
@@ -557,9 +557,9 @@ Internet-Draft           EESP IKEv2 negotiation               March 2026
 
 
 
-Klassert, et al.        Expires 3 September 2026               [Page 10]
+Klassert, et al.          Expires 4 March 2027                 [Page 10]
 
-Internet-Draft           EESP IKEv2 negotiation               March 2026
+Internet-Draft           EESP IKEv2 negotiation              August 2026
 
 
    Because individual Sub SAs can't be rekeyed, the complete EESP Child
@@ -613,9 +613,9 @@ Internet-Draft           EESP IKEv2 negotiation               March 2026
 
 
 
-Klassert, et al.        Expires 3 September 2026               [Page 11]
+Klassert, et al.          Expires 4 March 2027                 [Page 11]
 
-Internet-Draft           EESP IKEv2 negotiation               March 2026
+Internet-Draft           EESP IKEv2 negotiation              August 2026
 
 
 5.1.3.  IKEv2 Notify Message Status Types registry.
@@ -669,9 +669,9 @@ Internet-Draft           EESP IKEv2 negotiation               March 2026
 
 
 
-Klassert, et al.        Expires 3 September 2026               [Page 12]
+Klassert, et al.          Expires 4 March 2027                 [Page 12]
 
-Internet-Draft           EESP IKEv2 negotiation               March 2026
+Internet-Draft           EESP IKEv2 negotiation              August 2026
 
 
           +============+=====================+=================+
@@ -725,9 +725,9 @@ Internet-Draft           EESP IKEv2 negotiation               March 2026
 
 
 
-Klassert, et al.        Expires 3 September 2026               [Page 13]
+Klassert, et al.          Expires 4 March 2027                 [Page 13]
 
-Internet-Draft           EESP IKEv2 negotiation               March 2026
+Internet-Draft           EESP IKEv2 negotiation              August 2026
 
 
    be construed to be, a catalog of available implementations or their
@@ -745,6 +745,24 @@ Internet-Draft           EESP IKEv2 negotiation               March 2026
    this section, advising the Editor to remove the entire section before
    publication, as well as the reference to [RFC7942].
 
+6.1.  strongSwan
+
+   Organization  strongSwan (individual contribution)
+
+   Name  strongSwan EESP IKEv2
+      (https://github.com/antonyantony/strongswan/tree/eesp-ikev2-v00)
+
+   Description  An implementation of EESP negotiation in IKEv2.
+
+   Level of maturity  Alpha
+
+   Coverage  Implements EESP IKEv2 negotiation.  Needs an EESP supported
+      kernel from Linux XFRM ipsec-next-eesp-v3
+      (https://git.kernel.org/pub/scm/linux/kernel/git/klassert/linux-
+      stk.git/log/?h=ipsec-next-eesp-v3).
+
+   Licensing  GPLv2
+
 7.  Security Considerations
 
    The EESP Crypt Offset Option (see Section "EESP Crypt Offset Option"
@@ -752,6 +770,21 @@ Internet-Draft           EESP IKEv2 negotiation               March 2026
    bytes of the inner packet for specific deployments (e.g., data center
    telemetry/processing).  Its use and the maximum allowed Crypt Offset
    are negotiated (see Section 3.6).
+
+
+
+
+
+
+
+
+
+
+
+Klassert, et al.          Expires 4 March 2027                 [Page 14]
+
+Internet-Draft           EESP IKEv2 negotiation              August 2026
+
 
    When an EESP receiver implementation uses Stateless Decryption, it
    may not rely on single Security Policy Database (SPD) as specified in
@@ -778,20 +811,12 @@ Internet-Draft           EESP IKEv2 negotiation               March 2026
 
 9.  Normative References
 
-
-
-
-Klassert, et al.        Expires 3 September 2026               [Page 14]
-
-Internet-Draft           EESP IKEv2 negotiation               March 2026
-
-
    [I-D.ietf-ipsecme-eesp]
               Klassert, S., Antony, A., and C. Hopps, "Enhanced
               Encapsulating Security Payload (EESP)", Work in Progress,
-              Internet-Draft, draft-ietf-ipsecme-eesp-02, 19 October
-              2025, <https://datatracker.ietf.org/doc/html/draft-ietf-
-              ipsecme-eesp-02>.
+              Internet-Draft, draft-ietf-ipsecme-eesp-04, 2 March 2026,
+              <https://datatracker.ietf.org/doc/html/draft-ietf-ipsecme-
+              eesp-04>.
 
    [RFC4301]  Kent, S. and K. Seo, "Security Architecture for the
               Internet Protocol", RFC 4301, DOI 10.17487/RFC4301,
@@ -805,6 +830,17 @@ Internet-Draft           EESP IKEv2 negotiation               March 2026
               Encapsulating Security Payload (ESP) for Traffic
               Visibility", RFC 5840, DOI 10.17487/RFC5840, April 2010,
               <https://www.rfc-editor.org/info/rfc5840>.
+
+
+
+
+
+
+
+Klassert, et al.          Expires 4 March 2027                 [Page 15]
+
+Internet-Draft           EESP IKEv2 negotiation              August 2026
+
 
    [RFC7296]  Kaufman, C., Hoffman, P., Nir, Y., Eronen, P., and T.
               Kivinen, "Internet Key Exchange Protocol Version 2
@@ -831,17 +867,6 @@ Internet-Draft           EESP IKEv2 negotiation               March 2026
               <https://github.com/google/psp/blob/main/doc/
               PSP_Arch_Spec.pdf>.
 
-
-
-
-
-
-
-Klassert, et al.        Expires 3 September 2026               [Page 15]
-
-Internet-Draft           EESP IKEv2 negotiation               March 2026
-
-
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
               DOI 10.17487/RFC2119, March 1997,
@@ -864,6 +889,14 @@ Internet-Draft           EESP IKEv2 negotiation               March 2026
               Code: The Implementation Status Section", BCP 205,
               RFC 7942, DOI 10.17487/RFC7942, July 2016,
               <https://www.rfc-editor.org/info/rfc7942>.
+
+
+
+
+Klassert, et al.          Expires 4 March 2027                 [Page 16]
+
+Internet-Draft           EESP IKEv2 negotiation              August 2026
+
 
    [RFC8750]  Migault, D., Guggemos, T., and Y. Nir, "Implicit
               Initialization Vector (IV) for Counter-Based Ciphers in
@@ -888,15 +921,6 @@ Appendix A.  Additional Stuff
    TBD
 
 Authors' Addresses
-
-
-
-
-
-Klassert, et al.        Expires 3 September 2026               [Page 16]
-
-Internet-Draft           EESP IKEv2 negotiation               March 2026
-
 
    Steffen Klassert
    secunet Security Networks AG
@@ -925,28 +949,4 @@ Internet-Draft           EESP IKEv2 negotiation               March 2026
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Klassert, et al.        Expires 3 September 2026               [Page 17]
+Klassert, et al.          Expires 4 March 2027                 [Page 17]

@@ -7,21 +7,22 @@
 <title>Notes on IKEv2 Key Derivation Function</title>
 <meta content="Steffen Klassert" name="author">
 <meta content="Antony Antony" name="author">
-<meta content="xml2rfc 3.31.0" name="generator">
+<meta content="xml2rfc 3.34.0" name="generator">
 <meta content="draft-antony-eesp-ikev2-notes-00" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.31.0
+  xml2rfc 3.34.0
     Python 3.12.3
-    ConfigArgParse 1.7.1
+    ConfigArgParse 1.7.5
     google-i18n-address 3.1.1
     intervaltree 3.2.1
     Jinja2 3.1.2
-    lxml 6.0.2
-    platformdirs 4.9.2
+    lxml 6.1.2
+    natsort 8.4.0
+    platformdirs 4.11.3
     pycountry 26.2.16
     PyYAML 6.0.1
     requests 2.31.0
-    wcwidth 0.6.0
+    wcwidth 0.8.3
 -->
 <link href="draft-antony-eesp-ikev2-notes-00.xml" rel="alternate" type="application/rfc+xml">
 <link href="#copyright" rel="license">
@@ -1212,11 +1213,11 @@ li > p:last-of-type:only-child {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">KEv2 KDF Notes</td>
-<td class="right">March 2026</td>
+<td class="right">August 2026</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Klassert &amp; Antony</td>
-<td class="center">Expires 3 September 2026</td>
+<td class="center">Expires 4 March 2027</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1227,12 +1228,12 @@ li > p:last-of-type:only-child {
 <dd class="workgroup">IPSECME Working Group</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-03-02" class="published">2 March 2026</time>
+<time datetime="2026-08-31" class="published">31 August 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Informational</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-09-03">3 September 2026</time></dd>
+<dd class="expires"><time datetime="2027-03-04">4 March 2027</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1266,7 +1267,7 @@ li > p:last-of-type:only-child {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 3 September 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 4 March 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1767,7 +1768,7 @@ worked on <span>[<a href="#EESP-presenation" class="cite xref">EESP-presenation<
 <dd class="break"></dd>
 <dt id="I-D.mattsson-cfrg-aes-gcm-sst">[I-D.mattsson-cfrg-aes-gcm-sst]</dt>
       <dd>
-<span class="refAuthor">Campagna, M.</span>, <span class="refAuthor">Maximov, A.</span>, and <span class="refAuthor">J. P. Mattsson</span>, <span class="refTitle">"Galois Counter Mode with Strong Secure Tags (GCM-SST)"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-mattsson-cfrg-aes-gcm-sst-18</span>, <time datetime="2025-02-19" class="refDate">19 February 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-mattsson-cfrg-aes-gcm-sst-18">https://datatracker.ietf.org/doc/html/draft-mattsson-cfrg-aes-gcm-sst-18</a>&gt;</span>. </dd>
+<span class="refAuthor">Campagna, M.</span>, <span class="refAuthor">Maximov, A.</span>, and <span class="refAuthor">J. P. Mattsson</span>, <span class="refTitle">"Galois Counter Mode with Strong Secure Tags (GCM-SST)"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-mattsson-cfrg-aes-gcm-sst-21</span>, <time datetime="2026-07-05" class="refDate">5 July 2026</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-mattsson-cfrg-aes-gcm-sst-21">https://datatracker.ietf.org/doc/html/draft-mattsson-cfrg-aes-gcm-sst-21</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="I-D.mostafa-qesp">[I-D.mostafa-qesp]</dt>
       <dd>
@@ -1797,13 +1798,13 @@ worked on <span>[<a href="#EESP-presenation" class="cite xref">EESP-presenation<
       <dd>
 <span class="refAuthor">Keccak</span>, <span class="refTitle">"PSP Crypto Protocol and HW Offload"</span>, <span>&lt;<a href="https://www.youtube.com/watch?v=RlsxPMsWdxo">https://www.youtube.com/watch?v=RlsxPMsWdxo</a>&gt;</span>. </dd>
 <dd class="break"></dd>
-<dt id="NIST-800-108-comments">[NIST-800-108-comments]</dt>
-      <dd>
-<span class="refAuthor">NIST</span>, <span class="refTitle">"Public Comments and Resolutions on Draft NIST SP 800-108 Revision 1, Recommendation for Key DerivationUsingPseudorandomFunctions, 2020"</span>, <span>&lt;<a href="https://csrc.nist.gov/files/pubs/sp/800/108/r1/final/docs/sp800-108r1-draft-comments-resolutions.pdf">https://csrc.nist.gov/files/pubs/sp/800/108/r1/final/docs/sp800-108r1-draft-comments-resolutions.pdf</a>&gt;</span>. </dd>
-<dd class="break"></dd>
 <dt id="NIST800-185">[NIST800-185]</dt>
       <dd>
 <span class="refAuthor">NIST</span>, <span class="refTitle">"SHA-3 Derived Functions: cSHAKE, KMAC, TupleHash and ParallelHash"</span>, <span>&lt;<a href="https://csrc.nist.gov/pubs/sp/800/185/final">https://csrc.nist.gov/pubs/sp/800/185/final</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="NIST-800-108-comments">[NIST-800-108-comments]</dt>
+      <dd>
+<span class="refAuthor">NIST</span>, <span class="refTitle">"Public Comments and Resolutions on Draft NIST SP 800-108 Revision 1, Recommendation for Key DerivationUsingPseudorandomFunctions, 2020"</span>, <span>&lt;<a href="https://csrc.nist.gov/files/pubs/sp/800/108/r1/final/docs/sp800-108r1-draft-comments-resolutions.pdf">https://csrc.nist.gov/files/pubs/sp/800/108/r1/final/docs/sp800-108r1-draft-comments-resolutions.pdf</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="PRGS20">[PRGS20]</dt>
       <dd>
